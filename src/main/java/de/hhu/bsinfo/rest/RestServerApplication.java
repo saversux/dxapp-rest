@@ -16,6 +16,7 @@ import de.hhu.bsinfo.dxutils.NodeID;
 import spark.Service;
 
 import java.util.List;
+import java.util.ArrayList;
 
 
 public class RestServerApplication extends AbstractApplication{
@@ -61,7 +62,12 @@ public class RestServerApplication extends AbstractApplication{
         server.get("/nodelist", (request, response) -> {
             System.out.println(bootService.getOnlineNodeIDs().size());
             List<Short> nodes  = bootService.getOnlineNodeIDs();
-            String output = gson.toJson(nodes.toArray());
+            List<String> stringNodes = new ArrayList();
+            for (Short node : nodes) {
+                stringNodes.add(Integer.toHexString(node & 0xffff));
+            }
+
+            String output = gson.toJson(stringNodes);
 
             return output;
         });
