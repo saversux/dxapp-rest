@@ -1,0 +1,29 @@
+group 'de.hhu.bsinfo'
+
+version '1.0'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+task wrapper(type: Wrapper) {
+
+    gradleVersion = "4.7"
+}
+
+repositories {
+
+    mavenCentral()
+
+    maven() {
+
+        url "https://dl.bintray.com/hhu-bsinfo/dxram"
+    }
+}
+
+dependencies {
+
+    implementation 'de.hhu.bsinfo:dxram:0.3.1-dev'
+    compile "com.sparkjava:spark-core:2.7.2"
+    testImplementation 'junit:junit:4.12'
+}
