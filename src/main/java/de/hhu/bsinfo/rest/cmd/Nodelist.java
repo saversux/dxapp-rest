@@ -1,7 +1,5 @@
 package de.hhu.bsinfo.rest.cmd;
 
-import de.hhu.bsinfo.dxram.boot.BootService;
-import de.hhu.bsinfo.dxterm.TerminalServiceAccessor;
 import de.hhu.bsinfo.rest.AbstractRestCommand;
 import de.hhu.bsinfo.rest.ServiceHelper;
 import spark.Service;
