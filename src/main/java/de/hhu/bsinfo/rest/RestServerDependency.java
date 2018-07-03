@@ -1,4 +1,4 @@
-package de.hhu.bsinfo.dxhelloworld;
+package de.hhu.bsinfo.rest;
 
 import de.hhu.bsinfo.dxram.app.AbstractApplicationDependency;
 

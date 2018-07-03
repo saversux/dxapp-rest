@@ -1,4 +1,4 @@
-package de.hhu.bsinfo.dxhelloworld;
+package de.hhu.bsinfo.rest;
 
 
 
@@ -10,16 +10,22 @@ import de.hhu.bsinfo.dxram.chunk.ChunkService;
 import de.hhu.bsinfo.dxram.data.ChunkID;
 import de.hhu.bsinfo.dxram.data.DataStructure;
 import de.hhu.bsinfo.dxram.data.DummyDataStructure;
+import de.hhu.bsinfo.dxram.engine.AbstractDXRAMService;
 import de.hhu.bsinfo.dxram.engine.DXRAMVersion;
 import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
+import de.hhu.bsinfo.dxterm.TerminalServiceAccessor;
 import de.hhu.bsinfo.dxutils.NodeID;
+import de.hhu.bsinfo.rest.cmd.Chunkget;
+import de.hhu.bsinfo.rest.cmd.Chunklist;
+import de.hhu.bsinfo.rest.cmd.Nodelist;
 import spark.Service;
 
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.ArrayList;
 
 
-public class RestServerApplication extends AbstractApplication{
+public class RestServerApplication extends AbstractApplication {
 
     private static Service server;
     private boolean run;
@@ -44,58 +50,25 @@ public class RestServerApplication extends AbstractApplication{
 
     @Override
     public void main() {
-        chunkService = super.getService(ChunkService.class);
-        bootService = super.getService(BootService.class);
-        NameserviceService nameService = super.getService(NameserviceService.class);
-        gson = new Gson();
+        ServiceHelper services = new ServiceHelper(super.getService(BootService.class), super.getService(NameserviceService.class),super.getService(ChunkService.class));
 
+        gson = new Gson();
         run = true;
 
         System.out.println("Starting REST Server ............. :)");
-
         startServer();
-
-        String[] commands = {"nodelist, chunklist, chunkget"};
+        String[] commands = {"nodelist, chunklist, chunkget, abstract"};
 
         server.get("/", (req, res) -> gson.toJson(commands));
 
-        server.get("/nodelist", (request, response) -> {
-            System.out.println(bootService.getOnlineNodeIDs().size());
-            List<Short> nodes  = bootService.getOnlineNodeIDs();
-            List<String> stringNodes = new ArrayList();
-            for (Short node : nodes) {
-                stringNodes.add(Integer.toHexString(node & 0xffff));
-            }
+        List<AbstractRestCommand> restCommands = new ArrayList<>();
+        restCommands.add(new Chunkget());
+        restCommands.add(new Chunklist());
+        restCommands.add(new Nodelist());
 
-            String output = gson.toJson(stringNodes);
-
-            return output;
-        });
-
-        server.get("/chunklist/:nodeId", (request, response) -> {
-            short nid = NodeID.parse(request.params(":nodeId"));
-
-            if(nid != NodeID.INVALID_ID){
-                return chunkService.getAllLocalChunkIDRanges(nid);
-            }else{
-                return "NID invalid.";
-            }
-
-        });
-
-        server.get("/chunkget/:chunkId", (request, response) -> {
-            long cid = ChunkID.parse(request.params(":chunkId"));
-
-            if(cid != ChunkID.INVALID_ID){
-                return "dummy";
-            }else{
-                return "CID invalid.";
-            }
-
-        });
-
-        server.get("/chunklist/", (request, response) -> "Please enter NID as first parameter.");
-
+        for (AbstractRestCommand c : restCommands) {
+            c.register(server, services);
+        }
 
         while(run){
             //keep server alive
