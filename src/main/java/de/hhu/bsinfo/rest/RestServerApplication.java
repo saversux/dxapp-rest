@@ -7,9 +7,7 @@ import de.hhu.bsinfo.dxram.boot.BootService;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
 import de.hhu.bsinfo.dxram.engine.DXRAMVersion;
 import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
-import de.hhu.bsinfo.rest.cmd.Chunkget;
-import de.hhu.bsinfo.rest.cmd.Chunklist;
-import de.hhu.bsinfo.rest.cmd.Nodelist;
+import de.hhu.bsinfo.rest.cmd.*;
 import spark.Service;
 
 import java.util.ArrayList;
@@ -45,7 +43,7 @@ public class RestServerApplication extends AbstractApplication {
 
         System.out.println("Starting REST Server ............. :)");
         startServer();
-        String[] commands = {"nodelist, chunklist, chunkget, abstract"};
+        String[] commands = {"nodelist, chunklist, chunkget, namelist, namereg"};
 
         server.get("/", (req, res) -> gson.toJson(commands));
 
@@ -53,6 +51,8 @@ public class RestServerApplication extends AbstractApplication {
         restCommands.add(new Chunkget());
         restCommands.add(new Chunklist());
         restCommands.add(new Nodelist());
+        restCommands.add(new Namereg());
+        restCommands.add(new Namelist());
 
         for (AbstractRestCommand c : restCommands) {
             c.register(server, services);
