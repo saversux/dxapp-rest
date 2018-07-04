@@ -4,10 +4,12 @@ import com.google.gson.Gson;
 import de.hhu.bsinfo.dxram.DXRAM;
 import de.hhu.bsinfo.dxram.app.AbstractApplication;
 import de.hhu.bsinfo.dxram.boot.BootService;
+import de.hhu.bsinfo.dxram.chunk.ChunkAnonService;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
 import de.hhu.bsinfo.dxram.engine.DXRAMVersion;
 import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
 import de.hhu.bsinfo.rest.cmd.*;
+import org.eclipse.jetty.client.util.DeferredContentProvider;
 import spark.Service;
 
 import java.util.ArrayList;
@@ -36,14 +38,14 @@ public class RestServerApplication extends AbstractApplication {
 
     @Override
     public void main() {
-        ServiceHelper services = new ServiceHelper(super.getService(BootService.class), super.getService(NameserviceService.class), super.getService(ChunkService.class));
+        ServiceHelper services = new ServiceHelper(super.getService(BootService.class), super.getService(NameserviceService.class), super.getService(ChunkService.class), super.getService(ChunkAnonService.class));
 
         gson = new Gson();
         run = true;
 
         System.out.println("Starting REST Server ............. :)");
         startServer();
-        String[] commands = {"nodelist, chunklist, chunkget, namelist, namereg"};
+        String[] commands = {"nodelist, chunklist, chunkget, namelist, namereg, chunkcreate, chunkput"};
 
         server.get("/", (req, res) -> gson.toJson(commands));
 
@@ -53,6 +55,8 @@ public class RestServerApplication extends AbstractApplication {
         restCommands.add(new Nodelist());
         restCommands.add(new Namereg());
         restCommands.add(new Namelist());
+        restCommands.add(new Chunkcreate());
+        restCommands.add(new Chunkput());
 
         for (AbstractRestCommand c : restCommands) {
             c.register(server, services);
