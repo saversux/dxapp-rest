@@ -28,4 +28,8 @@ public abstract class AbstractRestCommand {
         return gson.toJson(new ResponseMessage(message));
     }
 
+    public String htmlRefresh(String message, String interval){
+        return "<html><head><title>DXRAM Statistics</title><meta http-equiv=\"refresh\" content=\""+interval+"\" ></head><body> <pre> <code>"+message+"</body></html></pre> </code>";
+    }
+
 }

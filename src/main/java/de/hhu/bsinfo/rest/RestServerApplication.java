@@ -8,6 +8,7 @@ import de.hhu.bsinfo.dxram.chunk.ChunkAnonService;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
 import de.hhu.bsinfo.dxram.engine.DXRAMVersion;
 import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
+import de.hhu.bsinfo.dxram.stats.StatisticsService;
 import de.hhu.bsinfo.rest.cmd.*;
 import org.eclipse.jetty.client.util.DeferredContentProvider;
 import spark.Service;
@@ -38,7 +39,7 @@ public class RestServerApplication extends AbstractApplication {
 
     @Override
     public void main() {
-        ServiceHelper services = new ServiceHelper(super.getService(BootService.class), super.getService(NameserviceService.class), super.getService(ChunkService.class), super.getService(ChunkAnonService.class));
+        ServiceHelper services = new ServiceHelper(super.getService(BootService.class), super.getService(NameserviceService.class), super.getService(ChunkService.class), super.getService(ChunkAnonService.class), super.getService(StatisticsService.class));
 
         gson = new Gson();
         run = true;
@@ -57,6 +58,8 @@ public class RestServerApplication extends AbstractApplication {
         restCommands.add(new Namelist());
         restCommands.add(new Chunkcreate());
         restCommands.add(new Chunkput());
+        restCommands.add(new Chunkdump());
+        restCommands.add(new Statsprint());
 
         for (AbstractRestCommand c : restCommands) {
             c.register(server, services);
