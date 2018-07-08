@@ -19,9 +19,7 @@ public class Nodelist extends AbstractRestCommand {
                 stringNodes.add(Integer.toHexString(node & 0xffff));
             }
 
-            String output = gson.toJson(stringNodes);
-
-            return output;
+            return gson.toJson(stringNodes);
         });
     }
 }

@@ -20,4 +20,12 @@ public abstract class AbstractRestCommand {
         return json;
     }
 
+    public String createError(String error){
+        return gson.toJson(new ResponseError(error));
+    }
+
+    public String createMessage(String message){
+        return gson.toJson(new ResponseMessage(message));
+    }
+
 }

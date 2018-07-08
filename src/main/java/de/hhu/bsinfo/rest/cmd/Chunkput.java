@@ -4,6 +4,7 @@ import de.hhu.bsinfo.dxram.data.ChunkAnon;
 import de.hhu.bsinfo.dxram.data.ChunkID;
 import de.hhu.bsinfo.dxutils.NodeID;
 import de.hhu.bsinfo.rest.AbstractRestCommand;
+import de.hhu.bsinfo.rest.ResponseError;
 import de.hhu.bsinfo.rest.ServiceHelper;
 import spark.Service;
 
@@ -12,28 +13,36 @@ import java.nio.ByteBuffer;
 public class Chunkput extends AbstractRestCommand {
     @Override
     public void register(Service server, ServiceHelper services) {
-        server.get("/chunkput/:cid/:type/:data", (request, response) -> {
-            long cid = ChunkID.parse(request.params(":cid"));
-            String data = request.params(":data");
-            String type = request.params(":type");
+        //server.get("/chunkput", (request, response) ->  createError("Invalid Parameter, please use: /chunkput/:cid/:type/:data"));
+        server.get("/chunkput", (request, response) -> {
+
+            String stringCid = request.queryParams("cid");
+            String data = request.queryParams("data");
+            String type = request.queryParams("type");
             int offset = 0;
 
+            if (stringCid == null || data == null || type == null){
+                return createError("Invalid Parameter, please use: /chunkput?cid=[CID]?type=[str,byte,short,int,long]?data=[YOURDATA]");
+            }
+
+            long cid = ChunkID.parse(stringCid);
+
             if (cid == ChunkID.INVALID_ID) {
-                return "No cid specified";
+                return createError("No cid specified");
             }
 
             if (data == null) {
-                return "No data specified";
+                return createError("No data specified");
             }
 
             if (ChunkID.getLocalID(cid) == 0) {
-                return "Put of index chunk is not allowed";
+                return createError("Put of index chunk is not allowed");
             }
 
             ChunkAnon[] chunks = new ChunkAnon[1];
 
             if (services.chunkAnonService.get(chunks, cid) != 1) {
-                return "Getting chunk 0x"+cid+" failed: " + chunks[0].getState();
+                return createError("Getting chunk 0x"+cid+" failed: " + chunks[0].getState());
             }
 
             ChunkAnon chunk = chunks[0];
@@ -118,14 +127,14 @@ public class Chunkput extends AbstractRestCommand {
                     break;
 
                 default:
-                    return "Unsupported data type.";
+                    return createError("Unsupported data type.");
             }
 
             // put chunk back
             if (services.chunkAnonService.put(chunk) != 1) {
-                return "Put to chunk 0x"+cid+" failed: "+chunk.getState();
+                return createError("Put to chunk 0x"+cid+" failed: "+chunk.getState());
             } else {
-                return "Put to chunk 0x"+cid+" successful";
+                return createMessage("Put to chunk 0x"+cid+" successful");
             }
 
 

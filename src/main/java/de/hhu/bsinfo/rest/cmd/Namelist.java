@@ -14,7 +14,7 @@ public class Namelist extends AbstractRestCommand {
         server.get("/namelist", (request, response) -> {
             List<NameserviceEntryStr> entries = services.nameService.getAllEntries();
 
-            return toHtml(entries);
+            return gson.toJson(entries);
         });
     }
 }
