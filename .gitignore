@@ -13,7 +13,7 @@ log.txt
 .gradle
 *.swp
 *.jar
-dxram.iml
+*.iml
 .dxram_term_hist
 out/*
 /tmp/
