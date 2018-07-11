@@ -77,7 +77,7 @@ public class RestServerApplication extends AbstractApplication {
     }
 
     private static void startServer(int maxThreads) {
-        server = Service.ignite().port(8009).threadPool(maxThreads);
+        server = Service.ignite().port(8009);
     }
 
     @Override
