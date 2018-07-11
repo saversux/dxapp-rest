@@ -1,6 +1,7 @@
-package de.hhu.bsinfo.rest;
+package de.hhu.bsinfo.dxapp.rest;
 
 import com.google.gson.Gson;
+import de.hhu.bsinfo.dxapp.rest.cmd.*;
 import de.hhu.bsinfo.dxram.DXRAM;
 import de.hhu.bsinfo.dxram.app.AbstractApplication;
 import de.hhu.bsinfo.dxram.boot.BootService;
@@ -9,18 +10,18 @@ import de.hhu.bsinfo.dxram.chunk.ChunkService;
 import de.hhu.bsinfo.dxram.engine.DXRAMVersion;
 import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
 import de.hhu.bsinfo.dxram.stats.StatisticsService;
-import de.hhu.bsinfo.rest.cmd.*;
-import org.eclipse.jetty.client.util.DeferredContentProvider;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import spark.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RestServerApplication extends AbstractApplication {
-
     private static Service server;
-    private boolean run;
+    private volatile boolean run;
     private Gson gson;
+    private static final Logger LOGGER = LogManager.getFormatterLogger(RestServerApplication.class.getSimpleName());
 
     @Override
     public DXRAMVersion getBuiltAgainstVersion() {
@@ -44,12 +45,9 @@ public class RestServerApplication extends AbstractApplication {
         gson = new Gson();
         run = true;
 
-        System.out.println("Starting REST Server ............. :)");
-        startServer();
-        String[] commands = {"nodelist, chunklist, chunkget, namelist, namereg, chunkcreate, chunkput"};
+        startServer(2);
 
-        server.get("/", (req, res) -> gson.toJson(commands));
-
+        List<Object> commandInfo = new ArrayList<>();
         List<AbstractRestCommand> restCommands = new ArrayList<>();
         restCommands.add(new Chunkget());
         restCommands.add(new Chunklist());
@@ -63,16 +61,23 @@ public class RestServerApplication extends AbstractApplication {
 
         for (AbstractRestCommand c : restCommands) {
             c.register(server, services);
+            commandInfo.add(c.getInfo());
         }
 
+        server.get("/", (req, res) -> gson.toJson(commandInfo));
+        LOGGER.debug("REST SERVER started");
+
         while (run) {
-            //keep server alive
+            try {
+                sleep(10000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-
-    private static void startServer() {
-        server = Service.ignite().port(8009);
+    private static void startServer(int maxThreads) {
+        server = Service.ignite().port(8009).threadPool(maxThreads);
     }
 
     @Override

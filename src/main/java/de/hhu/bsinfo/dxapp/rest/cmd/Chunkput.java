@@ -1,19 +1,21 @@
-package de.hhu.bsinfo.rest.cmd;
+package de.hhu.bsinfo.dxapp.rest.cmd;
 
+import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxram.data.ChunkAnon;
 import de.hhu.bsinfo.dxram.data.ChunkID;
-import de.hhu.bsinfo.dxutils.NodeID;
-import de.hhu.bsinfo.rest.AbstractRestCommand;
-import de.hhu.bsinfo.rest.ResponseError;
-import de.hhu.bsinfo.rest.ServiceHelper;
+import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import spark.Service;
 
 import java.nio.ByteBuffer;
 
 public class Chunkput extends AbstractRestCommand {
+
+    public Chunkput(){
+        setInfo("chunkput", "cid, data, type", "Put <data> with <type> on Chunk with <cid>");
+    }
+
     @Override
     public void register(Service server, ServiceHelper services) {
-        //server.get("/chunkput", (request, response) ->  createError("Invalid Parameter, please use: /chunkput/:cid/:type/:data"));
         server.get("/chunkput", (request, response) -> {
 
             String stringCid = request.queryParams("cid");
@@ -21,7 +23,7 @@ public class Chunkput extends AbstractRestCommand {
             String type = request.queryParams("type");
             int offset = 0;
 
-            if (stringCid == null || data == null || type == null){
+            if (stringCid == null || data == null || type == null) {
                 return createError("Invalid Parameter, please use: /chunkput?cid=[CID]?type=[str,byte,short,int,long]?data=[YOURDATA]");
             }
 
@@ -42,7 +44,7 @@ public class Chunkput extends AbstractRestCommand {
             ChunkAnon[] chunks = new ChunkAnon[1];
 
             if (services.chunkAnonService.get(chunks, cid) != 1) {
-                return createError("Getting chunk 0x"+cid+" failed: " + chunks[0].getState());
+                return createError("Getting chunk 0x" + cid + " failed: " + chunks[0].getState());
             }
 
             ChunkAnon chunk = chunks[0];
@@ -132,14 +134,10 @@ public class Chunkput extends AbstractRestCommand {
 
             // put chunk back
             if (services.chunkAnonService.put(chunk) != 1) {
-                return createError("Put to chunk 0x"+cid+" failed: "+chunk.getState());
+                return createError("Put to chunk 0x" + cid + " failed: " + chunk.getState());
             } else {
-                return createMessage("Put to chunk 0x"+cid+" successful");
+                return createMessage("Put to chunk 0x" + cid + " successful");
             }
-
-
-
-
         });
     }
 }

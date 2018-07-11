@@ -1,20 +1,23 @@
-package de.hhu.bsinfo.rest.cmd;
+package de.hhu.bsinfo.dxapp.rest.cmd;
 
+import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxram.chunk.ChunkAnonService;
 import de.hhu.bsinfo.dxram.data.ChunkAnon;
 import de.hhu.bsinfo.dxram.data.ChunkID;
-import de.hhu.bsinfo.dxram.nameservice.NameserviceEntryStr;
-import de.hhu.bsinfo.rest.AbstractRestCommand;
-import de.hhu.bsinfo.rest.ServiceHelper;
+import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import spark.Service;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.List;
 
 public class Chunkdump extends AbstractRestCommand {
+
+    public Chunkdump(){
+        setInfo("chunkdump", "name, cid", "Creates a Filedump of Chunk <cid> with <name>.");
+    }
+
     @Override
     public void register(Service server, ServiceHelper services) {
         server.get("/chunkdump", (request, response) -> {
@@ -22,13 +25,13 @@ public class Chunkdump extends AbstractRestCommand {
             String fileName = request.queryParams("name");
             String stringCid = request.queryParams("cid");
 
-            if (stringCid == null || fileName == null){
+            if (stringCid == null || fileName == null) {
                 return createError("Invalid Parameter, please use: /chunkdump?cid=[CID]?=name=[NAME]");
             }
 
             long cid = ChunkID.parse(stringCid);
 
-            if(cid == ChunkID.INVALID_ID){
+            if (cid == ChunkID.INVALID_ID) {
                 return createError("Invalid ChunkID");
             }
 
@@ -37,7 +40,7 @@ public class Chunkdump extends AbstractRestCommand {
 
             ChunkAnon[] chunks = new ChunkAnon[1];
             if (chunkAnon.get(chunks, cid) != 1) {
-                return createError("Getting chunk 0x"+cid+" failed: "+chunks[0].getState());
+                return createError("Getting chunk 0x" + cid + " failed: " + chunks[0].getState());
             }
 
             ChunkAnon chunk = chunks[0];
@@ -48,7 +51,7 @@ public class Chunkdump extends AbstractRestCommand {
 
             if (file.exists()) {
                 if (!file.delete()) {
-                    return createError("Deleting existing file "+fileName+" failed");
+                    return createError("Deleting existing file " + fileName + " failed");
                 } else {
                     RandomAccessFile raFile;
                     try {
@@ -60,7 +63,7 @@ public class Chunkdump extends AbstractRestCommand {
                     try {
                         raFile.write(chunk.getData());
                     } catch (final IOException e) {
-                        return createError("Dumping chunk failed: "+ e.getMessage());
+                        return createError("Dumping chunk failed: " + e.getMessage());
                     }
 
                     try {
@@ -71,10 +74,9 @@ public class Chunkdump extends AbstractRestCommand {
                     return createMessage("Chunk dumped");
 
                 }
-            }else{
+            } else {
                 return createError("File does not exist.");
             }
-
         });
     }
 }
