@@ -1,17 +1,19 @@
-package de.hhu.bsinfo.rest.cmd;
+package de.hhu.bsinfo.dxapp.rest.cmd;
 
+import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxram.data.ChunkAnon;
 import de.hhu.bsinfo.dxram.data.ChunkID;
-import de.hhu.bsinfo.rest.AbstractRestCommand;
-import de.hhu.bsinfo.rest.ResponseError;
-import de.hhu.bsinfo.rest.ResponseMessage;
-import de.hhu.bsinfo.rest.ServiceHelper;
+import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import spark.Service;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 
 public class Chunkget extends AbstractRestCommand {
+
+    public Chunkget(){
+        setInfo("chunkget", "cid, type", "Get Chunk <cid> of Type <type>");
+    }
 
     @Override
     public void register(Service server, ServiceHelper services) {
@@ -20,19 +22,19 @@ public class Chunkget extends AbstractRestCommand {
             String stringCid = request.queryParams("cid");
             String type = request.queryParams("type");
 
-            if (stringCid == null || type == null){
+            if (stringCid == null || type == null) {
                 return createError("Invalid Parameter, please use: /chunkget?cid=[CID]?=type=[str,byte,short,int,long]");
             }
 
             long cid = ChunkID.parse(stringCid);
 
-            if(cid == ChunkID.INVALID_ID){
+            if (cid == ChunkID.INVALID_ID) {
                 return createError("Invalid ChunkID");
             }
 
             ChunkAnon[] chunks = new ChunkAnon[1];
             if (services.chunkAnonService.get(chunks, cid) != 1) {
-                return  createError("Could not get Chunk");
+                return createError("Could not get Chunk");
             }
 
             ChunkAnon chunk = chunks[0];
@@ -52,7 +54,7 @@ public class Chunkget extends AbstractRestCommand {
                     try {
                         str = new String(chunk.getData(), offset, length, "US-ASCII");
                     } catch (final UnsupportedEncodingException e) {
-                        return  createError("Error encoding String");
+                        return createError("Error encoding String");
                     }
 
                     break;
@@ -101,10 +103,6 @@ public class Chunkget extends AbstractRestCommand {
                     return createError("Unsuported data type");
             }
             return gson.toJson(str);
-
-
         });
-
-
     }
 }
