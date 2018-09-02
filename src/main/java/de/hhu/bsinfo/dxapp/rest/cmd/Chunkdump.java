@@ -1,9 +1,9 @@
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
+import de.hhu.bsinfo.dxmem.data.ChunkID;
 import de.hhu.bsinfo.dxram.chunk.ChunkAnonService;
-import de.hhu.bsinfo.dxram.data.ChunkAnon;
-import de.hhu.bsinfo.dxram.data.ChunkID;
+import de.hhu.bsinfo.dxram.chunk.data.ChunkAnon;
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import spark.Service;
 
@@ -39,7 +39,7 @@ public class Chunkdump extends AbstractRestCommand {
             ChunkAnonService chunkAnon = services.chunkAnonService;
 
             ChunkAnon[] chunks = new ChunkAnon[1];
-            if (chunkAnon.get(chunks, cid) != 1) {
+            if (chunkAnon.getAnon().get(chunks, cid) != 1) {
                 return createError("Getting chunk 0x" + cid + " failed: " + chunks[0].getState());
             }
 

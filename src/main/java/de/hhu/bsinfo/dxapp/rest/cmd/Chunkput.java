@@ -1,8 +1,8 @@
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
-import de.hhu.bsinfo.dxram.data.ChunkAnon;
-import de.hhu.bsinfo.dxram.data.ChunkID;
+import de.hhu.bsinfo.dxmem.data.ChunkID;
+import de.hhu.bsinfo.dxram.chunk.data.ChunkAnon;
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import spark.Service;
 
@@ -43,7 +43,7 @@ public class Chunkput extends AbstractRestCommand {
 
             ChunkAnon[] chunks = new ChunkAnon[1];
 
-            if (services.chunkAnonService.get(chunks, cid) != 1) {
+            if (services.chunkAnonService.getAnon().get(chunks, cid) != 1) {
                 return createError("Getting chunk 0x" + cid + " failed: " + chunks[0].getState());
             }
 
@@ -133,7 +133,7 @@ public class Chunkput extends AbstractRestCommand {
             }
 
             // put chunk back
-            if (services.chunkAnonService.put(chunk) != 1) {
+            if (services.chunkAnonService.putAnon().put(chunk) != 1) {
                 return createError("Put to chunk 0x" + cid + " failed: " + chunk.getState());
             } else {
                 return createMessage("Put to chunk 0x" + cid + " successful");

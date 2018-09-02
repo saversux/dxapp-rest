@@ -28,13 +28,9 @@ public class Chunkcreate extends AbstractRestCommand {
                 return createError("NodeID invalid");
             }
 
-            long[] chunkIDs;
+            long[] chunkIDs = new long[1];
 
-            if (services.bootService.getNodeID() == nid) {
-                chunkIDs = services.chunkService.create(size, 1);
-            } else {
-                chunkIDs = services.chunkService.createRemote(nid, size);
-            }
+            services.chunkService.create().create(nid, chunkIDs,1, size);
 
             return createMessage("ChunkID: 0x" + Long.toHexString(chunkIDs[0]));
         });

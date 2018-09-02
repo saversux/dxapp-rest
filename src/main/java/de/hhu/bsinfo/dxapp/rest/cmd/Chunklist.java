@@ -23,8 +23,8 @@ public class Chunklist extends AbstractRestCommand {
             short nid = NodeID.parse(stringNid);
 
             if (nid != NodeID.INVALID_ID) {
-                String local = services.chunkService.getAllLocalChunkIDRanges(nid).toString();
-                String migrated = services.chunkService.getAllMigratedChunkIDRanges(nid).toString();
+                String local = services.chunkService.cidStatus().getAllLocalChunkIDRanges(nid).toString();
+                String migrated = services.chunkService.cidStatus().getAllMigratedChunkIDRanges(nid).toString();
                 return gson.toJson(new ChunkRangeRest(local, migrated));
             } else {
                 return createError("NID invalid");
