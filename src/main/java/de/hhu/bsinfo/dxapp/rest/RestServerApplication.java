@@ -2,7 +2,6 @@ package de.hhu.bsinfo.dxapp.rest;
 
 import com.google.gson.Gson;
 import de.hhu.bsinfo.dxapp.rest.cmd.*;
-import de.hhu.bsinfo.dxram.DXRAM;
 import de.hhu.bsinfo.dxram.app.AbstractApplication;
 import de.hhu.bsinfo.dxram.boot.BootService;
 import de.hhu.bsinfo.dxram.chunk.ChunkAnonService;
@@ -35,12 +34,7 @@ public class RestServerApplication extends AbstractApplication {
     }
 
     @Override
-    public boolean useConfigurationFile() {
-        return false;
-    }
-
-    @Override
-    public void main() {
+    public void main(String[] args) {
         ServiceHelper services = new ServiceHelper(super.getService(BootService.class), super.getService(NameserviceService.class), super.getService(ChunkService.class), super.getService(ChunkAnonService.class), super.getService(StatisticsService.class));
 
         gson = new Gson();
