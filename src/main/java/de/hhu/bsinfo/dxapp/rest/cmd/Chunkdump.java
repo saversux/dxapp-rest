@@ -40,7 +40,7 @@ public class Chunkdump extends AbstractRestCommand {
 
             ChunkAnon[] chunks = new ChunkAnon[1];
             if (chunkAnon.getAnon().get(chunks, cid) != 1) {
-                return createError("Getting chunk 0x" + cid + " failed: " + chunks[0].getState());
+                return createError("Getting chunk 0x" + ChunkID.toHexString(cid) + " failed: " + chunks[0].getState());
             }
 
             ChunkAnon chunk = chunks[0];
