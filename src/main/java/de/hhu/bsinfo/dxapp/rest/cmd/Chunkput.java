@@ -44,7 +44,7 @@ public class Chunkput extends AbstractRestCommand {
             ChunkAnon[] chunks = new ChunkAnon[1];
 
             if (services.chunkAnonService.getAnon().get(chunks, cid) != 1) {
-                return createError("Getting chunk 0x" + ChunkID.toHexString(cid) + " failed: " + chunks[0].getState());
+                return createError("Getting chunk " + ChunkID.toHexString(cid) + " failed: " + chunks[0].getState());
             }
 
             ChunkAnon chunk = chunks[0];
@@ -134,9 +134,9 @@ public class Chunkput extends AbstractRestCommand {
 
             // put chunk back
             if (services.chunkAnonService.putAnon().put(chunk) != 1) {
-                return createError("Put to chunk 0x" + ChunkID.toHexString(cid) + " failed: " + chunk.getState());
+                return createError("Put to chunk " + ChunkID.toHexString(cid) + " failed: " + chunk.getState());
             } else {
-                return createMessage("Put to chunk 0x" + ChunkID.toHexString(cid) + " successful");
+                return createMessage("Put to chunk " + ChunkID.toHexString(cid) + " successful");
             }
         });
     }

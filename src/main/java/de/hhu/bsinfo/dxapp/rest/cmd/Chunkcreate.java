@@ -33,7 +33,7 @@ public class Chunkcreate extends AbstractRestCommand {
 
             services.chunkService.create().create(nid, chunkIDs,1, size);
 
-            return createMessage("ChunkID: 0x" + ChunkID.toHexString(chunkIDs[0]));
+            return createMessage("ChunkID: " + ChunkID.toHexString(chunkIDs[0]));
         });
     }
 }

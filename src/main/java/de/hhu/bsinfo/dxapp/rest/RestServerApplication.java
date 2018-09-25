@@ -8,10 +8,11 @@ import de.hhu.bsinfo.dxram.chunk.ChunkAnonService;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
 import de.hhu.bsinfo.dxram.engine.DXRAMVersion;
 import de.hhu.bsinfo.dxram.generated.BuildConfig;
+import de.hhu.bsinfo.dxram.monitoring.MonitoringService;
 import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
 import de.hhu.bsinfo.dxram.stats.StatisticsService;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import spark.Service;
 
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public class RestServerApplication extends AbstractApplication {
 
     @Override
     public void main(String[] args) {
-        ServiceHelper services = new ServiceHelper(super.getService(BootService.class), super.getService(NameserviceService.class), super.getService(ChunkService.class), super.getService(ChunkAnonService.class), super.getService(StatisticsService.class));
+        ServiceHelper services = new ServiceHelper(super.getService(BootService.class), super.getService(NameserviceService.class), super.getService(ChunkService.class), super.getService(ChunkAnonService.class), super.getService(StatisticsService.class), super.getService(MonitoringService.class));
 
         gson = new Gson();
         run = true;
@@ -53,6 +54,7 @@ public class RestServerApplication extends AbstractApplication {
         restCommands.add(new Chunkput());
         restCommands.add(new Chunkdump());
         restCommands.add(new Statsprint());
+        restCommands.add(new Monitoring());
 
         for (AbstractRestCommand c : restCommands) {
             c.register(server, services);
