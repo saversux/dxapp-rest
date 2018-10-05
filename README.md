@@ -4,16 +4,16 @@ by Julien Bernhart
 ## Build
 Clone the project and execute
 
-´´´
+```
 ./gradlew jar
-´´´
+```
 
 ## Install
 Copy the dxrest-x.x.jar from build/libs to the dxapp folder of your dxram installation.
 
 To autostart the rest server add this to yout dxram configuration:
 
-´´´xml
+```xml
 "ApplicationServiceConfig": {
 "m_autoStart": [
     {
@@ -24,4 +24,4 @@ To autostart the rest server add this to yout dxram configuration:
 ],
 "m_classConfig": "de.hhu.bsinfo.dxram.app.ApplicationServiceConfig"
 },
-´´´
+```
