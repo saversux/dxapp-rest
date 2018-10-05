@@ -25,3 +25,6 @@ To autostart the rest server add this to yout dxram configuration:
 "m_classConfig": "de.hhu.bsinfo.dxram.app.ApplicationServiceConfig"
 },
 ```
+
+## Usage
+The server is running on port 8009. To see all available commands visit http://<server_ip>:8009
