@@ -2,6 +2,7 @@ package de.hhu.bsinfo.dxapp.rest.cmd;
 
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
+import de.hhu.bsinfo.dxram.chunk.ChunkService;
 import de.hhu.bsinfo.dxutils.NodeID;
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import spark.Service;
@@ -31,7 +32,7 @@ public class Chunkcreate extends AbstractRestCommand {
 
             long[] chunkIDs = new long[1];
 
-            services.chunkService.create().create(nid, chunkIDs,1, size);
+            services.getService(ChunkService.class).create().create(nid, chunkIDs,1, size);
 
             return createMessage("ChunkID: " + ChunkID.toHexString(chunkIDs[0]));
         });

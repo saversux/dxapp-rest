@@ -3,6 +3,7 @@ package de.hhu.bsinfo.dxapp.rest.cmd;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
 import spark.Service;
 
 public class Namereg extends AbstractRestCommand {
@@ -24,7 +25,7 @@ public class Namereg extends AbstractRestCommand {
             long cid = ChunkID.parse(stringCid);
 
             if (cid != ChunkID.INVALID_ID) {
-                services.nameService.register(cid, name);
+                services.getService(NameserviceService.class).register(cid, name);
                 return createMessage("Registered '" + name + "'");
             } else {
                 return createError("CID invalid");

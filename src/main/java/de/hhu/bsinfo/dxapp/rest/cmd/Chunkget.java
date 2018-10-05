@@ -2,6 +2,7 @@ package de.hhu.bsinfo.dxapp.rest.cmd;
 
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
+import de.hhu.bsinfo.dxram.chunk.ChunkAnonService;
 import de.hhu.bsinfo.dxram.chunk.data.ChunkAnon;
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import spark.Service;
@@ -33,7 +34,7 @@ public class Chunkget extends AbstractRestCommand {
             }
 
             ChunkAnon[] chunks = new ChunkAnon[1];
-            if (services.chunkAnonService.getAnon().get(chunks, cid) != 1) {
+            if (services.getService(ChunkAnonService.class).getAnon().get(chunks, cid) != 1) {
                 return createError("Could not get Chunk");
             }
 

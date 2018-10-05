@@ -2,8 +2,10 @@ package de.hhu.bsinfo.dxapp.rest.cmd;
 
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
+import de.hhu.bsinfo.dxram.chunk.ChunkAnonService;
 import de.hhu.bsinfo.dxram.chunk.data.ChunkAnon;
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import org.eclipse.jetty.client.util.DeferredContentProvider;
 import spark.Service;
 
 import java.nio.ByteBuffer;
@@ -17,10 +19,11 @@ public class Chunkput extends AbstractRestCommand {
     @Override
     public void register(Service server, ServiceHelper services) {
         server.get("/chunkput", (request, response) -> {
-
             String stringCid = request.queryParams("cid");
             String data = request.queryParams("data");
             String type = request.queryParams("type");
+
+            ChunkAnonService chunkAnon = services.getService(ChunkAnonService.class);
             int offset = 0;
 
             if (stringCid == null || data == null || type == null) {
@@ -43,7 +46,7 @@ public class Chunkput extends AbstractRestCommand {
 
             ChunkAnon[] chunks = new ChunkAnon[1];
 
-            if (services.chunkAnonService.getAnon().get(chunks, cid) != 1) {
+            if (chunkAnon.getAnon().get(chunks, cid) != 1) {
                 return createError("Getting chunk " + ChunkID.toHexString(cid) + " failed: " + chunks[0].getState());
             }
 
@@ -133,7 +136,7 @@ public class Chunkput extends AbstractRestCommand {
             }
 
             // put chunk back
-            if (services.chunkAnonService.putAnon().put(chunk) != 1) {
+            if (chunkAnon.putAnon().put(chunk) != 1) {
                 return createError("Put to chunk " + ChunkID.toHexString(cid) + " failed: " + chunk.getState());
             } else {
                 return createMessage("Put to chunk " + ChunkID.toHexString(cid) + " successful");

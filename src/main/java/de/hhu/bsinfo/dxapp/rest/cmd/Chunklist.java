@@ -1,6 +1,7 @@
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
+import de.hhu.bsinfo.dxram.chunk.ChunkService;
 import de.hhu.bsinfo.dxutils.NodeID;
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import spark.Service;
@@ -23,8 +24,8 @@ public class Chunklist extends AbstractRestCommand {
             short nid = NodeID.parse(stringNid);
 
             if (nid != NodeID.INVALID_ID) {
-                String local = services.chunkService.cidStatus().getAllLocalChunkIDRanges(nid).toString();
-                String migrated = services.chunkService.cidStatus().getAllMigratedChunkIDRanges(nid).toString();
+                String local = services.getService(ChunkService.class).cidStatus().getAllLocalChunkIDRanges(nid).toString();
+                String migrated = services.getService(ChunkService.class).cidStatus().getAllMigratedChunkIDRanges(nid).toString();
                 return gson.toJson(new ChunkRangeRest(local, migrated));
             } else {
                 return createError("NID invalid");

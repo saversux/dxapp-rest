@@ -4,6 +4,7 @@ import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
 import de.hhu.bsinfo.dxram.nameservice.NameserviceEntryStr;
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
 import spark.Service;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class Namelist extends AbstractRestCommand {
     @Override
     public void register(Service server, ServiceHelper services) {
         server.get("/namelist", (request, response) -> {
-            NamelistRest entries = new NamelistRest(services.nameService.getAllEntries());
+            NamelistRest entries = new NamelistRest(services.getService(NameserviceService.class).getAllEntries());
             return gson.toJson(entries);
         });
     }

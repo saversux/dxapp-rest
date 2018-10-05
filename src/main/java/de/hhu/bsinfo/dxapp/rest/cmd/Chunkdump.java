@@ -36,7 +36,7 @@ public class Chunkdump extends AbstractRestCommand {
             }
 
 
-            ChunkAnonService chunkAnon = services.chunkAnonService;
+            ChunkAnonService chunkAnon = services.getService(ChunkAnonService.class);
 
             ChunkAnon[] chunks = new ChunkAnon[1];
             if (chunkAnon.getAnon().get(chunks, cid) != 1) {

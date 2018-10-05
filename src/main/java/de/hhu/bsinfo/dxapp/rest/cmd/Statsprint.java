@@ -2,6 +2,7 @@ package de.hhu.bsinfo.dxapp.rest.cmd;
 
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import de.hhu.bsinfo.dxram.stats.StatisticsService;
 import spark.Service;
 
 import java.io.ByteArrayOutputStream;
@@ -24,7 +25,7 @@ public class Statsprint extends AbstractRestCommand {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             PrintStream ps = new PrintStream(os);
 
-            services.statisticsService.getManager().printStatistics(ps);
+            services.getService(StatisticsService.class).getManager().printStatistics(ps);
 
             return htmlRefresh(os.toString(), interval);
         });
