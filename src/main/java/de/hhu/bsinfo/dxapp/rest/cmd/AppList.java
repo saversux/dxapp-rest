@@ -17,7 +17,7 @@ public class AppList extends AbstractRestCommand {
             String stringNid = request.queryParams("nid");
 
             if (stringNid == null){
-                createError("Invalid Parameter, please use: /applist?=[NID]");
+               return createError("Invalid Parameter, please use: /applist?=[NID]");
             }
             short nid = NodeID.parse(stringNid);
 
