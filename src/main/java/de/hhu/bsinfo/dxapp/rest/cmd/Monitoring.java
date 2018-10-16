@@ -14,7 +14,7 @@ public class Monitoring extends AbstractRestCommand {
             String stringNid = request.queryParams("nid");
 
             if (stringNid == null) {
-                return createError("Invalid Parameter, please use: /monitor?nid=[NID]");
+                return createError("Invalid Parameter, please use: /monitor?nid=[NID]", response);
             }
 
             short nid = NodeID.parse(stringNid);
@@ -25,7 +25,7 @@ public class Monitoring extends AbstractRestCommand {
                 return gson.toJson(data);
 
             } else {
-                return createError("NID invalid");
+                return createError("NID invalid", response);
             }
 
         });

@@ -26,13 +26,13 @@ public class Chunkdump extends AbstractRestCommand {
             String stringCid = request.queryParams("cid");
 
             if (stringCid == null || fileName == null) {
-                return createError("Invalid Parameter, please use: /chunkdump?cid=[CID]?=name=[NAME]");
+                return createError("Invalid Parameter, please use: /chunkdump?cid=[CID]?=name=[NAME]", response);
             }
 
             long cid = ChunkID.parse(stringCid);
 
             if (cid == ChunkID.INVALID_ID) {
-                return createError("Invalid ChunkID");
+                return createError("Invalid ChunkID", response);
             }
 
 
@@ -40,7 +40,7 @@ public class Chunkdump extends AbstractRestCommand {
 
             ChunkAnon[] chunks = new ChunkAnon[1];
             if (chunkAnon.getAnon().get(chunks, cid) != 1) {
-                return createError("Getting chunk " + ChunkID.toHexString(cid) + " failed: " + chunks[0].getState());
+                return createError("Getting chunk " + ChunkID.toHexString(cid) + " failed: " + chunks[0].getState(), response);
             }
 
             ChunkAnon chunk = chunks[0];
@@ -51,19 +51,19 @@ public class Chunkdump extends AbstractRestCommand {
 
             if (file.exists()) {
                 if (!file.delete()) {
-                    return createError("Deleting existing file " + fileName + " failed");
+                    return createError("Deleting existing file " + fileName + " failed", response);
                 } else {
                     RandomAccessFile raFile;
                     try {
                         raFile = new RandomAccessFile(file, "rw");
                     } catch (final FileNotFoundException ignored) {
-                        return createError("Dumping chunk failed, file not found");
+                        return createError("Dumping chunk failed, file not found", response);
                     }
 
                     try {
                         raFile.write(chunk.getData());
                     } catch (final IOException e) {
-                        return createError("Dumping chunk failed: " + e.getMessage());
+                        return createError("Dumping chunk failed: " + e.getMessage(), response);
                     }
 
                     try {
@@ -75,7 +75,7 @@ public class Chunkdump extends AbstractRestCommand {
 
                 }
             } else {
-                return createError("File does not exist.");
+                return createError("File does not exist.", response);
             }
         });
     }

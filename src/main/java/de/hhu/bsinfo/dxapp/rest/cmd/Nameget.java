@@ -16,7 +16,7 @@ public class Nameget extends AbstractRestCommand {
             String name = request.queryParams("name");
 
             if (name == null){
-                createError("Invalid Parameter, please use: /nameget?=[name]");
+                createError("Invalid Parameter, please use: /nameget?=[name]", response);
             }
 
             NameserviceService nameservice = services.getService(NameserviceService.class);
@@ -24,7 +24,7 @@ public class Nameget extends AbstractRestCommand {
             long cid = nameservice.getChunkID(name, 2000);
 
             if (cid == ChunkID.INVALID_ID) {
-                return createError("Could not get name entry for "+name+", does not exist");
+                return createError("Could not get name entry for "+name+", does not exist", response);
             } else {
                 return gson.toJson(ChunkID.toHexString(cid));
             }

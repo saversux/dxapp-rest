@@ -2,6 +2,7 @@ package de.hhu.bsinfo.dxapp.rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import spark.Response;
 import spark.Service;
 
 public abstract class AbstractRestCommand {
@@ -21,7 +22,8 @@ public abstract class AbstractRestCommand {
         return json;
     }
 
-    public String createError(String error) {
+    public String createError(String error, Response response) {
+        response.status(400);
         return gson.toJson(new ResponseError(error));
     }
 

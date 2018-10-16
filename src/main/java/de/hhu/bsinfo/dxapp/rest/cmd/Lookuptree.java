@@ -17,12 +17,12 @@ public class Lookuptree extends AbstractRestCommand {
             String stringNid = request.queryParams("nid");
 
             if (stringNid == null) {
-                return createError("Invalid Parameter, please use: /lookuptree?nid=[NID]");
+                return createError("Invalid Parameter, please use: /lookuptree?nid=[NID]", response);
             }
 
             short nid = NodeID.parse(stringNid);
             if (nid == NodeID.INVALID_ID) {
-                return createError("NID invalid");
+                return createError("NID invalid", response);
             }
 
             LookupService lookup = services.getService(LookupService.class);
@@ -30,7 +30,7 @@ public class Lookuptree extends AbstractRestCommand {
             short respSuperpeer = lookup.getResponsibleSuperpeer(nid);
 
             if (respSuperpeer == NodeID.INVALID_ID) {
-                return createError("No responsible superpeer for "+NodeID.toHexString(nid)+" found");
+                return createError("No responsible superpeer for "+NodeID.toHexString(nid)+" found", response);
             }
 
             LookupTree tree = lookup.getLookupTreeFromSuperpeer(respSuperpeer, nid);

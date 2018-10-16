@@ -24,18 +24,18 @@ public class Chunkget extends AbstractRestCommand {
             String type = request.queryParams("type");
 
             if (stringCid == null || type == null) {
-                return createError("Invalid Parameter, please use: /chunkget?cid=[CID]?=type=[str,byte,short,int,long]");
+                return createError("Invalid Parameter, please use: /chunkget?cid=[CID]?=type=[str,byte,short,int,long]", response);
             }
 
             long cid = ChunkID.parse(stringCid);
 
             if (cid == ChunkID.INVALID_ID) {
-                return createError("Invalid ChunkID");
+                return createError("Invalid ChunkID", response);
             }
 
             ChunkAnon[] chunks = new ChunkAnon[1];
             if (services.getService(ChunkAnonService.class).getAnon().get(chunks, cid) != 1) {
-                return createError("Could not get Chunk");
+                return createError("Could not get Chunk", response);
             }
 
             ChunkAnon chunk = chunks[0];
@@ -55,7 +55,7 @@ public class Chunkget extends AbstractRestCommand {
                     try {
                         str = new String(chunk.getData(), offset, length, "US-ASCII");
                     } catch (final UnsupportedEncodingException e) {
-                        return createError("Error encoding String");
+                        return createError("Error encoding String", response);
                     }
 
                     break;
@@ -101,7 +101,7 @@ public class Chunkget extends AbstractRestCommand {
                     break;
 
                 default:
-                    return createError("Unsuported data type");
+                    return createError("Unsuported data type", response);
             }
             return gson.toJson(str);
         });

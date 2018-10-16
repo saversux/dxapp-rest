@@ -15,12 +15,12 @@ public class Chunklocklist extends AbstractRestCommand {
             String stringNid = request.queryParams("nid");
 
             if (stringNid == null) {
-                return createError("Invalid Parameter, please use: /chunklocklist?nid=[NID]");
+                return createError("Invalid Parameter, please use: /chunklocklist?nid=[NID]", response);
             }
 
             short nid = NodeID.parse(stringNid);
             if (nid == NodeID.INVALID_ID) {
-                return createError("NID invalid");
+                return createError("NID invalid", response);
             }
 
             //TODO

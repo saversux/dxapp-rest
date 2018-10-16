@@ -18,7 +18,7 @@ public class Chunklist extends AbstractRestCommand {
             String stringNid = request.queryParams("nid");
 
             if (stringNid == null) {
-                return createError("Invalid Parameter, please use: /chunklist?nid=[NID]");
+                return createError("Invalid Parameter, please use: /chunklist?nid=[NID]", response);
             }
 
             short nid = NodeID.parse(stringNid);
@@ -28,7 +28,7 @@ public class Chunklist extends AbstractRestCommand {
                 String migrated = services.getService(ChunkService.class).cidStatus().getAllMigratedChunkIDRanges(nid).toString();
                 return gson.toJson(new ChunkRangeRest(local, migrated));
             } else {
-                return createError("NID invalid");
+                return createError("NID invalid", response);
             }
 
         });

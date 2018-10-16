@@ -20,14 +20,14 @@ public class Nodeinfo extends AbstractRestCommand {
             BootService bootService = services.getService(BootService.class);
 
             if (stringNid == null) {
-                return createError("Invalid Parameter, please use: /nodeinfo?nid=[NID]");
+                return createError("Invalid Parameter, please use: /nodeinfo?nid=[NID]", response);
             }
 
             short nid = NodeID.parse(stringNid);
 
             if (nid != NodeID.INVALID_ID) {
                 if (!bootService.isNodeOnline(nid)){
-                    return createError("Node not available.");
+                    return createError("Node not available.", response);
                 }else{
                     return gson.toJson(new NodeinfoRest(NodeID.toHexString(nid),
                             bootService.getNodeRole(nid).toString(),
@@ -35,7 +35,7 @@ public class Nodeinfo extends AbstractRestCommand {
                             NodeCapabilities.toString(bootService.getNodeCapabilities(nid))));
                 }
             } else {
-                return createError("NID invalid");
+                return createError("NID invalid", response);
             }
 
         });

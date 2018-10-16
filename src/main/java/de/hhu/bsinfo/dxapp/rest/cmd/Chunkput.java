@@ -27,27 +27,27 @@ public class Chunkput extends AbstractRestCommand {
             int offset = 0;
 
             if (stringCid == null || data == null || type == null) {
-                return createError("Invalid Parameter, please use: /chunkput?cid=[CID]?type=[str,byte,short,int,long]?data=[YOURDATA]");
+                return createError("Invalid Parameter, please use: /chunkput?cid=[CID]?type=[str,byte,short,int,long]?data=[YOURDATA]", response);
             }
 
             long cid = ChunkID.parse(stringCid);
 
             if (cid == ChunkID.INVALID_ID) {
-                return createError("No cid specified");
+                return createError("No cid specified", response);
             }
 
             if (data == null) {
-                return createError("No data specified");
+                return createError("No data specified", response);
             }
 
             if (ChunkID.getLocalID(cid) == 0) {
-                return createError("Put of index chunk is not allowed");
+                return createError("Put of index chunk is not allowed", response);
             }
 
             ChunkAnon[] chunks = new ChunkAnon[1];
 
             if (chunkAnon.getAnon().get(chunks, cid) != 1) {
-                return createError("Getting chunk " + ChunkID.toHexString(cid) + " failed: " + chunks[0].getState());
+                return createError("Getting chunk " + ChunkID.toHexString(cid) + " failed: " + chunks[0].getState(), response);
             }
 
             ChunkAnon chunk = chunks[0];
@@ -132,12 +132,12 @@ public class Chunkput extends AbstractRestCommand {
                     break;
 
                 default:
-                    return createError("Unsupported data type.");
+                    return createError("Unsupported data type.", response);
             }
 
             // put chunk back
             if (chunkAnon.putAnon().put(chunk) != 1) {
-                return createError("Put to chunk " + ChunkID.toHexString(cid) + " failed: " + chunk.getState());
+                return createError("Put to chunk " + ChunkID.toHexString(cid) + " failed: " + chunk.getState(), response);
             } else {
                 return createMessage("Put to chunk " + ChunkID.toHexString(cid) + " successful");
             }

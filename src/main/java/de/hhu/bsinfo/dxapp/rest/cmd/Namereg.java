@@ -19,7 +19,7 @@ public class Namereg extends AbstractRestCommand {
             String name = request.queryParams("name");
 
             if (stringCid == null || name == null) {
-                return createError("Invalid Parameter, please use: /namereg?cid=[CID]?=name=[NameToRegister]");
+                return createError("Invalid Parameter, please use: /namereg?cid=[CID]?=name=[NameToRegister]", response);
             }
 
             long cid = ChunkID.parse(stringCid);
@@ -28,7 +28,7 @@ public class Namereg extends AbstractRestCommand {
                 services.getService(NameserviceService.class).register(cid, name);
                 return createMessage("Registered '" + name + "'");
             } else {
-                return createError("CID invalid");
+                return createError("CID invalid", response);
             }
         });
     }

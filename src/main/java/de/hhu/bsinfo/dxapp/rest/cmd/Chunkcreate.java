@@ -20,14 +20,14 @@ public class Chunkcreate extends AbstractRestCommand {
             String stringSize = request.queryParams("size");
 
             if (stringNid == null || stringSize == null) {
-                return createError("Invalid Parameter, please use: /chunkcreate?nid=[NID]?=size=[size in bytes]");
+                return createError("Invalid Parameter, please use: /chunkcreate?nid=[NID]?=size=[size in bytes]", response);
             }
 
             short nid = NodeID.parse(stringNid);
             int size = Integer.parseInt(stringSize);
 
             if (nid == NodeID.INVALID_ID) {
-                return createError("NodeID invalid");
+                return createError("NodeID invalid", response);
             }
 
             long[] chunkIDs = new long[1];

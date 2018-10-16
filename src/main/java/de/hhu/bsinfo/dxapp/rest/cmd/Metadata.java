@@ -37,7 +37,7 @@ public class Metadata extends AbstractRestCommand {
             }else{
                 short nid = NodeID.parse(stringNid);
                 if (nid == NodeID.INVALID_ID) {
-                    return createError("NID invalid");
+                    return createError("NID invalid", response);
                 }
 
                 String summary = lookup.getMetadataSummary(nid);
