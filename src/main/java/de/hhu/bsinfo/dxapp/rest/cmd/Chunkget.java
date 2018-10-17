@@ -27,11 +27,11 @@ public class Chunkget extends AbstractRestCommand {
                 return createError("Invalid Parameter, please use: /chunkget?cid=[CID]?=type=[str,byte,short,int,long]", response);
             }
 
-            long cid = ChunkID.parse(stringCid);
-
-            if (cid == ChunkID.INVALID_ID) {
+            if (!isChunkID(stringCid)){
                 return createError("Invalid ChunkID", response);
             }
+
+            long cid = ChunkID.parse(stringCid);
 
             ChunkAnon[] chunks = new ChunkAnon[1];
             if (services.getService(ChunkAnonService.class).getAnon().get(chunks, cid) != 1) {

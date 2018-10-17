@@ -30,6 +30,10 @@ public class Chunkput extends AbstractRestCommand {
                 return createError("Invalid Parameter, please use: /chunkput?cid=[CID]?type=[str,byte,short,int,long]?data=[YOURDATA]", response);
             }
 
+            if (!isChunkID(stringCid)){
+                return createError("Invalid ChunkID", response);
+            }
+
             long cid = ChunkID.parse(stringCid);
 
             if (cid == ChunkID.INVALID_ID) {

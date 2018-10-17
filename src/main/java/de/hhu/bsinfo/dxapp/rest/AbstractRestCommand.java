@@ -35,6 +35,11 @@ public abstract class AbstractRestCommand {
         return "<html><head><title>DXRAM Statistics</title><meta http-equiv=\"refresh\" content=\"" + interval + "\" ></head><body> <pre> <code>" + message + "</body></html></pre> </code>";
     }
 
+    public Boolean isChunkID(String stringCid){
+        boolean isChunkId = (stringCid.startsWith("0x") && stringCid.length() == 18) || stringCid.length() == 16;
+        return isChunkId;
+    }
+
     public void setInfo(String name, String param, String info) {
         this.info = new CommandInfo(name, param, info);
     }

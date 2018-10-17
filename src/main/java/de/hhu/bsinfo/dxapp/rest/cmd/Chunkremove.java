@@ -21,10 +21,14 @@ public class Chunkremove extends AbstractRestCommand {
                 return createError("Invalid Parameter, please use: /chunkremove?cid=[CID]", response);
             }
 
+            if (!isChunkID(stringCid)){
+                return createError("Invalid ChunkID", response);
+            }
+
             long cid = ChunkID.parse(stringCid);
 
-            if (cid == ChunkID.INVALID_ID) {
-                return createError("ChunkID invalid", response);
+            if (!isChunkID(stringCid)) {
+                return createError("Invalid ChunkID", response);
             }else if (ChunkID.getLocalID(cid) == 0){
                 return createError("Removal of index chunk is not allowed", response);
             }

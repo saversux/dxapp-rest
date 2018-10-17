@@ -22,6 +22,10 @@ public class Namereg extends AbstractRestCommand {
                 return createError("Invalid Parameter, please use: /namereg?cid=[CID]?=name=[NameToRegister]", response);
             }
 
+            if (!isChunkID(stringCid)){
+                return createError("Invalid ChunkID", response);
+            }
+
             long cid = ChunkID.parse(stringCid);
 
             if (cid != ChunkID.INVALID_ID) {
