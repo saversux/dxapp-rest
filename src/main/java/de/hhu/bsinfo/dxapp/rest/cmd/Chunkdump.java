@@ -56,31 +56,32 @@ public class Chunkdump extends AbstractRestCommand {
             if (file.exists()) {
                 if (!file.delete()) {
                     return createError("Deleting existing file " + fileName + " failed", response);
-                } else {
-                    RandomAccessFile raFile;
-                    try {
-                        raFile = new RandomAccessFile(file, "rw");
-                    } catch (final FileNotFoundException ignored) {
-                        return createError("Dumping chunk failed, file not found", response);
-                    }
-
-                    try {
-                        raFile.write(chunk.getData());
-                    } catch (final IOException e) {
-                        return createError("Dumping chunk failed: " + e.getMessage(), response);
-                    }
-
-                    try {
-                        raFile.close();
-                    } catch (final IOException ignore) {
-
-                    }
-                    return createMessage("Chunk dumped");
-
                 }
-            } else {
-                return createError("File does not exist.", response);
             }
+
+            if (!file.createNewFile()) {
+                return createError("Could not create file.", response);
+            }
+
+            RandomAccessFile raFile;
+            try {
+                raFile = new RandomAccessFile(file, "rw");
+            } catch (final FileNotFoundException ignored) {
+                return createError("Dumping chunk failed, file not found", response);
+            }
+
+            try {
+                raFile.write(chunk.getData());
+            } catch (final IOException e) {
+                return createError("Dumping chunk failed: " + e.getMessage(), response);
+            }
+
+            try {
+                raFile.close();
+            } catch (final IOException ignore) {
+
+            }
+            return createMessage("Chunk dumped");
         });
     }
 }
