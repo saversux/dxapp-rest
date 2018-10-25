@@ -40,6 +40,11 @@ public abstract class AbstractRestCommand {
         return isChunkId;
     }
 
+    public Boolean isNodeID(String stringNid){
+        boolean isNodeId = (stringNid.startsWith("0x") && stringNid.length() == 6) || stringNid.length() == 4;
+        return isNodeId;
+    }
+
     public void setInfo(String name, String param, String info) {
         this.info = new CommandInfo(name, param, info);
     }

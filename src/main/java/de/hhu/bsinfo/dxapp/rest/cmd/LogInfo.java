@@ -19,6 +19,10 @@ public class LogInfo extends AbstractRestCommand {
                 return createError("Invalid Parameter, please use: /loginfo?nid=[NID]", response);
             }
 
+            if (!isNodeID(stringNid)){
+                return createError("Invalid NodeID", response);
+            }
+
             short nid = NodeID.parse(stringNid);
             if (nid == NodeID.INVALID_ID) {
                 return createError("NID invalid", response);

@@ -23,6 +23,10 @@ public class Nodeinfo extends AbstractRestCommand {
                 return createError("Invalid Parameter, please use: /nodeinfo?nid=[NID]", response);
             }
 
+            if (!isNodeID(stringNid)){
+                return createError("Invalid NodeID", response);
+            }
+
             short nid = NodeID.parse(stringNid);
 
             if (nid != NodeID.INVALID_ID) {

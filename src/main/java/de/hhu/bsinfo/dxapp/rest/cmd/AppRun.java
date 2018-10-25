@@ -20,15 +20,20 @@ public class AppRun extends AbstractRestCommand {
             ApplicationService appService = services.getService(ApplicationService.class);
 
             if (stringNid == null || appname == null){
-                createError("Invalid Parameter, please use: /apprun?=[NID]?=[APP]", response);
+                return createError("Invalid Parameter, please use: /apprun?nid=[NID]?app=[APPNAME]", response);
             }
+
+            if (!isNodeID(stringNid)){
+                return createError("Invalid NodeID", response);
+            }
+
             short nid = NodeID.parse(stringNid);
 
             if (nid == NodeID.INVALID_ID) {
                 return createError("NodeID invalid", response);
             }
 
-            if (!appService.startApplication(appname, null)) {
+            if (!appService.startApplication(nid, appname, null)) {
                 return createError("Starting "+appname+" failed...", response);
             }
 

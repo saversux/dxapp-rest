@@ -14,17 +14,19 @@ public class AppList extends AbstractRestCommand {
     @Override
     public void register(Service server, ServiceHelper services) {
         server.get("/applist", (request, response) -> {
+            //remote lookup not implemented
+            /*
             String stringNid = request.queryParams("nid");
 
             if (stringNid == null){
-
-               return createError("Invalid Parameter, please use: /applist?=[NID]", response);
+               return createError("Invalid Parameter, please use: /applist?nid=[NID]", response);
             }
+
             short nid = NodeID.parse(stringNid);
 
             if (nid == NodeID.INVALID_ID) {
                 return createError("NodeID invalid", response);
-            }
+            }*/
 
             return gson.toJson(services.getService(ApplicationService.class).getLoadedApplicationClasses());
         });
