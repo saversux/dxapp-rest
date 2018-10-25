@@ -35,6 +35,10 @@ public class Metadata extends AbstractRestCommand {
                 }
                 return gson.toJson(metadataEntries);
             }else{
+                if (!isNodeID(stringNid)){
+                    return createError("Invalid NodeID", response);
+                }
+
                 short nid = NodeID.parse(stringNid);
                 if (nid == NodeID.INVALID_ID) {
                     return createError("NID invalid", response);

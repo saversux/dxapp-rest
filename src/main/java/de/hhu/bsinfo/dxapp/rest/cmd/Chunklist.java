@@ -21,6 +21,10 @@ public class Chunklist extends AbstractRestCommand {
                 return createError("Invalid Parameter, please use: /chunklist?nid=[NID]", response);
             }
 
+            if (!isNodeID(stringNid)){
+                return createError("Invalid NodeID", response);
+            }
+
             short nid = NodeID.parse(stringNid);
 
             if (nid != NodeID.INVALID_ID) {

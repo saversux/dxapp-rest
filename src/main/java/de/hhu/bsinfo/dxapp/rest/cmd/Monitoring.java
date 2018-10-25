@@ -17,11 +17,15 @@ public class Monitoring extends AbstractRestCommand {
                 return createError("Invalid Parameter, please use: /monitor?nid=[NID]", response);
             }
 
+            if (!isNodeID(stringNid)){
+                return createError("Invalid NodeID", response);
+            }
+
             short nid = NodeID.parse(stringNid);
             MonitoringService monitoring = services.getService(MonitoringService.class);
 
             if (nid != NodeID.INVALID_ID) {
-                MonitoringDataStructure data = monitoring.getMonitoringDataFromPeer(NodeID.parse("b1bd"));
+                MonitoringDataStructure data = monitoring.getMonitoringDataFromPeer(nid);
                 return gson.toJson(data);
 
             } else {
