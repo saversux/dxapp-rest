@@ -53,3 +53,18 @@ Use this commands with this URL: http://<server_ip>:8009/command?parameter1=...?
 | nodelist | - | list all nodes |
 | statsprint | - | debug information | html site with autorefresh |
 
+## Example
+
+URL: http://localhost:8009/nodeinfo?nid=b1bd
+
+Result:
+
+```json
+{
+	"nid": "0xB1BD",
+	"role": "peer",
+	"address": "/127.0.0.1:22222",
+	"capabilities": "[STORAGE]"
+}
+```
+
