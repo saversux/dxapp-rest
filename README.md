@@ -13,7 +13,7 @@ Copy the dxrest-x.x.jar from build/libs to the dxapp folder of your dxram instal
 
 To autostart the rest server add this to yout dxram configuration:
 
-```xml
+```json
 "ApplicationServiceConfig": {
 "m_autoStart": [
     {
