@@ -31,6 +31,7 @@ The server is running on port 8009. To see all available commands visit http://<
 
 ## Commands
 Use this commands with this URL: http://<server_ip>:8009/command?parameter1=...?parameter2=...
+Optional parameters are *cursive*.
 
 | Command | Parameter | Info | Notes | 
 | ------- | --------- | ---- | ---- |
