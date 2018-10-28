@@ -59,7 +59,7 @@ URL: http://localhost:8009/nodeinfo?nid=b1bd
 
 Result:
 
-```json
+```perl
 {
 	"nid": "0xB1BD",
 	"role": "peer",
