@@ -8,6 +8,9 @@ import de.hhu.bsinfo.dxutils.NodeID;
 import spark.Service;
 
 public class Monitoring extends AbstractRestCommand {
+    public Monitoring(){
+        setInfo("monitoring", "nid", "Get monitoring data of given peer");
+    }
     @Override
     public void register(Service server, ServiceHelper services) {
         server.get("/monitor", (request, response) -> {

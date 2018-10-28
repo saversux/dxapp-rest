@@ -28,3 +28,28 @@ To autostart the rest server add this to yout dxram configuration:
 
 ## Usage
 The server is running on port 8009. To see all available commands visit http://<server_ip>:8009
+
+## Commands
+Use this commands with this URL: http://<server_ip>:8009/command?parameter1=...?parameter2=...
+
+| Command | Parameter | Info | Notes | 
+| ------- | --------- | ---- | ---- |
+| applist | - | lists running applications |
+| apprun | nid, appname | starts a dxapp on a remote peer |
+| chunkcreate | nid, size | creates a new chunk on remote peer |
+| chunkdump | name, cid | create chunkdump with specified filename |
+| chunkget | cid, type | get chunk, supported types: str,byte,short,int,long |
+| chunklist | nid | get chunklist for a specific remote node |
+| chunkput | cid, type, data | put data to chunk | change to POST method |
+| chunkremove | cid | remove specific chunk |
+| loginfo | nid | prints the log utilization of given peer | testing |
+| lookuptree | nid | get the lookuptree of a specified node | testing |
+| metadata | *nid* | get summary of all or one superper's metadata |
+| monitoring | nid | get monitoring data of given peer | testing |
+| namget | name | get chunk by name |
+| namelist | - | get namelist |
+| namreg | cid, name | register chunk with name |
+| nodeinfo | nid |  get information about a node in the network |
+| nodelist | - | list all nodes |
+| statsprint | - | debug information | html site with autorefresh |
+
