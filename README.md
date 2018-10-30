@@ -29,7 +29,7 @@ To autostart the rest server add this to yout dxram configuration:
 ## Usage
 The server is running on port 8009. To see all available commands visit http://<server_ip>:8009
 
-it is recommended to use a rest client like Insomnia. (https://insomnia.rest)
+It is recommended to use a rest client like Insomnia. (https://insomnia.rest)
 
 ## Commands
 Use this commands with this URL: http://<server_ip>:8009/command?parameter1=...?parameter2=...
