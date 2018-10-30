@@ -1,23 +1,53 @@
+/*
+ * Copyright (C) 2018 Heinrich-Heine-Universitaet Duesseldorf, Institute of Computer Science,
+ * Department Operating Systems
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ */
+
 package de.hhu.bsinfo.dxapp.rest;
 
-import com.google.gson.Gson;
-import de.hhu.bsinfo.dxapp.rest.cmd.*;
-import de.hhu.bsinfo.dxram.app.AbstractApplication;
-import de.hhu.bsinfo.dxram.boot.BootService;
-import de.hhu.bsinfo.dxram.chunk.ChunkAnonService;
-import de.hhu.bsinfo.dxram.chunk.ChunkService;
-import de.hhu.bsinfo.dxram.engine.AbstractDXRAMService;
-import de.hhu.bsinfo.dxram.engine.DXRAMVersion;
-import de.hhu.bsinfo.dxram.generated.BuildConfig;
-import de.hhu.bsinfo.dxram.monitoring.MonitoringService;
-import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
-import de.hhu.bsinfo.dxram.stats.StatisticsService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import spark.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.google.gson.Gson;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import de.hhu.bsinfo.dxapp.rest.cmd.AppList;
+import de.hhu.bsinfo.dxapp.rest.cmd.AppRun;
+import de.hhu.bsinfo.dxapp.rest.cmd.Chunkcreate;
+import de.hhu.bsinfo.dxapp.rest.cmd.Chunkdump;
+import de.hhu.bsinfo.dxapp.rest.cmd.Chunkget;
+import de.hhu.bsinfo.dxapp.rest.cmd.Chunklist;
+import de.hhu.bsinfo.dxapp.rest.cmd.Chunkput;
+import de.hhu.bsinfo.dxapp.rest.cmd.Chunkremove;
+import de.hhu.bsinfo.dxapp.rest.cmd.LogInfo;
+import de.hhu.bsinfo.dxapp.rest.cmd.Lookuptree;
+import de.hhu.bsinfo.dxapp.rest.cmd.Metadata;
+import de.hhu.bsinfo.dxapp.rest.cmd.Monitoring;
+import de.hhu.bsinfo.dxapp.rest.cmd.Nameget;
+import de.hhu.bsinfo.dxapp.rest.cmd.Namelist;
+import de.hhu.bsinfo.dxapp.rest.cmd.Namereg;
+import de.hhu.bsinfo.dxapp.rest.cmd.Nodeinfo;
+import de.hhu.bsinfo.dxapp.rest.cmd.Nodelist;
+import de.hhu.bsinfo.dxapp.rest.cmd.Statsprint;
+import de.hhu.bsinfo.dxram.app.AbstractApplication;
+import de.hhu.bsinfo.dxram.engine.AbstractDXRAMService;
+import de.hhu.bsinfo.dxram.engine.DXRAMVersion;
+import de.hhu.bsinfo.dxram.generated.BuildConfig;
 
 public class RestServerApplication extends AbstractApplication {
     private static Service server;
@@ -42,7 +72,20 @@ public class RestServerApplication extends AbstractApplication {
         gson = new Gson();
         run = true;
 
-        startServer(2);
+        int port;
+        if (args.length > 0) {
+            try {
+                port = Integer.parseInt(args[0]);
+            } catch (NumberFormatException e) {
+                LOGGER.error("Invalid port argument. Running with standard port 8009.");
+                port = 8009;
+            }
+        } else {
+            LOGGER.error("Invalid port argument. Running with standard port 8009.");
+            port = 8009;
+        }
+
+        startServer(2, port);
 
         List<Object> commandInfo = new ArrayList<>();
         List<AbstractRestCommand> restCommands = new ArrayList<>();
@@ -86,8 +129,8 @@ public class RestServerApplication extends AbstractApplication {
         return super.getService(p_class);
     }
 
-    private static void startServer(int maxThreads) {
-        server = Service.ignite().port(8009);
+    private static void startServer(int maxThreads, int port) {
+        server = Service.ignite().port(port);
     }
 
     @Override

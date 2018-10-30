@@ -14,19 +14,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package de.hhu.bsinfo.dxapp.rest;
+package de.hhu.bsinfo.dxapp.rest.cmd.Requests;
 
-import de.hhu.bsinfo.dxram.engine.AbstractDXRAMService;
+import com.google.gson.annotations.Expose;
 
-public class ServiceHelper {
-    private RestServerApplication app;
+public class ChunkputRequest {
+    @Expose
+    private String cid;
+    @Expose
+    private String data;
+    @Expose
+    private String type;
 
-    public ServiceHelper(RestServerApplication app) {
-        this.app = app;
+    public String getData() {
+        return data;
     }
 
-    public <T extends AbstractDXRAMService> T getService(final Class<T> p_class) {
-        return app.getService(p_class);
+    public String getCid() {
+        return cid;
     }
 
+    public String getType() {
+        return type;
+    }
 }

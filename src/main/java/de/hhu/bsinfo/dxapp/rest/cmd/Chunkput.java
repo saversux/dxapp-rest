@@ -1,36 +1,62 @@
+/*
+ * Copyright (C) 2018 Heinrich-Heine-Universitaet Duesseldorf, Institute of Computer Science,
+ * Department Operating Systems
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ */
+
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
-import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
-import de.hhu.bsinfo.dxmem.data.ChunkID;
-import de.hhu.bsinfo.dxram.chunk.ChunkAnonService;
-import de.hhu.bsinfo.dxram.chunk.data.ChunkAnon;
-import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
-import org.eclipse.jetty.client.util.DeferredContentProvider;
 import spark.Service;
 
 import java.nio.ByteBuffer;
 
+import com.google.gson.JsonSyntaxException;
+
+import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
+import de.hhu.bsinfo.dxapp.rest.cmd.Requests.ChunkputRequest;
+import de.hhu.bsinfo.dxmem.data.ChunkID;
+import de.hhu.bsinfo.dxram.chunk.ChunkAnonService;
+import de.hhu.bsinfo.dxram.chunk.data.ChunkAnon;
+
 public class Chunkput extends AbstractRestCommand {
 
-    public Chunkput(){
+    public Chunkput() {
         setInfo("chunkput", "cid, data, type", "Put <data> with <type> on Chunk with <cid>");
     }
 
     @Override
     public void register(Service server, ServiceHelper services) {
         server.get("/chunkput", (request, response) -> {
-            String stringCid = request.queryParams("cid");
-            String data = request.queryParams("data");
-            String type = request.queryParams("type");
+            ChunkputRequest chunkputRequest;
+            try {
+                chunkputRequest = gson.fromJson(request.body(), ChunkputRequest.class);
+            } catch (JsonSyntaxException e) {
+                return createError("Please put cid, type and data into body as json.", response);
+            }
+
+            String stringCid = chunkputRequest.getCid();
+            String data = chunkputRequest.getData();
+            String type = chunkputRequest.getType();
 
             ChunkAnonService chunkAnon = services.getService(ChunkAnonService.class);
             int offset = 0;
 
             if (stringCid == null || data == null || type == null) {
-                return createError("Invalid Parameter, please use: /chunkput?cid=[CID]?type=[str,byte,short,int,long]?data=[YOURDATA]", response);
+                return createError("Please put cid, type and data into body as json.", response);
             }
 
-            if (!isChunkID(stringCid)){
+            if (!isChunkID(stringCid)) {
                 return createError("Invalid ChunkID", response);
             }
 
@@ -51,7 +77,8 @@ public class Chunkput extends AbstractRestCommand {
             ChunkAnon[] chunks = new ChunkAnon[1];
 
             if (chunkAnon.getAnon().get(chunks, cid) != 1) {
-                return createError("Getting chunk " + ChunkID.toHexString(cid) + " failed: " + chunks[0].getState(), response);
+                return createError("Getting chunk " + ChunkID.toHexString(cid) + " failed: " + chunks[0].getState(),
+                        response);
             }
 
             ChunkAnon chunk = chunks[0];
@@ -141,7 +168,8 @@ public class Chunkput extends AbstractRestCommand {
 
             // put chunk back
             if (chunkAnon.putAnon().put(chunk) != 1) {
-                return createError("Put to chunk " + ChunkID.toHexString(cid) + " failed: " + chunk.getState(), response);
+                return createError("Put to chunk " + ChunkID.toHexString(cid) + " failed: " + chunk.getState(),
+                        response);
             } else {
                 return createMessage("Put to chunk " + ChunkID.toHexString(cid) + " successful");
             }

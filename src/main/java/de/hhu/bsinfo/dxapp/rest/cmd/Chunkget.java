@@ -1,18 +1,35 @@
+/*
+ * Copyright (C) 2018 Heinrich-Heine-Universitaet Duesseldorf, Institute of Computer Science,
+ * Department Operating Systems
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ */
+
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
-import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
-import de.hhu.bsinfo.dxmem.data.ChunkID;
-import de.hhu.bsinfo.dxram.chunk.ChunkAnonService;
-import de.hhu.bsinfo.dxram.chunk.data.ChunkAnon;
-import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import spark.Service;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 
+import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
+import de.hhu.bsinfo.dxmem.data.ChunkID;
+import de.hhu.bsinfo.dxram.chunk.ChunkAnonService;
+import de.hhu.bsinfo.dxram.chunk.data.ChunkAnon;
+
 public class Chunkget extends AbstractRestCommand {
 
-    public Chunkget(){
+    public Chunkget() {
         setInfo("chunkget", "cid, type", "Get Chunk <cid> of Type <type>");
     }
 
@@ -24,10 +41,11 @@ public class Chunkget extends AbstractRestCommand {
             String type = request.queryParams("type");
 
             if (stringCid == null || type == null) {
-                return createError("Invalid Parameter, please use: /chunkget?cid=[CID]?=type=[str,byte,short,int,long]", response);
+                return createError("Invalid Parameter, please use: /chunkget?cid=[CID]?=type=[str,byte,short,int,long]",
+                        response);
             }
 
-            if (!isChunkID(stringCid)){
+            if (!isChunkID(stringCid)) {
                 return createError("Invalid ChunkID", response);
             }
 
@@ -43,7 +61,6 @@ public class Chunkget extends AbstractRestCommand {
             int offset = 0;
 
             boolean hex = true;
-
 
             String str = "";
             ByteBuffer byteBuffer = ByteBuffer.wrap(chunk.getData());
