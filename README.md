@@ -16,11 +16,11 @@ To autostart the rest server add this to yout dxram configuration:
 ```json
 "ApplicationServiceConfig": {
 "m_autoStart": [
-    {
-        "m_className": "de.hhu.bsinfo.dxapp.rest.RestServerApplication",
-        "m_args": "123",
-        "m_startOrderId": 0
-    }
+  {
+    "m_className": "de.hhu.bsinfo.dxapp.rest.RestServerApplication",
+    "m_args": "123",
+    "m_startOrderId": 0
+  }
 ],
 "m_classConfig": "de.hhu.bsinfo.dxram.app.ApplicationServiceConfig"
 },
@@ -29,8 +29,12 @@ To autostart the rest server add this to yout dxram configuration:
 ## Usage
 The server is running on port 8009. To see all available commands visit http://<server_ip>:8009
 
+it is recommended to use a rest client like Insomnia. (https://insomnia.rest)
+
 ## Commands
 Use this commands with this URL: http://<server_ip>:8009/command?parameter1=...?parameter2=...
+
+Commands with note "json body" require a json body with the expected parameters.
 
 Optional parameters are *cursive*.
 
@@ -42,7 +46,7 @@ Optional parameters are *cursive*.
 | chunkdump | name, cid | create chunkdump with specified filename |
 | chunkget | cid, type | get chunk, supported types: str,byte,short,int,long |
 | chunklist | nid | get chunklist for a specific remote node |
-| chunkput | cid, type, data | put data to chunk | change to POST method |
+| chunkput | cid, type, data | put data to chunk | json body |
 | chunkremove | cid | remove specific chunk |
 | loginfo | nid | prints the log utilization of given peer | testing |
 | lookuptree | nid | get the lookuptree of a specified node | testing |
@@ -63,10 +67,10 @@ Result:
 
 ```json
 {
-	"nid": "0xB1BD",
-	"role": "peer",
-	"address": "/127.0.0.1:22222",
-	"capabilities": "[STORAGE]"
+  "nid": "0xB1BD",
+  "role": "peer",
+  "address": "/127.0.0.1:22222",
+  "capabilities": "[STORAGE]"
 }
 ```
 
