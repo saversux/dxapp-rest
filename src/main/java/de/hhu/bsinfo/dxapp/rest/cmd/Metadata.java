@@ -40,16 +40,19 @@ public class Metadata extends AbstractRestCommand {
     @Override
     public void register(Service server, ServiceHelper services) {
         server.get("metadata", (request, response) -> {
-            if (request.body().equals("")) {
-                return createError("No body in request.", response);
-            }
             MetadataRequest metadataRequest;
             try {
                 metadataRequest = gson.fromJson(request.body(), MetadataRequest.class);
             } catch (JsonSyntaxException e) {
                 return createError("Please put nid into body as json.", response);
             }
-            String stringNid = metadataRequest.getNid();
+
+            String stringNid;
+            if (request.body().equals("")) {
+                stringNid = null;
+            }else{
+                stringNid = metadataRequest.getNid();
+            }
 
             LookupService lookup = services.getService(LookupService.class);
             BootService boot = services.getService(BootService.class);
