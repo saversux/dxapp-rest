@@ -32,9 +32,9 @@ The server is running on port 8009. To see all available commands visit http://<
 It is recommended to use a rest client like Insomnia. (https://insomnia.rest)
 
 ## Commands
-Use this commands with this URL: http://<server_ip>:8009/command?parameter1=...?parameter2=...
+Use this commands with this URL: http://<server_ip>:8009/command
 
-Commands with note "json body" require a json body with the expected parameters.
+Commands with parameters require a json body with the expected parameters.
 
 Optional parameters are *cursive*.
 
@@ -46,7 +46,7 @@ Optional parameters are *cursive*.
 | chunkdump | name, cid | create chunkdump with specified filename |
 | chunkget | cid, type | get chunk, supported types: str,byte,short,int,long |
 | chunklist | nid | get chunklist for a specific remote node |
-| chunkput | cid, type, data | put data to chunk | json body |
+| chunkput | cid, type, data | put data to chunk | |
 | chunkremove | cid | remove specific chunk |
 | loginfo | nid | prints the log utilization of given peer | testing |
 | lookuptree | nid | get the lookuptree of a specified node | testing |
@@ -61,7 +61,15 @@ Optional parameters are *cursive*.
 
 ## Example
 
-URL: http://localhost:8009/nodeinfo?nid=b1bd
+URL: http://localhost:8009/nodeinfo
+
+Request body:
+
+```json
+{
+  "nid":"b1bd"
+}
+```
 
 Result:
 

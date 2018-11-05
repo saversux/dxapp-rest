@@ -18,8 +18,12 @@ package de.hhu.bsinfo.dxapp.rest.cmd;
 
 import spark.Service;
 
+import com.google.gson.JsonSyntaxException;
+
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
+import de.hhu.bsinfo.dxapp.rest.cmd.requests.MonitoringRequest;
+import de.hhu.bsinfo.dxapp.rest.cmd.requests.NamegetRequest;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
 import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
 
@@ -31,10 +35,19 @@ public class Nameget extends AbstractRestCommand {
     @Override
     public void register(Service server, ServiceHelper services) {
         server.get("/nameget", (request, response) -> {
-            String name = request.queryParams("name");
+            if (request.body().equals("")) {
+                return createError("No body in request.", response);
+            }
+            NamegetRequest namegetRequest;
+            try {
+                namegetRequest = gson.fromJson(request.body(), NamegetRequest.class);
+            } catch (JsonSyntaxException e) {
+                return createError("Please put name into body as json.", response);
+            }
+            String name = namegetRequest.getName();
 
             if (name == null) {
-                createError("Invalid Parameter, please use: /nameget?=[name]", response);
+                createError("Please put name into body as json.", response);
             }
 
             NameserviceService nameservice = services.getService(NameserviceService.class);

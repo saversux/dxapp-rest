@@ -18,8 +18,12 @@ package de.hhu.bsinfo.dxapp.rest.cmd;
 
 import spark.Service;
 
+import com.google.gson.JsonSyntaxException;
+
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
+import de.hhu.bsinfo.dxapp.rest.cmd.requests.NameregRequest;
+import de.hhu.bsinfo.dxapp.rest.cmd.requests.NodeinfoRequest;
 import de.hhu.bsinfo.dxram.boot.BootService;
 import de.hhu.bsinfo.dxram.util.NodeCapabilities;
 import de.hhu.bsinfo.dxutils.NodeID;
@@ -32,12 +36,21 @@ public class Nodeinfo extends AbstractRestCommand {
     @Override
     public void register(Service server, ServiceHelper services) {
         server.get("/nodeinfo", (request, response) -> {
-            String stringNid = request.queryParams("nid");
+            if (request.body().equals("")) {
+                return createError("No body in request.", response);
+            }
+            NodeinfoRequest nodeinfoRequest;
+            try {
+                nodeinfoRequest = gson.fromJson(request.body(), NodeinfoRequest.class);
+            } catch (JsonSyntaxException e) {
+                return createError("Please put nid into body as json.", response);
+            }
+            String stringNid = nodeinfoRequest.getNid();
 
             BootService bootService = services.getService(BootService.class);
 
             if (stringNid == null) {
-                return createError("Invalid Parameter, please use: /nodeinfo?nid=[NID]", response);
+                return createError("Please put nid into body as json.", response);
             }
 
             if (!isNodeID(stringNid)) {

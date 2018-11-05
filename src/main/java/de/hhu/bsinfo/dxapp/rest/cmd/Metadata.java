@@ -21,8 +21,12 @@ import spark.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.JsonSyntaxException;
+
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
+import de.hhu.bsinfo.dxapp.rest.cmd.requests.LogInfoRequest;
+import de.hhu.bsinfo.dxapp.rest.cmd.requests.MetadataRequest;
 import de.hhu.bsinfo.dxram.boot.BootService;
 import de.hhu.bsinfo.dxram.lookup.LookupService;
 import de.hhu.bsinfo.dxram.util.NodeRole;
@@ -36,7 +40,16 @@ public class Metadata extends AbstractRestCommand {
     @Override
     public void register(Service server, ServiceHelper services) {
         server.get("metadata", (request, response) -> {
-            String stringNid = request.queryParams("nid");
+            if (request.body().equals("")) {
+                return createError("No body in request.", response);
+            }
+            MetadataRequest metadataRequest;
+            try {
+                metadataRequest = gson.fromJson(request.body(), MetadataRequest.class);
+            } catch (JsonSyntaxException e) {
+                return createError("Please put nid into body as json.", response);
+            }
+            String stringNid = metadataRequest.getNid();
 
             LookupService lookup = services.getService(LookupService.class);
             BootService boot = services.getService(BootService.class);

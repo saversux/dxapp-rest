@@ -18,8 +18,12 @@ package de.hhu.bsinfo.dxapp.rest.cmd;
 
 import spark.Service;
 
+import com.google.gson.JsonSyntaxException;
+
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
+import de.hhu.bsinfo.dxapp.rest.cmd.requests.ChunkputRequest;
+import de.hhu.bsinfo.dxapp.rest.cmd.requests.ChunkremoveRequest;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
 
@@ -31,10 +35,19 @@ public class Chunkremove extends AbstractRestCommand {
     @Override
     public void register(Service server, ServiceHelper services) {
         server.get("/chunkremove", (request, response) -> {
-            String stringCid = request.queryParams("cid");
+            if (request.body().equals("")) {
+                return createError("No body in request.", response);
+            }
+            ChunkremoveRequest chunkremoveRequest;
+            try {
+                chunkremoveRequest = gson.fromJson(request.body(), ChunkremoveRequest.class);
+            } catch (JsonSyntaxException e) {
+                return createError("Please put cid into body as json.", response);
+            }
+            String stringCid = chunkremoveRequest.getCid();
 
             if (stringCid == null) {
-                return createError("Invalid Parameter, please use: /chunkremove?cid=[CID]", response);
+                return createError("Please put cid into body as json.", response);
             }
 
             if (!isChunkID(stringCid)) {

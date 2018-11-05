@@ -18,8 +18,12 @@ package de.hhu.bsinfo.dxapp.rest.cmd;
 
 import spark.Service;
 
+import com.google.gson.JsonSyntaxException;
+
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
+import de.hhu.bsinfo.dxapp.rest.cmd.requests.ChunkgetRequest;
+import de.hhu.bsinfo.dxapp.rest.cmd.requests.ChunklistRequest;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
 import de.hhu.bsinfo.dxutils.NodeID;
 
@@ -32,10 +36,19 @@ public class Chunklist extends AbstractRestCommand {
     @Override
     public void register(Service server, ServiceHelper services) {
         server.get("/chunklist", (request, response) -> {
-            String stringNid = request.queryParams("nid");
+            if (request.body().equals("")) {
+                return createError("No body in request.", response);
+            }
+            ChunklistRequest chunklistRequest;
+            try {
+                chunklistRequest = gson.fromJson(request.body(), ChunklistRequest.class);
+            } catch (JsonSyntaxException e) {
+                return createError("Please put nid into body as json.", response);
+            }
+            String stringNid = chunklistRequest.getNid();
 
             if (stringNid == null) {
-                return createError("Invalid Parameter, please use: /chunklist?nid=[NID]", response);
+                return createError("Please put nid into body as json.", response);
             }
 
             if (!isNodeID(stringNid)) {

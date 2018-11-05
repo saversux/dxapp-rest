@@ -18,8 +18,12 @@ package de.hhu.bsinfo.dxapp.rest.cmd;
 
 import spark.Service;
 
+import com.google.gson.JsonSyntaxException;
+
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
+import de.hhu.bsinfo.dxapp.rest.cmd.requests.AppRunRequest;
+import de.hhu.bsinfo.dxapp.rest.cmd.requests.ChunkputRequest;
 import de.hhu.bsinfo.dxram.app.ApplicationService;
 import de.hhu.bsinfo.dxutils.NodeID;
 
@@ -31,13 +35,22 @@ public class AppRun extends AbstractRestCommand {
     @Override
     public void register(Service server, ServiceHelper services) {
         server.get("/apprun", (request, response) -> {
-            String stringNid = request.queryParams("nid");
-            String appname = request.queryParams("app");
+            if (request.body().equals("")) {
+                return createError("No body in request.", response);
+            }
+            AppRunRequest apprunRequest;
+            try {
+                apprunRequest = gson.fromJson(request.body(), AppRunRequest.class);
+            } catch (JsonSyntaxException e) {
+                return createError("Please put nid and name into body as json.", response);
+            }
+            String stringNid = apprunRequest.getNid();
+            String appname = apprunRequest.getName();
 
             ApplicationService appService = services.getService(ApplicationService.class);
 
             if (stringNid == null || appname == null) {
-                return createError("Invalid Parameter, please use: /apprun?nid=[NID]?app=[APPNAME]", response);
+                return createError("Please put nid and name into body as json.", response);
             }
 
             if (!isNodeID(stringNid)) {

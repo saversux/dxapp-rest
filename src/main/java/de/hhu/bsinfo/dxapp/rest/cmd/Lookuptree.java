@@ -18,8 +18,11 @@ package de.hhu.bsinfo.dxapp.rest.cmd;
 
 import spark.Service;
 
+import com.google.gson.JsonSyntaxException;
+
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
+import de.hhu.bsinfo.dxapp.rest.cmd.requests.LogInfoRequest;
 import de.hhu.bsinfo.dxram.lookup.LookupService;
 import de.hhu.bsinfo.dxram.lookup.overlay.storage.LookupTree;
 import de.hhu.bsinfo.dxutils.NodeID;
@@ -32,10 +35,19 @@ public class Lookuptree extends AbstractRestCommand {
     @Override
     public void register(Service server, ServiceHelper services) {
         server.get("/lookuptree", (request, response) -> {
-            String stringNid = request.queryParams("nid");
+            if (request.body().equals("")) {
+                return createError("No body in request.", response);
+            }
+            LogInfoRequest logInfoRequest;
+            try {
+                logInfoRequest = gson.fromJson(request.body(), LogInfoRequest.class);
+            } catch (JsonSyntaxException e) {
+                return createError("Please put nid into body as json.", response);
+            }
+            String stringNid = logInfoRequest.getNid();
 
             if (stringNid == null) {
-                return createError("Invalid Parameter, please use: /lookuptree?nid=[NID]", response);
+                return createError("Please put nid into body as json.", response);
             }
 
             if (!isNodeID(stringNid)) {

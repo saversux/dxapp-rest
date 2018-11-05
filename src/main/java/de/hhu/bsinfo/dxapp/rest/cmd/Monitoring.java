@@ -18,8 +18,12 @@ package de.hhu.bsinfo.dxapp.rest.cmd;
 
 import spark.Service;
 
+import com.google.gson.JsonSyntaxException;
+
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
+import de.hhu.bsinfo.dxapp.rest.cmd.requests.MetadataRequest;
+import de.hhu.bsinfo.dxapp.rest.cmd.requests.MonitoringRequest;
 import de.hhu.bsinfo.dxram.monitoring.MonitoringDataStructure;
 import de.hhu.bsinfo.dxram.monitoring.MonitoringService;
 import de.hhu.bsinfo.dxutils.NodeID;
@@ -32,10 +36,19 @@ public class Monitoring extends AbstractRestCommand {
     @Override
     public void register(Service server, ServiceHelper services) {
         server.get("/monitor", (request, response) -> {
-            String stringNid = request.queryParams("nid");
+            if (request.body().equals("")) {
+                return createError("No body in request.", response);
+            }
+            MonitoringRequest monitoringRequest;
+            try {
+                monitoringRequest = gson.fromJson(request.body(), MonitoringRequest.class);
+            } catch (JsonSyntaxException e) {
+                return createError("Please put nid into body as json.", response);
+            }
+            String stringNid = monitoringRequest.getNid();
 
             if (stringNid == null) {
-                return createError("Invalid Parameter, please use: /monitor?nid=[NID]", response);
+                return createError("Please put nid into body as json.", response);
             }
 
             if (!isNodeID(stringNid)) {

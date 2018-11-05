@@ -18,8 +18,12 @@ package de.hhu.bsinfo.dxapp.rest.cmd;
 
 import spark.Service;
 
+import com.google.gson.JsonSyntaxException;
+
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
+import de.hhu.bsinfo.dxapp.rest.cmd.requests.AppRunRequest;
+import de.hhu.bsinfo.dxapp.rest.cmd.requests.ChunkcreateRequest;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
 import de.hhu.bsinfo.dxutils.NodeID;
@@ -33,11 +37,20 @@ public class Chunkcreate extends AbstractRestCommand {
     @Override
     public void register(Service server, ServiceHelper services) {
         server.get("/chunkcreate", (request, response) -> {
-            String stringNid = request.queryParams("nid");
-            String stringSize = request.queryParams("size");
+            if (request.body().equals("")) {
+                return createError("No body in request.", response);
+            }
+            ChunkcreateRequest chunkcreateRequest;
+            try {
+                chunkcreateRequest = gson.fromJson(request.body(), ChunkcreateRequest.class);
+            } catch (JsonSyntaxException e) {
+                return createError("Please put nid and size into body as json.", response);
+            }
+            String stringNid = chunkcreateRequest.getNid();
+            String stringSize = chunkcreateRequest.getSize();
 
             if (stringNid == null || stringSize == null) {
-                return createError("Invalid Parameter, please use: /chunkcreate?nid=[NID]?=size=[size in bytes]",
+                return createError("Please put nid and size into body as json.",
                         response);
             }
 

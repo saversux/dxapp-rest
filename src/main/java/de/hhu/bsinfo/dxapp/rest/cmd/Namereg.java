@@ -18,8 +18,11 @@ package de.hhu.bsinfo.dxapp.rest.cmd;
 
 import spark.Service;
 
+import com.google.gson.JsonSyntaxException;
+
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
+import de.hhu.bsinfo.dxapp.rest.cmd.requests.NameregRequest;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
 import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
 
@@ -32,11 +35,20 @@ public class Namereg extends AbstractRestCommand {
     @Override
     public void register(Service server, ServiceHelper services) {
         server.get("/namereg", (request, response) -> {
-            String stringCid = request.queryParams("cid");
-            String name = request.queryParams("name");
+            if (request.body().equals("")) {
+                return createError("No body in request.", response);
+            }
+            NameregRequest nameregRequest;
+            try {
+                nameregRequest = gson.fromJson(request.body(), NameregRequest.class);
+            } catch (JsonSyntaxException e) {
+                return createError("Please put name and cid into body as json.", response);
+            }
+            String stringCid = nameregRequest.getCid();
+            String name = nameregRequest.getName();
 
             if (stringCid == null || name == null) {
-                return createError("Invalid Parameter, please use: /namereg?cid=[CID]?=name=[NameToRegister]",
+                return createError("Please put name and cid into body as json.",
                         response);
             }
 

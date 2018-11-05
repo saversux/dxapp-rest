@@ -21,8 +21,12 @@ import spark.Service;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 
+import com.google.gson.JsonSyntaxException;
+
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
+import de.hhu.bsinfo.dxapp.rest.cmd.requests.AppRunRequest;
+import de.hhu.bsinfo.dxapp.rest.cmd.requests.ChunkgetRequest;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
 import de.hhu.bsinfo.dxram.chunk.ChunkAnonService;
 import de.hhu.bsinfo.dxram.chunk.data.ChunkAnon;
@@ -36,12 +40,20 @@ public class Chunkget extends AbstractRestCommand {
     @Override
     public void register(Service server, ServiceHelper services) {
         server.get("/chunkget", (request, response) -> {
-
-            String stringCid = request.queryParams("cid");
-            String type = request.queryParams("type");
+            if (request.body().equals("")) {
+                return createError("No body in request.", response);
+            }
+            ChunkgetRequest chunkgetRequest;
+            try {
+                chunkgetRequest = gson.fromJson(request.body(), ChunkgetRequest.class);
+            } catch (JsonSyntaxException e) {
+                return createError("Please put cid and type into body as json.", response);
+            }
+            String stringCid = chunkgetRequest.getCid();
+            String type = chunkgetRequest.getType();
 
             if (stringCid == null || type == null) {
-                return createError("Invalid Parameter, please use: /chunkget?cid=[CID]?=type=[str,byte,short,int,long]",
+                return createError("Please put cid and type into body as json.",
                         response);
             }
 

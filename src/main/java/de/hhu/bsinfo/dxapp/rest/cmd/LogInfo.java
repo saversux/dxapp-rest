@@ -18,8 +18,12 @@ package de.hhu.bsinfo.dxapp.rest.cmd;
 
 import spark.Service;
 
+import com.google.gson.JsonSyntaxException;
+
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
+import de.hhu.bsinfo.dxapp.rest.cmd.requests.ChunkremoveRequest;
+import de.hhu.bsinfo.dxapp.rest.cmd.requests.LogInfoRequest;
 import de.hhu.bsinfo.dxram.log.LogService;
 import de.hhu.bsinfo.dxutils.NodeID;
 
@@ -31,10 +35,19 @@ public class LogInfo extends AbstractRestCommand {
     @Override
     public void register(Service server, ServiceHelper services) {
         server.get("/loginfo", (request, response) -> {
-            String stringNid = request.queryParams("nid");
+            if (request.body().equals("")) {
+                return createError("No body in request.", response);
+            }
+            LogInfoRequest logInfoRequest;
+            try {
+                logInfoRequest = gson.fromJson(request.body(), LogInfoRequest.class);
+            } catch (JsonSyntaxException e) {
+                return createError("Please put nid into body as json.", response);
+            }
+            String stringNid = logInfoRequest.getNid();
 
             if (stringNid == null) {
-                return createError("Invalid Parameter, please use: /loginfo?nid=[NID]", response);
+                return createError("Please put nid into body as json.", response);
             }
 
             if (!isNodeID(stringNid)) {
