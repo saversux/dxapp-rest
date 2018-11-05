@@ -18,7 +18,7 @@ To autostart the rest server add this to yout dxram configuration:
 "m_autoStart": [
   {
     "m_className": "de.hhu.bsinfo.dxapp.rest.RestServerApplication",
-    "m_args": "123",
+    "m_args": "8009",
     "m_startOrderId": 0
   }
 ],
