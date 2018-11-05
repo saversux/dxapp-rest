@@ -4,26 +4,42 @@ version '1.0'
 
 apply plugin: 'java'
 
-sourceCompatibility = 1.8
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
 
 task wrapper(type: Wrapper) {
+    gradleVersion = "4.10"
+}
 
-    gradleVersion = "4.7"
+configurations {
+    providedImplementation
+}
+
+compileJava {
+    sourceSets.main.compileClasspath += configurations.providedImplementation
 }
 
 repositories {
-
     mavenCentral()
 
     maven() {
+        url "https://dl.bintray.com/hhu-bsinfo/dxram"
+    }
 
-        url "https://oss.jfrog.org/artifactory/oss-snapshot-local"
+    maven {
+        url 'https://oss.jfrog.org/artifactory/oss-snapshot-local'
+    }
+}
+
+jar {
+    archiveName 'dxa-rest.jar'
+    from {
+        configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
 
 dependencies {
-
-    implementation 'de.hhu.bsinfo:dxram:0.6.0-SNAPSHOT'
+    providedImplementation 'de.hhu.bsinfo:dxram:0.6.0' + (Boolean.valueOf(System.getProperty("release")) ? "" : "-SNAPSHOT")
     compile "com.sparkjava:spark-core:2.7.2"
     testImplementation 'junit:junit:4.12'
 }
