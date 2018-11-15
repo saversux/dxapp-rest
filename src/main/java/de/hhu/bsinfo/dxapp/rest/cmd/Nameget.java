@@ -34,7 +34,7 @@ public class Nameget extends AbstractRestCommand {
 
     @Override
     public void register(Service server, ServiceHelper services) {
-        server.get("/nameget", (request, response) -> {
+        server.put("/nameget", (request, response) -> {
             if (request.body().equals("")) {
                 return createError("No body in request.", response);
             }

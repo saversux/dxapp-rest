@@ -39,7 +39,7 @@ public class Chunkget extends AbstractRestCommand {
 
     @Override
     public void register(Service server, ServiceHelper services) {
-        server.get("/chunkget", (request, response) -> {
+        server.put("/chunkget", (request, response) -> {
             if (request.body().equals("")) {
                 return createError("No body in request.", response);
             }

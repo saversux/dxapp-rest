@@ -34,7 +34,7 @@ public class Chunkremove extends AbstractRestCommand {
 
     @Override
     public void register(Service server, ServiceHelper services) {
-        server.get("/chunkremove", (request, response) -> {
+        server.put("/chunkremove", (request, response) -> {
             if (request.body().equals("")) {
                 return createError("No body in request.", response);
             }

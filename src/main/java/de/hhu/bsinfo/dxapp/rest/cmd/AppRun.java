@@ -34,7 +34,7 @@ public class AppRun extends AbstractRestCommand {
 
     @Override
     public void register(Service server, ServiceHelper services) {
-        server.get("/apprun", (request, response) -> {
+        server.put("/apprun", (request, response) -> {
             if (request.body().equals("")) {
                 return createError("No body in request.", response);
             }

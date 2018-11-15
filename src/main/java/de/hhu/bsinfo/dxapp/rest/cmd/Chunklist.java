@@ -35,7 +35,7 @@ public class Chunklist extends AbstractRestCommand {
 
     @Override
     public void register(Service server, ServiceHelper services) {
-        server.get("/chunklist", (request, response) -> {
+        server.put("/chunklist", (request, response) -> {
             if (request.body().equals("")) {
                 return createError("No body in request.", response);
             }
