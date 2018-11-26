@@ -58,6 +58,8 @@ Optional parameters are *cursive*.
 | nodeinfo | nid |  get information about a node in the network |
 | nodelist | - | list all nodes |
 | statsprint | - | debug information | html site with autorefresh |
+| barrierstatus | bid | get status of a barrier |
+| nodeshutdown | nid, *kill* | shutdown dxram node |
 
 ## Example
 
