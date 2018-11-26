@@ -101,6 +101,15 @@ public abstract class AbstractRestCommand {
     }
 
     /**
+     * Check whether a barrierid is valid or not
+     * @param stringBid
+     * @return
+     */
+    public Boolean isBarrierID(String stringBid){
+        return isNodeID(stringBid);
+    }
+
+    /**
      * Set information about the command
      * @param name
      * @param param
