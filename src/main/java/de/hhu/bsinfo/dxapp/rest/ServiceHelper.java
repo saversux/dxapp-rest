@@ -18,6 +18,11 @@ package de.hhu.bsinfo.dxapp.rest;
 
 import de.hhu.bsinfo.dxram.engine.AbstractDXRAMService;
 
+/**
+ * Service wrapper
+ *
+ * @author Julien Bernhart, 2018-11-26
+ */
 public class ServiceHelper {
     private RestServerApplication app;
 

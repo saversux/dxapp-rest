@@ -16,6 +16,11 @@
 
 package de.hhu.bsinfo.dxapp.rest;
 
+/**
+ * Response Error
+ *
+ * @author Julien Bernhart, 2018-11-26
+ */
 public class ResponseError {
     String error;
 

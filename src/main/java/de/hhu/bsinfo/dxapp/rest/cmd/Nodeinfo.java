@@ -22,12 +22,16 @@ import com.google.gson.JsonSyntaxException;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
-import de.hhu.bsinfo.dxapp.rest.cmd.requests.NameregRequest;
 import de.hhu.bsinfo.dxapp.rest.cmd.requests.NodeinfoRequest;
 import de.hhu.bsinfo.dxram.boot.BootService;
 import de.hhu.bsinfo.dxram.util.NodeCapabilities;
 import de.hhu.bsinfo.dxutils.NodeID;
 
+/**
+ * Get information about a node in the network
+ *
+ * @author Julien Bernhart, 2018-11-26
+ */
 public class Nodeinfo extends AbstractRestCommand {
     public Nodeinfo() {
         setInfo("nodeinfo", "nid", "Get information about a node in the network");
@@ -75,6 +79,9 @@ public class Nodeinfo extends AbstractRestCommand {
         });
     }
 
+    /**
+     * NodeinfoRest gson Object
+     */
     private class NodeinfoRest {
         String nid;
         String role;

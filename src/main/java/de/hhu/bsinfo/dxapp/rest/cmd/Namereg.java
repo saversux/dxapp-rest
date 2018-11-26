@@ -26,6 +26,11 @@ import de.hhu.bsinfo.dxapp.rest.cmd.requests.NameregRequest;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
 import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
 
+/**
+ * Register a Chunk in the nameservice.
+ *
+ * @author Julien Bernhart, 2018-11-26
+ */
 public class Namereg extends AbstractRestCommand {
 
     public Namereg() {

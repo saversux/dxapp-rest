@@ -27,6 +27,11 @@ import de.hhu.bsinfo.dxapp.rest.cmd.requests.ChunklistRequest;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
 import de.hhu.bsinfo.dxutils.NodeID;
 
+/**
+ * List all chunks on a node
+ *
+ * @author Julien Bernhart, 2018-11-26
+ */
 public class Chunklist extends AbstractRestCommand {
 
     public Chunklist() {

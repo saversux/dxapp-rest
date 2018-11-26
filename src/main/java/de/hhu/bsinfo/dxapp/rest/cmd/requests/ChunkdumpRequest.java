@@ -18,6 +18,11 @@ package de.hhu.bsinfo.dxapp.rest.cmd.requests;
 
 import com.google.gson.annotations.Expose;
 
+/**
+ * Chunkdump gson request
+ *
+ * @author Julien Bernhart, 2018-11-26
+ */
 public class ChunkdumpRequest {
     @Expose
     private String name;

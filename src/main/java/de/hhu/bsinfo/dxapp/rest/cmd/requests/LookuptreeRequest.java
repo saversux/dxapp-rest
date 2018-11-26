@@ -18,6 +18,11 @@ package de.hhu.bsinfo.dxapp.rest.cmd.requests;
 
 import com.google.gson.annotations.Expose;
 
+/**
+ * Lookuptree gson request
+ *
+ * @author Julien Bernhart, 2018-11-26
+ */
 public class LookuptreeRequest {
     @Expose
     private String nid;

@@ -32,9 +32,14 @@ import de.hhu.bsinfo.dxram.lookup.LookupService;
 import de.hhu.bsinfo.dxram.util.NodeRole;
 import de.hhu.bsinfo.dxutils.NodeID;
 
+/**
+ * Get summary of all or one superpeer's metadata
+ *
+ * @author Julien Bernhart, 2018-11-26
+ */
 public class Metadata extends AbstractRestCommand {
     public Metadata() {
-        setInfo("metadata", "nid (optional)", "Get summary of all or one superper's metadata");
+        setInfo("metadata", "nid (optional)", "Get summary of all or one superpeer's metadata");
     }
 
     @Override

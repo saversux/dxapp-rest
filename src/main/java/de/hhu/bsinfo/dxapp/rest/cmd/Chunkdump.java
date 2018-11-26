@@ -33,6 +33,11 @@ import de.hhu.bsinfo.dxmem.data.ChunkID;
 import de.hhu.bsinfo.dxram.chunk.ChunkAnonService;
 import de.hhu.bsinfo.dxram.chunk.data.ChunkAnon;
 
+/**
+ * Dump chunk to file
+ *
+ * @author Julien Bernhart, 2018-11-26
+ */
 public class Chunkdump extends AbstractRestCommand {
 
     public Chunkdump() {

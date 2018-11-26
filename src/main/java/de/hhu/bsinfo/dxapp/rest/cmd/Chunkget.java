@@ -31,6 +31,11 @@ import de.hhu.bsinfo.dxmem.data.ChunkID;
 import de.hhu.bsinfo.dxram.chunk.ChunkAnonService;
 import de.hhu.bsinfo.dxram.chunk.data.ChunkAnon;
 
+/**
+ * Get chunk with chunkid
+ *
+ * @author Julien Bernhart, 2018-11-26
+ */
 public class Chunkget extends AbstractRestCommand {
 
     public Chunkget() {

@@ -28,6 +28,11 @@ import de.hhu.bsinfo.dxmem.data.ChunkID;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
 import de.hhu.bsinfo.dxutils.NodeID;
 
+/**
+ * Create a chunk on specified node with specified size
+ *
+ * @author Julien Bernhart, 2018-11-26
+ */
 public class Chunkcreate extends AbstractRestCommand {
 
     public Chunkcreate() {

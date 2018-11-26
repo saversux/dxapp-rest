@@ -27,6 +27,11 @@ import de.hhu.bsinfo.dxapp.rest.cmd.requests.NamegetRequest;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
 import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
 
+/**
+ * Get chunk by name from nameservice
+ *
+ * @author Julien Bernhart, 2018-11-26
+ */
 public class Nameget extends AbstractRestCommand {
     public Nameget() {
         setInfo("nameget", "name", "Get chunk by name from nameservice.");

@@ -49,6 +49,11 @@ import de.hhu.bsinfo.dxram.engine.AbstractDXRAMService;
 import de.hhu.bsinfo.dxram.engine.DXRAMVersion;
 import de.hhu.bsinfo.dxram.generated.BuildConfig;
 
+/**
+ * DXRAM Rest Server Application
+ *
+ * @author Julien Bernhart, 2018-11-26
+ */
 public class RestServerApplication extends AbstractApplication {
     private static Service server;
     private volatile boolean run;
@@ -65,6 +70,10 @@ public class RestServerApplication extends AbstractApplication {
         return "RestServer";
     }
 
+    /**
+     * initialize server and register all commands
+     * @param args
+     */
     @Override
     public void main(String[] args) {
         ServiceHelper services = new ServiceHelper(this);
@@ -129,10 +138,18 @@ public class RestServerApplication extends AbstractApplication {
         return super.getService(p_class);
     }
 
+    /**
+     * Start server on specific port
+     * @param maxThreads
+     * @param port
+     */
     private static void startServer(int maxThreads, int port) {
         server = Service.ignite().port(port);
     }
 
+    /**
+     * Shuts the server down
+     */
     @Override
     public void signalShutdown() {
         server.stop();

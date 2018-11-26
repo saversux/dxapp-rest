@@ -29,6 +29,11 @@ import de.hhu.bsinfo.dxmem.data.ChunkID;
 import de.hhu.bsinfo.dxram.chunk.ChunkAnonService;
 import de.hhu.bsinfo.dxram.chunk.data.ChunkAnon;
 
+/**
+ * Put data with specific type on chunk
+ *
+ * @author Julien Bernhart, 2018-11-26
+ */
 public class Chunkput extends AbstractRestCommand {
 
     public Chunkput() {

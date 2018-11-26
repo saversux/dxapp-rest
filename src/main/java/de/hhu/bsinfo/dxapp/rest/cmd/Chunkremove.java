@@ -27,6 +27,11 @@ import de.hhu.bsinfo.dxapp.rest.cmd.requests.ChunkremoveRequest;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
 
+/**
+ * Remove chunk with specified chunkid
+ *
+ * @author Julien Bernhart, 2018-11-26
+ */
 public class Chunkremove extends AbstractRestCommand {
     public Chunkremove() {
         setInfo("chunkremove", "cid", "Remove chunk with CID");

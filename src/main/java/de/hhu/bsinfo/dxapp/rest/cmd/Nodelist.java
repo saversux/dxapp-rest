@@ -25,6 +25,11 @@ import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxram.boot.BootService;
 
+/**
+ * Get a list of all nodes
+ *
+ * @author Julien Bernhart, 2018-11-26
+ */
 public class Nodelist extends AbstractRestCommand {
 
     public Nodelist() {

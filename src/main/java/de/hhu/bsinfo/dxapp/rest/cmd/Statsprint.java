@@ -25,6 +25,11 @@ import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxram.stats.StatisticsService;
 
+/**
+ * Return HTML page with autorefresh, which contains information about the cluster
+ *
+ * @author Julien Bernhart, 2018-11-26
+ */
 public class Statsprint extends AbstractRestCommand {
 
     public Statsprint() {

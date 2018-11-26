@@ -27,6 +27,11 @@ import de.hhu.bsinfo.dxmem.data.ChunkID;
 import de.hhu.bsinfo.dxram.nameservice.NameserviceEntryStr;
 import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
 
+/**
+ * Get all nameservice entries
+ *
+ * @author Julien Bernhart, 2018-11-26
+ */
 public class Namelist extends AbstractRestCommand {
 
     public Namelist() {
