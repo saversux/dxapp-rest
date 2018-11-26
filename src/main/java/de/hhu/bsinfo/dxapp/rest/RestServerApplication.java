@@ -43,6 +43,7 @@ import de.hhu.bsinfo.dxapp.rest.cmd.Namelist;
 import de.hhu.bsinfo.dxapp.rest.cmd.Namereg;
 import de.hhu.bsinfo.dxapp.rest.cmd.Nodeinfo;
 import de.hhu.bsinfo.dxapp.rest.cmd.Nodelist;
+import de.hhu.bsinfo.dxapp.rest.cmd.Nodeshutdown;
 import de.hhu.bsinfo.dxapp.rest.cmd.Statsprint;
 import de.hhu.bsinfo.dxram.app.AbstractApplication;
 import de.hhu.bsinfo.dxram.engine.AbstractDXRAMService;
@@ -116,6 +117,7 @@ public class RestServerApplication extends AbstractApplication {
         restCommands.add(new LogInfo());
         restCommands.add(new Lookuptree());
         restCommands.add(new Metadata());
+        restCommands.add(new Nodeshutdown());
 
         for (AbstractRestCommand c : restCommands) {
             c.register(server, services);
