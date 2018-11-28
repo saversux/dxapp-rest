@@ -28,6 +28,7 @@ import org.apache.logging.log4j.Logger;
 
 import de.hhu.bsinfo.dxapp.rest.cmd.AppList;
 import de.hhu.bsinfo.dxapp.rest.cmd.AppRun;
+import de.hhu.bsinfo.dxapp.rest.cmd.Barrieralloc;
 import de.hhu.bsinfo.dxapp.rest.cmd.Barrierstatus;
 import de.hhu.bsinfo.dxapp.rest.cmd.Chunkcreate;
 import de.hhu.bsinfo.dxapp.rest.cmd.Chunkdump;
@@ -120,6 +121,7 @@ public class RestServerApplication extends AbstractApplication {
         restCommands.add(new Metadata());
         restCommands.add(new Nodeshutdown());
         restCommands.add(new Barrierstatus());
+        restCommands.add(new Barrieralloc());
 
         for (AbstractRestCommand c : restCommands) {
             c.register(server, services);

@@ -106,7 +106,8 @@ public abstract class AbstractRestCommand {
      * @return
      */
     public Boolean isBarrierID(String stringBid){
-        return isNodeID(stringBid);
+        boolean isNodeId = (stringBid.startsWith("0x") && stringBid.length() == 10) || stringBid.length() == 8;
+        return isNodeId;
     }
 
     /**

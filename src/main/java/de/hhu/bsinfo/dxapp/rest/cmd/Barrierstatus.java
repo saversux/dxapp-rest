@@ -78,7 +78,8 @@ public class Barrierstatus extends AbstractRestCommand {
                 peers.add(new BarrierstatusEntryRest(NodeID.toHexString(status.getSignedOnNodeIDs()[i]), ChunkID.toHexString(status.getCustomData()[i])));
             }
 
-            return new BarrierstatusRest(peers, BarrierID.toHexString(bid), status.getNumberOfSignedOnPeers(), status.getSignedOnNodeIDs().length);
+            BarrierstatusRest barrierstatusRest = new BarrierstatusRest(peers, BarrierID.toHexString(bid), status.getNumberOfSignedOnPeers(), status.getSignedOnNodeIDs().length);
+            return gson.toJson(barrierstatusRest);
 
         });
     }
