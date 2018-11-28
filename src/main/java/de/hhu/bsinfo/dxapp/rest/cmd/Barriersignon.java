@@ -22,56 +22,54 @@ import com.google.gson.JsonSyntaxException;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
-import de.hhu.bsinfo.dxapp.rest.cmd.requests.BarrierallocRequest;
+import de.hhu.bsinfo.dxapp.rest.cmd.requests.BarriersignonRequest;
 import de.hhu.bsinfo.dxram.lookup.overlay.storage.BarrierID;
+import de.hhu.bsinfo.dxram.lookup.overlay.storage.BarrierStatus;
 import de.hhu.bsinfo.dxram.sync.SynchronizationService;
 
 /**
- * Create a new barrier
+ * Sign into an existing barrier for synchronization
  *
  * @author Julien Bernhart, 2018-11-28
  */
-public class Barrieralloc extends AbstractRestCommand {
-    public Barrieralloc() {
-        setInfo("barrieralloc", "size", "Create a new barrier for synchronization of multiple peers");
+public class Barriersignon extends AbstractRestCommand {
+    public Barriersignon() {
+        setInfo("barriersignon", "bid, data", "Sign on to an allocated barrier for synchronization");
     }
 
     @Override
     public void register(Service server, ServiceHelper services) {
-        server.put("/barrieralloc", (request, response) -> {
+        server.put("/barriersignon", (request, response) -> {
             if (request.body().equals("")) {
                 return createError("No body in request.", response);
             }
-            BarrierallocRequest barrierallocRequest;
+            BarriersignonRequest barriersignonRequest;
             try {
-                barrierallocRequest = gson.fromJson(request.body(), BarrierallocRequest.class);
+                barriersignonRequest = gson.fromJson(request.body(), BarriersignonRequest.class);
             } catch (JsonSyntaxException e) {
                 return createError("Please put bid into body as json.", response);
             }
-            int size = barrierallocRequest.getSize();
+            String stringBid = barriersignonRequest.getBid();
+            long data = barriersignonRequest.getData();
 
-            if (size <= 0){
-                return createError("Please put a valid size in body", response);
+            if (stringBid == null) {
+                return createError("Please put bid into body as json.", response);
             }
+
+            if (!isBarrierID(stringBid)) {
+                return createError("Invalid BarrierID", response);
+            }
+
+            int bid = BarrierID.parse(stringBid);
 
             SynchronizationService sync = services.getService(SynchronizationService.class);
+            BarrierStatus result = sync.barrierSignOn(bid, data);
 
-            int barrierId = sync.barrierAllocate(size);
-            if (barrierId == BarrierID.INVALID_ID) {
-                return createError("Allocating barrier failed", response);
-            } else {
-                BarrierallocRest barrierallocRest = new BarrierallocRest(BarrierID.toHexString(barrierId));
-                return gson.toJson(barrierallocRest);
+            if (result == null) {
+                return createError("Signing on to barrier "+ BarrierID.toHexString(bid)+" failed",response);
             }
 
+            return createMessage("Synchronized to barrier "+ BarrierID.toHexString(bid)+" with custom data: "+data);
         });
-    }
-
-    private class BarrierallocRest{
-        String bid;
-
-        public BarrierallocRest(String bid){
-            this.bid = bid;
-        }
     }
 }

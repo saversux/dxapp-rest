@@ -59,6 +59,8 @@ Optional parameters are *cursive*.
 | nodelist | - | list all nodes |
 | statsprint | - | debug information | html site with autorefresh |
 | barrierstatus | bid | get status of a barrier |
+| barrieralloc | size | alloc barrier with given size |
+| barriersignon | bid, *data* | sign into an existing barrier for synchronization |
 | nodeshutdown | nid, *kill* | shutdown dxram node |
 
 ## Example

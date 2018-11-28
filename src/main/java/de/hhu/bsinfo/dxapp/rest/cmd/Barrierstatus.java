@@ -87,13 +87,13 @@ public class Barrierstatus extends AbstractRestCommand {
     private class BarrierstatusRest {
         String bid;
         short signedOnPeers;
-        int totalAmount;
+        int size;
         List<BarrierstatusEntryRest> peers;
 
-        public BarrierstatusRest(List<BarrierstatusEntryRest> peers, String bid, short signedOnPeers, int totalAmount){
+        public BarrierstatusRest(List<BarrierstatusEntryRest> peers, String bid, short signedOnPeers, int size){
             this.bid = bid;
             this.signedOnPeers = signedOnPeers;
-            this.totalAmount = totalAmount;
+            this.size = size;
             this.peers = peers;
         }
     }
