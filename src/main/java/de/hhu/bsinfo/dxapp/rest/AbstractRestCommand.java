@@ -44,7 +44,7 @@ public abstract class AbstractRestCommand {
      */
     public String toHtml(Object o) {
         String json = gson.toJson(o);
-        json = "<html> <body> <pre> <code>" + json + "</html> </body> </pre> </code>";
+        json = "<html> <body> <pre> <code>" + json + "</code> </pre> </body> </html>";
 
         return json;
     }
@@ -77,7 +77,7 @@ public abstract class AbstractRestCommand {
      */
     public String htmlRefresh(String message, String interval) {
         return "<html><head><title>DXRAM Statistics</title><meta http-equiv=\"refresh\" content=\"" + interval +
-                "\" ></head><body> <pre> <code>" + message + "</body></html></pre> </code>";
+                "\" ></head><body> <pre> <code>" + message + "</code> </pre> </body> </html>";
     }
 
     /**

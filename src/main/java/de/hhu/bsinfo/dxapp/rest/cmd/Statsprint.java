@@ -42,8 +42,8 @@ public class Statsprint extends AbstractRestCommand {
             String interval = request.queryParams("interval");
 
             if (interval == null) {
-                return createError("Please enter the refresh interval parameter: /statsprint?interval=[SECONDS]",
-                        response);
+                response.status(400);
+                return toHtml("Please enter the refresh interval parameter: /statsprint?interval=[SECONDS]");
             }
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             PrintStream ps = new PrintStream(os);
