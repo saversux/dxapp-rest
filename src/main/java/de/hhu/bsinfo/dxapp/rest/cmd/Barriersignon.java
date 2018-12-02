@@ -63,7 +63,7 @@ public class Barriersignon extends AbstractRestCommand {
             int bid = BarrierID.parse(stringBid);
 
             SynchronizationService sync = services.getService(SynchronizationService.class);
-            BarrierStatus result = sync.barrierSignOn(bid, data);
+            BarrierStatus result = sync.barrierSignOn(bid, data, false);
 
             if (result == null) {
                 return createError("Signing on to barrier "+ BarrierID.toHexString(bid)+" failed",response);
