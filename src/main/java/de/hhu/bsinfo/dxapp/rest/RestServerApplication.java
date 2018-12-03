@@ -31,6 +31,7 @@ import de.hhu.bsinfo.dxapp.rest.cmd.AppRun;
 import de.hhu.bsinfo.dxapp.rest.cmd.Barrieralloc;
 import de.hhu.bsinfo.dxapp.rest.cmd.Barrierfree;
 import de.hhu.bsinfo.dxapp.rest.cmd.Barriersignon;
+import de.hhu.bsinfo.dxapp.rest.cmd.Barriersize;
 import de.hhu.bsinfo.dxapp.rest.cmd.Barrierstatus;
 import de.hhu.bsinfo.dxapp.rest.cmd.Chunkcreate;
 import de.hhu.bsinfo.dxapp.rest.cmd.Chunkdump;
@@ -126,6 +127,7 @@ public class RestServerApplication extends AbstractApplication {
         restCommands.add(new Barrieralloc());
         restCommands.add(new Barriersignon());
         restCommands.add(new Barrierfree());
+        restCommands.add(new Barriersize());
 
         for (AbstractRestCommand c : restCommands) {
             c.register(server, services);
