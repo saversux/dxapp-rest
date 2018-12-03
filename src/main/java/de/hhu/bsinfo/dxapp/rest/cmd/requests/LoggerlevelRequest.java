@@ -19,21 +19,19 @@ package de.hhu.bsinfo.dxapp.rest.cmd.requests;
 import com.google.gson.annotations.Expose;
 
 /**
- * Barriersize gson request
- *
  * @author Julien Bernhart, 2018-12-03
  */
-public class BarriersizeRequest {
+public class LoggerlevelRequest {
     @Expose
-    private String bid;
+    private String nid;
     @Expose
-    private int size;
+    private String level;
 
-    public String getBid() {
-        return bid;
+    public String getNid() {
+        return nid;
     }
 
-    public int getSize() {
-        return size;
+    public String getLevel() {
+        return level;
     }
 }

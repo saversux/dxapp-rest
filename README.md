@@ -61,6 +61,9 @@ Optional parameters are *cursive*.
 | barrierstatus | bid | get status of a barrier |
 | barrieralloc | size | alloc barrier with given size |
 | barriersignon | bid, *data* | sign into an existing barrier for synchronization |
+| barrierfree | bid | free an allocated barrier |
+| barriersize | bid, size | change the size of an existing barrier |
+| loggerlevel | level, *nid* | change the output level of the logger |
 | nodeshutdown | nid, *kill* | shutdown dxram node |
 
 ## Example

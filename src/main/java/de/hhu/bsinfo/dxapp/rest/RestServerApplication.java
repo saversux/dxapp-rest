@@ -40,6 +40,7 @@ import de.hhu.bsinfo.dxapp.rest.cmd.Chunklist;
 import de.hhu.bsinfo.dxapp.rest.cmd.Chunkput;
 import de.hhu.bsinfo.dxapp.rest.cmd.Chunkremove;
 import de.hhu.bsinfo.dxapp.rest.cmd.LogInfo;
+import de.hhu.bsinfo.dxapp.rest.cmd.Loggerlevel;
 import de.hhu.bsinfo.dxapp.rest.cmd.Lookuptree;
 import de.hhu.bsinfo.dxapp.rest.cmd.Metadata;
 import de.hhu.bsinfo.dxapp.rest.cmd.Monitoring;
@@ -128,6 +129,7 @@ public class RestServerApplication extends AbstractApplication {
         restCommands.add(new Barriersignon());
         restCommands.add(new Barrierfree());
         restCommands.add(new Barriersize());
+        restCommands.add(new Loggerlevel());
 
         for (AbstractRestCommand c : restCommands) {
             c.register(server, services);
