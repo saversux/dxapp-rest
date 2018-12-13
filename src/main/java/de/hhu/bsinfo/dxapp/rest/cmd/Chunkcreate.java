@@ -27,6 +27,7 @@ import de.hhu.bsinfo.dxapp.rest.cmd.requests.ChunkcreateRequest;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
 import de.hhu.bsinfo.dxutils.NodeID;
+import de.hhu.bsinfo.dxapp.rest.cmd.responses.*;
 
 /**
  * Create a chunk on specified node with specified size
@@ -76,7 +77,7 @@ public class Chunkcreate extends AbstractRestCommand {
 
             services.getService(ChunkService.class).create().create(nid, chunkIDs, 1, size);
 
-            return createMessage("ChunkID: " + ChunkID.toHexString(chunkIDs[0]));
+            return createMessageOfJavaObject(new ChunkCreateResponse(ChunkID.toHexString(chunkIDs[0])));
         });
     }
 }

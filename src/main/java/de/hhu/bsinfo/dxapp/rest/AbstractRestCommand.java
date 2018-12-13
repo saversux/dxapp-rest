@@ -69,6 +69,10 @@ public abstract class AbstractRestCommand {
         return gson.toJson(new ResponseMessage(message));
     }
 
+    public String createMessageOfJavaObject(Object javaObject) {
+        return gson.toJson(javaObject);
+    }
+
     /**
      * Creates a html page with autorefresh (only for statsprint command)
      * @param message

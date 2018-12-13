@@ -16,6 +16,7 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
+import de.hhu.bsinfo.dxapp.rest.cmd.responses.ChunkGetResponse;
 import spark.Service;
 
 import java.io.UnsupportedEncodingException;
@@ -137,7 +138,7 @@ public class Chunkget extends AbstractRestCommand {
                 default:
                     return createError("Unsuported data type", response);
             }
-            return gson.toJson(str);
+            return createMessageOfJavaObject(new ChunkGetResponse(str));
         });
     }
 }
