@@ -36,6 +36,11 @@ import de.hhu.bsinfo.dxram.chunk.data.ChunkAnon;
  * Get chunk with chunkid
  *
  * @author Julien Bernhart, 2018-11-26
+ * @author Maximilian Loose
+ * Modifications:
+
+ *   However, the functionality of these lines is already implemented in the client app
+ * - parsing of the the String cid is not necessary anymmore because cids are sent as longs
  */
 public class Chunkget extends AbstractRestCommand {
 
@@ -46,6 +51,7 @@ public class Chunkget extends AbstractRestCommand {
     @Override
     public void register(Service server, ServiceHelper services) {
         server.put("/chunkget", (request, response) -> {
+            long DEFAULT_VALUE_LONG = 0L;
             if (request.body().equals("")) {
                 return createError("No body in request.", response);
             }
@@ -55,19 +61,13 @@ public class Chunkget extends AbstractRestCommand {
             } catch (JsonSyntaxException e) {
                 return createError("Please put cid and type into body as json.", response);
             }
-            String stringCid = chunkgetRequest.getCid();
+            long cid = chunkgetRequest.getCid();
             String type = chunkgetRequest.getType();
 
-            if (stringCid == null || type == null) {
+            if (cid == DEFAULT_VALUE_LONG || type == null) {
                 return createError("Please put cid and type into body as json.",
                         response);
             }
-
-            if (!isChunkID(stringCid)) {
-                return createError("Invalid ChunkID", response);
-            }
-
-            long cid = ChunkID.parse(stringCid);
 
             ChunkAnon[] chunks = new ChunkAnon[1];
             if (services.getService(ChunkAnonService.class).getAnon().get(chunks, cid) != 1) {

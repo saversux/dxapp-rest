@@ -16,6 +16,7 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
+import de.hhu.bsinfo.dxapp.rest.cmd.responses.NodeListResponse;
 import spark.Service;
 
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class Nodelist extends AbstractRestCommand {
                 stringNodes.add(Integer.toHexString(node & 0xffff));
             }
 
-            return gson.toJson(stringNodes);
+            return createMessageOfJavaObject(new NodeListResponse(stringNodes));
         });
     }
 }

@@ -22,12 +22,15 @@ import com.google.gson.annotations.Expose;
  * Chunkremove gson request
  *
  * @author Julien Bernhart, 2018-11-26
+ * @author Maximilian Loose,
+ * Modifications:
+ * - cid is now saved as a long value
  */
 public class ChunkremoveRequest {
     @Expose
-    private String cid;
+    private long cid;
 
-    public String getCid() {
+    public long getCid() {
         return cid;
     }
 }

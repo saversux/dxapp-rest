@@ -16,6 +16,8 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
+import de.hhu.bsinfo.dxapp.rest.cmd.responses.MetadataResponseAllPeers;
+import de.hhu.bsinfo.dxapp.rest.cmd.responses.MetadataResponseOnePeer;
 import spark.Service;
 
 import java.util.ArrayList;
@@ -64,15 +66,15 @@ public class Metadata extends AbstractRestCommand {
 
             if (stringNid == null) {
                 List<Short> nodeIds = boot.getOnlineNodeIDs();
-                List<MetadataEntry> metadataEntries = new ArrayList<>();
+                List<MetadataResponseOnePeer> metadataEntries = new ArrayList<>();
                 for (Short nodeId : nodeIds) {
                     NodeRole curRole = boot.getNodeRole(nodeId);
                     if (curRole == NodeRole.SUPERPEER) {
                         String summary = lookup.getMetadataSummary(nodeId);
-                        metadataEntries.add(new MetadataEntry(NodeID.toHexString(nodeId), summary));
+                        metadataEntries.add(new MetadataResponseOnePeer(NodeID.toHexString(nodeId), summary));
                     }
                 }
-                return gson.toJson(metadataEntries);
+                return createMessageOfJavaObject(new MetadataResponseAllPeers(metadataEntries));
             } else {
                 if (!isNodeID(stringNid)) {
                     return createError("Invalid NodeID", response);
@@ -84,18 +86,10 @@ public class Metadata extends AbstractRestCommand {
                 }
 
                 String summary = lookup.getMetadataSummary(nid);
-                return gson.toJson(new MetadataEntry(NodeID.toHexString(nid), summary));
+                return createMessageOfJavaObject(new MetadataResponseOnePeer(NodeID.toHexString(nid), summary));
             }
         });
     }
 
-    private class MetadataEntry {
-        String nid;
-        String metadata;
 
-        public MetadataEntry(String nid, String metadata) {
-            this.nid = nid;
-            this.metadata = metadata;
-        }
-    }
 }

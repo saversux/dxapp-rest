@@ -16,6 +16,7 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
+import de.hhu.bsinfo.dxapp.rest.cmd.responses.NameGetResponse;
 import spark.Service;
 
 import com.google.gson.JsonSyntaxException;
@@ -62,7 +63,7 @@ public class Nameget extends AbstractRestCommand {
             if (cid == ChunkID.INVALID_ID) {
                 return createError("Could not get name entry for " + name + ", does not exist", response);
             } else {
-                return gson.toJson(ChunkID.toHexString(cid));
+                return createMessageOfJavaObject(new NameGetResponse(cid));
             }
 
         });

@@ -22,14 +22,17 @@ import com.google.gson.annotations.Expose;
  * Chunkget gson request
  *
  * @author Julien Bernhart, 2018-11-26
+ * @author Maximilian Loose,
+ * Modifications:
+ * - cid is now saved as a long value
  */
 public class ChunkgetRequest {
     @Expose
-    private String cid;
+    private long cid;
     @Expose
     private String type;
 
-    public String getCid() {
+    public long getCid() {
         return cid;
     }
 

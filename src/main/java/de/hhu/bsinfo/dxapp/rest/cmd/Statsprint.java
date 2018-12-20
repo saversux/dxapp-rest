@@ -16,6 +16,10 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
+import com.google.gson.JsonSyntaxException;
+import de.hhu.bsinfo.dxapp.rest.cmd.requests.ChunkgetRequest;
+import de.hhu.bsinfo.dxapp.rest.cmd.requests.StatsPrintRequest;
+import de.hhu.bsinfo.dxapp.rest.cmd.responses.StatsPrintResponse;
 import spark.Service;
 
 import java.io.ByteArrayOutputStream;
@@ -38,10 +42,11 @@ public class Statsprint extends AbstractRestCommand {
 
     @Override
     public void register(Service server, ServiceHelper services) {
-        server.get("/statsprint", (request, response) -> {
-            String interval = request.queryParams("interval");
-
-            if (interval == null) {
+        server.put("/statsprint", (request, response) -> {
+            StatsPrintRequest statsPrintRequest;
+            try {
+                statsPrintRequest = gson.fromJson(request.body(), StatsPrintRequest.class);
+            } catch (JsonSyntaxException e) {
                 response.status(400);
                 return toHtml("Please enter the refresh interval parameter: /statsprint?interval=[SECONDS]");
             }
@@ -50,7 +55,7 @@ public class Statsprint extends AbstractRestCommand {
 
             services.getService(StatisticsService.class).getManager().printStatistics(ps);
 
-            return htmlRefresh(os.toString(), interval);
+            return createMessageOfJavaObject(new StatsPrintResponse(os.toString(), statsPrintRequest.getInterval()));
         });
     }
 }

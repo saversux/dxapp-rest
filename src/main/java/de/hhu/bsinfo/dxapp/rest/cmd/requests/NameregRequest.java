@@ -22,10 +22,13 @@ import com.google.gson.annotations.Expose;
  * Namereg gson request
  *
  * @author Julien Bernhart, 2018-11-26
+ * @author Maximilian Loose,
+ * Modifications:
+ * - cid is now saved as a long value
  */
 public class NameregRequest {
     @Expose
-    private String cid;
+    private long cid;
     @Expose
     private String name;
 
@@ -33,7 +36,7 @@ public class NameregRequest {
         return name;
     }
 
-    public String getCid() {
+    public long getCid() {
         return cid;
     }
 }

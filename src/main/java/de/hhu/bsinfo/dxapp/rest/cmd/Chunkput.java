@@ -33,6 +33,12 @@ import de.hhu.bsinfo.dxram.chunk.data.ChunkAnon;
  * Put data with specific type on chunk
  *
  * @author Julien Bernhart, 2018-11-26
+ * @author Maximilian Loose,
+ * Modifications:
+ *   - parsing of the the String cid is not necessary anymmore because cids are sent as longs
+ *   - in the case of an succesful response a response body is not needed. The value of the status code is
+ *   enough to indicate a succesful response.
+ *
  */
 public class Chunkput extends AbstractRestCommand {
 
@@ -42,10 +48,8 @@ public class Chunkput extends AbstractRestCommand {
 
     @Override
     public void register(Service server, ServiceHelper services) {
+        long DEFAULT_VALUE_LONG = 0L;
         server.put("/chunkput", (request, response) -> {
-            if (request.body().equals("")) {
-                return createError("No body in request.", response);
-            }
             if (request.body().equals("")) {
                 return createError("No body in request.", response);
             }
@@ -56,22 +60,16 @@ public class Chunkput extends AbstractRestCommand {
                 return createError("Please put cid, type and data into body as json.", response);
             }
 
-            String stringCid = chunkputRequest.getCid();
+            Long cid = chunkputRequest.getCid();
             String data = chunkputRequest.getData();
             String type = chunkputRequest.getType();
 
             ChunkAnonService chunkAnon = services.getService(ChunkAnonService.class);
             int offset = 0;
 
-            if (stringCid == null || data == null || type == null) {
+            if (cid == DEFAULT_VALUE_LONG || data == null || type == null) {
                 return createError("Please put cid, type and data into body as json.", response);
             }
-
-            if (!isChunkID(stringCid)) {
-                return createError("Invalid ChunkID", response);
-            }
-
-            long cid = ChunkID.parse(stringCid);
 
             if (cid == ChunkID.INVALID_ID) {
                 return createError("No cid specified", response);
@@ -182,7 +180,8 @@ public class Chunkput extends AbstractRestCommand {
                 return createError("Put to chunk " + ChunkID.toHexString(cid) + " failed: " + chunk.getState(),
                         response);
             } else {
-                return createMessage("Put to chunk " + ChunkID.toHexString(cid) + " successful");
+                response.status(200);
+                return "";
             }
         });
     }

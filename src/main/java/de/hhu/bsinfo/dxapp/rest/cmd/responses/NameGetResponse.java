@@ -4,13 +4,13 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Maximilian Loose
- * created a new response class for sending responses after a chunkcreate request
+ * created a new response class for sending responses after a nameget request
  */
-public class ChunkCreateResponse {
+public class NameGetResponse {
     @SerializedName("cid")
     private long m_cid;
 
-    public ChunkCreateResponse(long p_cid) {
+    public NameGetResponse(long p_cid) {
         this.m_cid = p_cid;
     }
 }

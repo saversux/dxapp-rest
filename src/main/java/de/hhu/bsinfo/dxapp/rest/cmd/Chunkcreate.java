@@ -33,6 +33,11 @@ import de.hhu.bsinfo.dxapp.rest.cmd.responses.*;
  * Create a chunk on specified node with specified size
  *
  * @author Julien Bernhart, 2018-11-26
+ * @author Maximilian Loose,
+ * Modifications:
+ * - chunks IDs are now sent as long values instead of strings
+ * - response body is sent with createMessageOfJavaObject method
+ *
  */
 public class Chunkcreate extends AbstractRestCommand {
 
@@ -77,7 +82,7 @@ public class Chunkcreate extends AbstractRestCommand {
 
             services.getService(ChunkService.class).create().create(nid, chunkIDs, 1, size);
 
-            return createMessageOfJavaObject(new ChunkCreateResponse(ChunkID.toHexString(chunkIDs[0])));
+            return createMessageOfJavaObject(new ChunkCreateResponse(chunkIDs[0]));
         });
     }
 }

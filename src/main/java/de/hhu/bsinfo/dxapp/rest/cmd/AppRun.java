@@ -31,6 +31,9 @@ import de.hhu.bsinfo.dxutils.NodeID;
  * Start app on remote node
  *
  * @author Julien Bernhart, 2018-11-26
+ * @author Maximilian Loose
+ * Modifications:
+ * - in the case of a successful response, no response body is sent
  */
 public class AppRun extends AbstractRestCommand {
     public AppRun() {
@@ -71,8 +74,8 @@ public class AppRun extends AbstractRestCommand {
             if (!appService.startApplication(nid, appname, null)) {
                 return createError("Starting " + appname + " failed...", response);
             }
-
-            return createMessage(appname + " started successful");
+            response.status(200);
+            return "";
         });
     }
 }

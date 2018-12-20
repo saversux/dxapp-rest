@@ -16,6 +16,7 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
+import de.hhu.bsinfo.dxapp.rest.cmd.responses.NodeInfoResponse;
 import spark.Service;
 
 import com.google.gson.JsonSyntaxException;
@@ -67,10 +68,13 @@ public class Nodeinfo extends AbstractRestCommand {
                 if (!bootService.isNodeOnline(nid)) {
                     return createError("Node not available.", response);
                 } else {
-                    return gson.toJson(new NodeinfoRest(NodeID.toHexString(nid),
+                    NodeInfoResponse nodeInfoResponse = new NodeInfoResponse(
+                            NodeID.toHexString(nid),
                             bootService.getNodeRole(nid).toString(),
                             bootService.getNodeAddress(nid).toString(),
-                            NodeCapabilities.toString(bootService.getNodeCapabilities(nid))));
+                            NodeCapabilities.toString(bootService.getNodeCapabilities(nid))
+                    );
+                    return createMessageOfJavaObject(nodeInfoResponse);
                 }
             } else {
                 return createError("NID invalid", response);
@@ -79,21 +83,6 @@ public class Nodeinfo extends AbstractRestCommand {
         });
     }
 
-    /**
-     * NodeinfoRest gson Object
-     */
-    private class NodeinfoRest {
-        String nid;
-        String role;
-        String address;
-        String capabilities;
 
-        public NodeinfoRest(String nid, String role, String address, String capabilities) {
-            this.nid = nid;
-            this.role = role;
-            this.address = address;
-            this.capabilities = capabilities;
-        }
-    }
 
 }

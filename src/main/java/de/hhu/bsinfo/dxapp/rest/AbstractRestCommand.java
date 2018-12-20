@@ -74,6 +74,7 @@ public abstract class AbstractRestCommand {
     }
 
     /**
+     * MODIFICATION!
      * Creates a html page with autorefresh (only for statsprint command)
      * @param message
      * @param interval
