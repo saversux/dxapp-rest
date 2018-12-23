@@ -38,6 +38,9 @@ import de.hhu.bsinfo.dxutils.NodeID;
  * Get summary of all or one superpeer's metadata
  *
  * @author Julien Bernhart, 2018-11-26
+ * @author Maximilian Loose,
+ *  Modifications:
+ *  - response body is sent with createMessageOfJavaObject method
  */
 public class Metadata extends AbstractRestCommand {
     public Metadata() {

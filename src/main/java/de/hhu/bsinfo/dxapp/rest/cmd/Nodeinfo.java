@@ -32,6 +32,9 @@ import de.hhu.bsinfo.dxutils.NodeID;
  * Get information about a node in the network
  *
  * @author Julien Bernhart, 2018-11-26
+ * @author Maximilian Loose
+ *  Modifications:
+ *  - response body is sent with createMessageOfJavaObject method
  */
 public class Nodeinfo extends AbstractRestCommand {
     public Nodeinfo() {

@@ -30,6 +30,7 @@ import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
  * Register a Chunk in the nameservice.
  *
  * @author Julien Bernhart, 2018-11-26
+ * @author Maximilian Loose
  * - parsing of the the String cid is not necessary anymmore because cids are sent as longs
  */
 public class Namereg extends AbstractRestCommand {

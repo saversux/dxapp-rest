@@ -33,6 +33,9 @@ import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
  * Get all nameservice entries
  *
  * @author Julien Bernhart, 2018-11-26
+ * @author Maximilian Loose
+ *  * Modifications:
+ *  * - response body is sent with createMessageOfJavaObject method
  */
 public class Namelist extends AbstractRestCommand {
 

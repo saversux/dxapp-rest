@@ -26,6 +26,9 @@ import com.google.gson.GsonBuilder;
  * Command Class, this is used to create new DXRAM Rest commands
  *
  * @author Julien Bernhart, 2018-11-26
+ * @author Maximilian Loose
+ * Modifications:
+ * - added createMessageOfJavaObject
  */
 public abstract class AbstractRestCommand {
     protected Gson gson;

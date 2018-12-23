@@ -38,8 +38,6 @@ import de.hhu.bsinfo.dxram.chunk.data.ChunkAnon;
  * @author Julien Bernhart, 2018-11-26
  * @author Maximilian Loose
  * Modifications:
-
- *   However, the functionality of these lines is already implemented in the client app
  * - parsing of the the String cid is not necessary anymmore because cids are sent as longs
  */
 public class Chunkget extends AbstractRestCommand {

@@ -32,6 +32,9 @@ import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
  * Get chunk by name from nameservice
  *
  * @author Julien Bernhart, 2018-11-26
+ * @author Maximilian Loose
+ * Modifications:
+ * - response body is sent with createMessageOfJavaObject method
  */
 public class Nameget extends AbstractRestCommand {
     public Nameget() {

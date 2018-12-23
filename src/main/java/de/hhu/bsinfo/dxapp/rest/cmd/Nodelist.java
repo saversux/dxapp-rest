@@ -30,6 +30,9 @@ import de.hhu.bsinfo.dxram.boot.BootService;
  * Get a list of all nodes
  *
  * @author Julien Bernhart, 2018-11-26
+ * @author Maximilian Loose
+ *  Modifications:
+ *  - response body is sent with createMessageOfJavaObject method
  */
 public class Nodelist extends AbstractRestCommand {
 

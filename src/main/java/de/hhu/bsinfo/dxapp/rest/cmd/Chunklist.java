@@ -32,6 +32,9 @@ import de.hhu.bsinfo.dxutils.NodeID;
  * List all chunks on a node
  *
  * @author Julien Bernhart, 2018-11-26
+ * @author Maximilian Loose
+ * Modifications:
+ * - response body is sent with createMessageOfJavaObject method
  */
 public class Chunklist extends AbstractRestCommand {
 

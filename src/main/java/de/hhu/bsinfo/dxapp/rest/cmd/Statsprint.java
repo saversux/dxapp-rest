@@ -33,6 +33,11 @@ import de.hhu.bsinfo.dxram.stats.StatisticsService;
  * Return HTML page with autorefresh, which contains information about the cluster
  *
  * @author Julien Bernhart, 2018-11-26
+ * @author Maximilian Loose
+ *  Modifications:
+ *  - response body is sent with createMessageOfJavaObject method
+ *  - changed from get to put
+ *  - htmlRefresh function not necessary anymore @see AbstractRestCommand
  */
 public class Statsprint extends AbstractRestCommand {
 
