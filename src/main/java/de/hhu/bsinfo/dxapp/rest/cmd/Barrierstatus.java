@@ -44,7 +44,7 @@ public class Barrierstatus extends AbstractRestCommand {
 
     @Override
     public void register(Service server, ServiceHelper services) {
-        server.put("/barrierstatus", (request, response) -> {
+        server.get("/barrierstatus", (request, response) -> {
             if (request.body().equals("")) {
                 return createError("No body in request.", response);
             }

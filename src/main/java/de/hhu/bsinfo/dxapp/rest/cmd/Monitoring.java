@@ -40,7 +40,7 @@ public class Monitoring extends AbstractRestCommand {
 
     @Override
     public void register(Service server, ServiceHelper services) {
-        server.put("/monitor", (request, response) -> {
+        server.get("/monitor", (request, response) -> {
             if (request.body().equals("")) {
                 return createError("No body in request.", response);
             }

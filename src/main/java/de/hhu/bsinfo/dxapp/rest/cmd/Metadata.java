@@ -49,7 +49,7 @@ public class Metadata extends AbstractRestCommand {
 
     @Override
     public void register(Service server, ServiceHelper services) {
-        server.put("metadata", (request, response) -> {
+        server.get("metadata", (request, response) -> {
             MetadataRequest metadataRequest;
             try {
                 metadataRequest = gson.fromJson(request.body(), MetadataRequest.class);

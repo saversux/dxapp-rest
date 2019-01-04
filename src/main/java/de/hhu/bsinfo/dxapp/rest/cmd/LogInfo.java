@@ -39,7 +39,7 @@ public class LogInfo extends AbstractRestCommand {
 
     @Override
     public void register(Service server, ServiceHelper services) {
-        server.put("/loginfo", (request, response) -> {
+        server.get("/loginfo", (request, response) -> {
             if (request.body().equals("")) {
                 return createError("No body in request.", response);
             }

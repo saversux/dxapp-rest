@@ -43,7 +43,7 @@ public class Nodeinfo extends AbstractRestCommand {
 
     @Override
     public void register(Service server, ServiceHelper services) {
-        server.put("/nodeinfo", (request, response) -> {
+        server.get("/nodeinfo", (request, response) -> {
             if (request.body().equals("")) {
                 return createError("No body in request.", response);
             }

@@ -39,7 +39,7 @@ public class Lookuptree extends AbstractRestCommand {
 
     @Override
     public void register(Service server, ServiceHelper services) {
-        server.put("/lookuptree", (request, response) -> {
+        server.get("/lookuptree", (request, response) -> {
             if (request.body().equals("")) {
                 return createError("No body in request.", response);
             }

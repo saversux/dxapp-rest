@@ -47,7 +47,7 @@ public class Statsprint extends AbstractRestCommand {
 
     @Override
     public void register(Service server, ServiceHelper services) {
-        server.put("/statsprint", (request, response) -> {
+        server.get("/statsprint", (request, response) -> {
             StatsPrintRequest statsPrintRequest;
             try {
                 statsPrintRequest = gson.fromJson(request.body(), StatsPrintRequest.class);
