@@ -16,6 +16,7 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
+import de.hhu.bsinfo.dxapp.rest.cmd.responses.ChunkListResponse;
 import spark.Service;
 
 import com.google.gson.JsonSyntaxException;
@@ -27,6 +28,14 @@ import de.hhu.bsinfo.dxapp.rest.cmd.requests.ChunklistRequest;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
 import de.hhu.bsinfo.dxutils.NodeID;
 
+/**
+ * List all chunks on a node
+ *
+ * @author Julien Bernhart, 2018-11-26
+ * @author Maximilian Loose
+ * Modifications:
+ * - response body is sent with createMessageOfJavaObject method
+ */
 public class Chunklist extends AbstractRestCommand {
 
     public Chunklist() {
@@ -62,7 +71,7 @@ public class Chunklist extends AbstractRestCommand {
                         .toString();
                 String migrated = services.getService(ChunkService.class).cidStatus().getAllMigratedChunkIDRanges(nid)
                         .toString();
-                return gson.toJson(new ChunkRangeRest(local, migrated));
+                return createMessageOfJavaObject(new ChunkListResponse(local, migrated));
             } else {
                 return createError("NID invalid", response);
             }
@@ -70,13 +79,4 @@ public class Chunklist extends AbstractRestCommand {
         });
     }
 
-    private class ChunkRangeRest {
-        String localChunkRanges;
-        String migratedChunkRanges;
-
-        public ChunkRangeRest(String localChunkRanges, String migratedChunkRanges) {
-            this.localChunkRanges = localChunkRanges;
-            this.migratedChunkRanges = migratedChunkRanges;
-        }
-    }
 }

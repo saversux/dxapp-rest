@@ -16,18 +16,26 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
+import de.hhu.bsinfo.dxapp.rest.cmd.responses.NodeInfoResponse;
 import spark.Service;
 
 import com.google.gson.JsonSyntaxException;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
-import de.hhu.bsinfo.dxapp.rest.cmd.requests.NameregRequest;
 import de.hhu.bsinfo.dxapp.rest.cmd.requests.NodeinfoRequest;
 import de.hhu.bsinfo.dxram.boot.BootService;
 import de.hhu.bsinfo.dxram.util.NodeCapabilities;
 import de.hhu.bsinfo.dxutils.NodeID;
 
+/**
+ * Get information about a node in the network
+ *
+ * @author Julien Bernhart, 2018-11-26
+ * @author Maximilian Loose
+ *  Modifications:
+ *  - response body is sent with createMessageOfJavaObject method
+ */
 public class Nodeinfo extends AbstractRestCommand {
     public Nodeinfo() {
         setInfo("nodeinfo", "nid", "Get information about a node in the network");
@@ -63,10 +71,13 @@ public class Nodeinfo extends AbstractRestCommand {
                 if (!bootService.isNodeOnline(nid)) {
                     return createError("Node not available.", response);
                 } else {
-                    return gson.toJson(new NodeinfoRest(NodeID.toHexString(nid),
+                    NodeInfoResponse nodeInfoResponse = new NodeInfoResponse(
+                            NodeID.toHexString(nid),
                             bootService.getNodeRole(nid).toString(),
                             bootService.getNodeAddress(nid).toString(),
-                            NodeCapabilities.toString(bootService.getNodeCapabilities(nid))));
+                            NodeCapabilities.toString(bootService.getNodeCapabilities(nid))
+                    );
+                    return createMessageOfJavaObject(nodeInfoResponse);
                 }
             } else {
                 return createError("NID invalid", response);
@@ -75,18 +86,6 @@ public class Nodeinfo extends AbstractRestCommand {
         });
     }
 
-    private class NodeinfoRest {
-        String nid;
-        String role;
-        String address;
-        String capabilities;
 
-        public NodeinfoRest(String nid, String role, String address, String capabilities) {
-            this.nid = nid;
-            this.role = role;
-            this.address = address;
-            this.capabilities = capabilities;
-        }
-    }
 
 }

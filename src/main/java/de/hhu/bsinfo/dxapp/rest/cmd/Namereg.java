@@ -26,6 +26,13 @@ import de.hhu.bsinfo.dxapp.rest.cmd.requests.NameregRequest;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
 import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
 
+/**
+ * Register a Chunk in the nameservice.
+ *
+ * @author Julien Bernhart, 2018-11-26
+ * @author Maximilian Loose
+ * - parsing of the the String cid is not necessary anymmore because cids are sent as longs
+ */
 public class Namereg extends AbstractRestCommand {
 
     public Namereg() {
@@ -34,7 +41,7 @@ public class Namereg extends AbstractRestCommand {
 
     @Override
     public void register(Service server, ServiceHelper services) {
-        server.get("/namereg", (request, response) -> {
+        server.put("/namereg", (request, response) -> {
             if (request.body().equals("")) {
                 return createError("No body in request.", response);
             }
@@ -44,23 +51,17 @@ public class Namereg extends AbstractRestCommand {
             } catch (JsonSyntaxException e) {
                 return createError("Please put name and cid into body as json.", response);
             }
-            String stringCid = nameregRequest.getCid();
+            Long cid  = nameregRequest.getCid();
             String name = nameregRequest.getName();
 
-            if (stringCid == null || name == null) {
+            if (cid == 0L || name == null) {
                 return createError("Please put name and cid into body as json.",
                         response);
             }
-
-            if (!isChunkID(stringCid)) {
-                return createError("Invalid ChunkID", response);
-            }
-
-            long cid = ChunkID.parse(stringCid);
-
             if (cid != ChunkID.INVALID_ID) {
                 services.getService(NameserviceService.class).register(cid, name);
-                return createMessage("Registered '" + name + "'");
+                response.status(200);
+                return "";
             } else {
                 return createError("CID invalid", response);
             }

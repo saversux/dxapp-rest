@@ -16,6 +16,7 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
+import de.hhu.bsinfo.dxapp.rest.cmd.responses.NameGetResponse;
 import spark.Service;
 
 import com.google.gson.JsonSyntaxException;
@@ -27,6 +28,14 @@ import de.hhu.bsinfo.dxapp.rest.cmd.requests.NamegetRequest;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
 import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
 
+/**
+ * Get chunk by name from nameservice
+ *
+ * @author Julien Bernhart, 2018-11-26
+ * @author Maximilian Loose
+ * Modifications:
+ * - response body is sent with createMessageOfJavaObject method
+ */
 public class Nameget extends AbstractRestCommand {
     public Nameget() {
         setInfo("nameget", "name", "Get chunk by name from nameservice.");
@@ -57,7 +66,7 @@ public class Nameget extends AbstractRestCommand {
             if (cid == ChunkID.INVALID_ID) {
                 return createError("Could not get name entry for " + name + ", does not exist", response);
             } else {
-                return gson.toJson(ChunkID.toHexString(cid));
+                return createMessageOfJavaObject(new NameGetResponse(cid));
             }
 
         });

@@ -16,6 +16,11 @@
 
 package de.hhu.bsinfo.dxapp.rest;
 
+/**
+ * Basic response
+ *
+ * @author Julien Bernhart, 2018-11-26
+ */
 public class ResponseMessage {
     String message;
 

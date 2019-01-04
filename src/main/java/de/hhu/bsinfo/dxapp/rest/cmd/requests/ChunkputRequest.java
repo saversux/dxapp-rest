@@ -18,9 +18,17 @@ package de.hhu.bsinfo.dxapp.rest.cmd.requests;
 
 import com.google.gson.annotations.Expose;
 
+/**
+ * Chunkput gson request
+ *
+ * @author Julien Bernhart, 2018-11-26
+ * @author Maximilian Loose,
+ * Modifications:
+ * cid is now saved as a long value
+ */
 public class ChunkputRequest {
     @Expose
-    private String cid;
+    private long cid;
     @Expose
     private String data;
     @Expose
@@ -30,7 +38,7 @@ public class ChunkputRequest {
         return data;
     }
 
-    public String getCid() {
+    public long getCid() {
         return cid;
     }
 

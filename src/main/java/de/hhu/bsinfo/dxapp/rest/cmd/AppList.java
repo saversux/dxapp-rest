@@ -16,12 +16,21 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
+import de.hhu.bsinfo.dxapp.rest.cmd.responses.AppListResponse;
 import spark.Service;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxram.app.ApplicationService;
 
+/**
+ * Lists available applications to run on a remote peer
+ *
+ * @author Julien Bernhart, 2018-11-26
+ * @author Maximilian Loose
+ * Modifications:
+ * - response body is sent with createMessageOfJavaObject method
+ */
 public class AppList extends AbstractRestCommand {
     public AppList() {
         setInfo("applist", "nid", "Lists available applications to run on a remote peer");
@@ -44,7 +53,8 @@ public class AppList extends AbstractRestCommand {
                 return createError("NodeID invalid", response);
             }*/
 
-            return gson.toJson(services.getService(ApplicationService.class).getLoadedApplicationClasses());
+            return createMessageOfJavaObject(new AppListResponse(services.getService(ApplicationService.class).
+                    getLoadedApplicationClasses()));
         });
     }
 }

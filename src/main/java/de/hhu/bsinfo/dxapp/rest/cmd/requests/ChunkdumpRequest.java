@@ -18,17 +18,25 @@ package de.hhu.bsinfo.dxapp.rest.cmd.requests;
 
 import com.google.gson.annotations.Expose;
 
+/**
+ * Chunkdump gson request
+ *
+ * @author Julien Bernhart, 2018-11-26
+ * @author Maximilian Loose,
+ * Modifications:
+ * - cid is now saved as a long value
+ */
 public class ChunkdumpRequest {
     @Expose
     private String name;
     @Expose
-    private String cid;
+    private long cid;
 
     public String getName() {
         return name;
     }
 
-    public String getCid() {
+    public long getCid() {
         return cid;
     }
 }

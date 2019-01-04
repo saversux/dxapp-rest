@@ -16,6 +16,7 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
+import de.hhu.bsinfo.dxapp.rest.cmd.responses.NodeListResponse;
 import spark.Service;
 
 import java.util.ArrayList;
@@ -25,6 +26,14 @@ import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxram.boot.BootService;
 
+/**
+ * Get a list of all nodes
+ *
+ * @author Julien Bernhart, 2018-11-26
+ * @author Maximilian Loose
+ *  Modifications:
+ *  - response body is sent with createMessageOfJavaObject method
+ */
 public class Nodelist extends AbstractRestCommand {
 
     public Nodelist() {
@@ -41,7 +50,7 @@ public class Nodelist extends AbstractRestCommand {
                 stringNodes.add(Integer.toHexString(node & 0xffff));
             }
 
-            return gson.toJson(stringNodes);
+            return createMessageOfJavaObject(new NodeListResponse(stringNodes));
         });
     }
 }

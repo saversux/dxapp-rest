@@ -27,6 +27,11 @@ import de.hhu.bsinfo.dxapp.rest.cmd.requests.LogInfoRequest;
 import de.hhu.bsinfo.dxram.log.LogService;
 import de.hhu.bsinfo.dxutils.NodeID;
 
+/**
+ * Prints the log utilization of a given peer
+ *
+ * @author Julien Bernhart, 2018-11-26
+ */
 public class LogInfo extends AbstractRestCommand {
     public LogInfo() {
         setInfo("loginfo", "nid", "Prints the log utilization of given peer");

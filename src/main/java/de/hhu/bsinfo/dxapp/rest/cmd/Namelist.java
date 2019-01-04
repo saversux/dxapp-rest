@@ -16,6 +16,8 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
+import de.hhu.bsinfo.dxapp.rest.cmd.responses.NameListResponse;
+import org.w3c.dom.NameList;
 import spark.Service;
 
 import java.util.ArrayList;
@@ -27,6 +29,14 @@ import de.hhu.bsinfo.dxmem.data.ChunkID;
 import de.hhu.bsinfo.dxram.nameservice.NameserviceEntryStr;
 import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
 
+/**
+ * Get all nameservice entries
+ *
+ * @author Julien Bernhart, 2018-11-26
+ * @author Maximilian Loose
+ *  * Modifications:
+ *  * - response body is sent with createMessageOfJavaObject method
+ */
 public class Namelist extends AbstractRestCommand {
 
     public Namelist() {
@@ -36,29 +46,9 @@ public class Namelist extends AbstractRestCommand {
     @Override
     public void register(Service server, ServiceHelper services) {
         server.get("/namelist", (request, response) -> {
-            NamelistRest entries = new NamelistRest(services.getService(NameserviceService.class).getAllEntries());
-            return gson.toJson(entries);
+            NameListResponse entries = new NameListResponse(services.getService(NameserviceService.class).getAllEntries());
+            return createMessageOfJavaObject(entries);
         });
     }
 
-    private class NamelistRest {
-        List<NamelistEntryRest> namelist;
-
-        public NamelistRest(ArrayList<NameserviceEntryStr> entries) {
-            namelist = new ArrayList<NamelistEntryRest>();
-            for (NameserviceEntryStr entry : entries) {
-                namelist.add(new NamelistEntryRest(entry));
-            }
-        }
-    }
-
-    private class NamelistEntryRest {
-        String name;
-        String cid;
-
-        public NamelistEntryRest(NameserviceEntryStr entry) {
-            this.name = entry.getName();
-            this.cid = ChunkID.toHexString(entry.getValue());
-        }
-    }
 }

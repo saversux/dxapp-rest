@@ -28,6 +28,11 @@ import de.hhu.bsinfo.dxram.monitoring.MonitoringDataStructure;
 import de.hhu.bsinfo.dxram.monitoring.MonitoringService;
 import de.hhu.bsinfo.dxutils.NodeID;
 
+/**
+ * Get monitoring data of given peer
+ *
+ * @author Julien Bernhart, 2018-11-26
+ */
 public class Monitoring extends AbstractRestCommand {
     public Monitoring() {
         setInfo("monitoring", "nid", "Get monitoring data of given peer");

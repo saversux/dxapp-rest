@@ -27,6 +27,14 @@ import de.hhu.bsinfo.dxapp.rest.cmd.requests.ChunkputRequest;
 import de.hhu.bsinfo.dxram.app.ApplicationService;
 import de.hhu.bsinfo.dxutils.NodeID;
 
+/**
+ * Start app on remote node
+ *
+ * @author Julien Bernhart, 2018-11-26
+ * @author Maximilian Loose
+ * Modifications:
+ * - in the case of a successful response, no response body is sent
+ */
 public class AppRun extends AbstractRestCommand {
     public AppRun() {
         setInfo("apprun", "nid, app", "Start app on remote node");
@@ -34,7 +42,7 @@ public class AppRun extends AbstractRestCommand {
 
     @Override
     public void register(Service server, ServiceHelper services) {
-        server.get("/apprun", (request, response) -> {
+        server.put("/apprun", (request, response) -> {
             if (request.body().equals("")) {
                 return createError("No body in request.", response);
             }
@@ -66,8 +74,8 @@ public class AppRun extends AbstractRestCommand {
             if (!appService.startApplication(nid, appname, null)) {
                 return createError("Starting " + appname + " failed...", response);
             }
-
-            return createMessage(appname + " started successful");
+            response.status(200);
+            return "";
         });
     }
 }

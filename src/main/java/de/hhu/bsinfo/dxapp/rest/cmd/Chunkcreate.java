@@ -27,7 +27,18 @@ import de.hhu.bsinfo.dxapp.rest.cmd.requests.ChunkcreateRequest;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
 import de.hhu.bsinfo.dxutils.NodeID;
+import de.hhu.bsinfo.dxapp.rest.cmd.responses.*;
 
+/**
+ * Create a chunk on specified node with specified size
+ *
+ * @author Julien Bernhart, 2018-11-26
+ * @author Maximilian Loose,
+ * Modifications:
+ * - chunks IDs are now sent as long values instead of strings
+ * - response body is sent with createMessageOfJavaObject method
+ *
+ */
 public class Chunkcreate extends AbstractRestCommand {
 
     public Chunkcreate() {
@@ -36,7 +47,7 @@ public class Chunkcreate extends AbstractRestCommand {
 
     @Override
     public void register(Service server, ServiceHelper services) {
-        server.get("/chunkcreate", (request, response) -> {
+        server.put("/chunkcreate", (request, response) -> {
             if (request.body().equals("")) {
                 return createError("No body in request.", response);
             }
@@ -71,7 +82,7 @@ public class Chunkcreate extends AbstractRestCommand {
 
             services.getService(ChunkService.class).create().create(nid, chunkIDs, 1, size);
 
-            return createMessage("ChunkID: " + ChunkID.toHexString(chunkIDs[0]));
+            return createMessageOfJavaObject(new ChunkCreateResponse(chunkIDs[0]));
         });
     }
 }

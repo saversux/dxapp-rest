@@ -27,6 +27,11 @@ import de.hhu.bsinfo.dxram.lookup.LookupService;
 import de.hhu.bsinfo.dxram.lookup.overlay.storage.LookupTree;
 import de.hhu.bsinfo.dxutils.NodeID;
 
+/**
+ * Get the look up tree of a specified node
+ *
+ * @author Julien Bernhart, 2018-11-26
+ */
 public class Lookuptree extends AbstractRestCommand {
     public Lookuptree() {
         setInfo("lookuptree", "nid", "Get the look up tree of a specified node");

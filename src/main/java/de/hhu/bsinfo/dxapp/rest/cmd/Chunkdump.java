@@ -33,6 +33,15 @@ import de.hhu.bsinfo.dxmem.data.ChunkID;
 import de.hhu.bsinfo.dxram.chunk.ChunkAnonService;
 import de.hhu.bsinfo.dxram.chunk.data.ChunkAnon;
 
+/**
+ * Dump chunk to file
+ *
+ * @author Julien Bernhart, 2018-11-26
+ *  @author Maximilian Loose
+ *  Modifications:
+ *  - in the case of a successful response, no response body is sent
+ *  - parsing of the the String cid is not necessary anymmore because cids are sent as longs
+ */
 public class Chunkdump extends AbstractRestCommand {
 
     public Chunkdump() {
@@ -41,7 +50,7 @@ public class Chunkdump extends AbstractRestCommand {
 
     @Override
     public void register(Service server, ServiceHelper services) {
-        server.get("/chunkdump", (request, response) -> {
+        server.put("/chunkdump", (request, response) -> {
             if (request.body().equals("")) {
                 return createError("No body in request.", response);
             }
@@ -52,17 +61,11 @@ public class Chunkdump extends AbstractRestCommand {
                 return createError("Please put cid and name into body as json.", response);
             }
             String fileName = chunkdumpRequest.getName();
-            String stringCid = chunkdumpRequest.getCid();
+            Long cid = chunkdumpRequest.getCid();
 
-            if (stringCid == null || fileName == null) {
+            if (cid == 0L || fileName == null) {
                 return createError("Please put cid and name into body as json.", response);
             }
-
-            if (!isChunkID(stringCid)) {
-                return createError("Invalid ChunkID", response);
-            }
-
-            long cid = ChunkID.parse(stringCid);
 
             if (cid == ChunkID.INVALID_ID) {
                 return createError("Invalid ChunkID", response);
@@ -110,7 +113,8 @@ public class Chunkdump extends AbstractRestCommand {
             } catch (final IOException ignore) {
 
             }
-            return createMessage("Chunk dumped");
+            response.status(200);
+            return "";
         });
     }
 }

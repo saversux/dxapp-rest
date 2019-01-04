@@ -27,6 +27,14 @@ import de.hhu.bsinfo.dxapp.rest.cmd.requests.ChunkremoveRequest;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
 
+/**
+ * Remove chunk with specified chunkid
+ *
+ * @author Julien Bernhart, 2018-11-26
+ * @author Maximilian Loose,
+ * Modifications:
+ * - parsing of the the String cid is not necessary anymmore because cids are sent as longs
+ */
 public class Chunkremove extends AbstractRestCommand {
     public Chunkremove() {
         setInfo("chunkremove", "cid", "Remove chunk with CID");
@@ -34,7 +42,7 @@ public class Chunkremove extends AbstractRestCommand {
 
     @Override
     public void register(Service server, ServiceHelper services) {
-        server.get("/chunkremove", (request, response) -> {
+        server.put("/chunkremove", (request, response) -> {
             if (request.body().equals("")) {
                 return createError("No body in request.", response);
             }
@@ -44,28 +52,21 @@ public class Chunkremove extends AbstractRestCommand {
             } catch (JsonSyntaxException e) {
                 return createError("Please put cid into body as json.", response);
             }
-            String stringCid = chunkremoveRequest.getCid();
+            Long cid = chunkremoveRequest.getCid();
 
-            if (stringCid == null) {
+            if (cid == 0L) {
                 return createError("Please put cid into body as json.", response);
             }
 
-            if (!isChunkID(stringCid)) {
-                return createError("Invalid ChunkID", response);
-            }
 
-            long cid = ChunkID.parse(stringCid);
-
-            if (!isChunkID(stringCid)) {
-                return createError("Invalid ChunkID", response);
-            } else if (ChunkID.getLocalID(cid) == 0) {
+            if (ChunkID.getLocalID(cid) == 0) {
                 return createError("Removal of index chunk is not allowed", response);
             }
-
             if (services.getService(ChunkService.class).remove().remove(cid) != 1) {
                 return createError("Removing chunk with ID " + ChunkID.toHexString(cid) + " failed", response);
             } else {
-                return createMessage("Chunk " + ChunkID.toHexString(cid) + " removed");
+                response.status(200);
+                return "";
             }
         });
     }
