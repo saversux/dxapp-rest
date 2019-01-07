@@ -66,6 +66,8 @@ Optional parameters are *cursive*.
 | barriersize | PUT | bid, size | change the size of an existing barrier |
 | loggerlevel | PUT | level, *nid* | change the output level of the logger |
 | nodeshutdown | PUT | nid, *kill* | shutdown dxram node |
+| compgrpls | GET | - | list all compute groups |
+| compgrpstatus | GET | cgid | get status of specific compute group |
 
 ## Example
 
