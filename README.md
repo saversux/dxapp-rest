@@ -42,6 +42,7 @@ Optional parameters are *cursive*.
 | ------- | ------ |--------- | ---- | ---- |
 | applist | GET | - | lists running applications |
 | apprun | PUT | nid, appname | starts a dxapp on a remote peer |
+| appstats | GET | - | shows information about all running applications |
 | chunkcreate | PUT |  nid, size | creates a new chunk on remote peer |
 | chunkdump | PUT |  name, cid | create chunkdump with specified filename |
 | chunkget | GET |  cid, type | get chunk, supported types: str,byte,short,int,long |
