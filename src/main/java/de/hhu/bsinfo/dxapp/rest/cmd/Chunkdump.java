@@ -27,7 +27,6 @@ import com.google.gson.JsonSyntaxException;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
-import de.hhu.bsinfo.dxapp.rest.cmd.requests.AppRunRequest;
 import de.hhu.bsinfo.dxapp.rest.cmd.requests.ChunkdumpRequest;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
 import de.hhu.bsinfo.dxram.chunk.ChunkAnonService;

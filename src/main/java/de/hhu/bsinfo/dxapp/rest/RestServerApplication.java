@@ -28,6 +28,7 @@ import org.apache.logging.log4j.Logger;
 
 import de.hhu.bsinfo.dxapp.rest.cmd.AppList;
 import de.hhu.bsinfo.dxapp.rest.cmd.AppRun;
+import de.hhu.bsinfo.dxapp.rest.cmd.AppStats;
 import de.hhu.bsinfo.dxapp.rest.cmd.Barrieralloc;
 import de.hhu.bsinfo.dxapp.rest.cmd.Barrierfree;
 import de.hhu.bsinfo.dxapp.rest.cmd.Barriersignon;
@@ -130,6 +131,7 @@ public class RestServerApplication extends AbstractApplication {
         restCommands.add(new Barrierfree());
         restCommands.add(new Barriersize());
         restCommands.add(new Loggerlevel());
+        restCommands.add(new AppStats());
 
         for (AbstractRestCommand c : restCommands) {
             c.register(server, services);

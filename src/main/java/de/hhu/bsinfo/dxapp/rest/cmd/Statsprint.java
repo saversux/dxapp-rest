@@ -16,10 +16,6 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
-import com.google.gson.JsonSyntaxException;
-import de.hhu.bsinfo.dxapp.rest.cmd.requests.ChunkgetRequest;
-import de.hhu.bsinfo.dxapp.rest.cmd.requests.StatsPrintRequest;
-import de.hhu.bsinfo.dxapp.rest.cmd.responses.StatsPrintResponse;
 import spark.Service;
 
 import java.io.ByteArrayOutputStream;
@@ -33,11 +29,6 @@ import de.hhu.bsinfo.dxram.stats.StatisticsService;
  * Return HTML page with autorefresh, which contains information about the cluster
  *
  * @author Julien Bernhart, 2018-11-26
- * @author Maximilian Loose
- *  Modifications:
- *  - response body is sent with createMessageOfJavaObject method
- *  - changed from get to put
- *  - htmlRefresh function not necessary anymore @see AbstractRestCommand
  */
 public class Statsprint extends AbstractRestCommand {
 
@@ -48,19 +39,19 @@ public class Statsprint extends AbstractRestCommand {
     @Override
     public void register(Service server, ServiceHelper services) {
         server.get("/statsprint", (request, response) -> {
-            StatsPrintRequest statsPrintRequest;
-            try {
-                statsPrintRequest = gson.fromJson(request.body(), StatsPrintRequest.class);
-            } catch (JsonSyntaxException e) {
+            String interval = request.queryParams("interval");
+
+            if (interval == null) {
                 response.status(400);
-                return toHtml("Please enter the refresh interval parameter: /statsprint?interval=[SECONDS]");
+                return createError("Please enter the refresh interval parameter: /statsprint?interval=[SECONDS]",
+                        response);
             }
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             PrintStream ps = new PrintStream(os);
 
             services.getService(StatisticsService.class).getManager().printStatistics(ps);
 
-            return createMessageOfJavaObject(new StatsPrintResponse(os.toString(), statsPrintRequest.getInterval()));
+            return htmlRefresh(os.toString(), interval);
         });
     }
 }

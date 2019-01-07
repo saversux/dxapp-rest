@@ -1,7 +1,5 @@
 package de.hhu.bsinfo.dxapp.rest.cmd.responses;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 /**
  * @author Maximilian Loose

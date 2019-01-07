@@ -19,38 +19,36 @@ package de.hhu.bsinfo.dxapp.rest.cmd;
 import spark.Service;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
-import de.hhu.bsinfo.dxapp.rest.cmd.responses.NodeListResponse;
-import de.hhu.bsinfo.dxram.boot.BootService;
+import de.hhu.bsinfo.dxapp.rest.cmd.responses.ApplicationProcessResponse;
+import de.hhu.bsinfo.dxram.app.ApplicationProcess;
+import de.hhu.bsinfo.dxram.app.ApplicationService;
 
 /**
- * Get a list of all nodes
- *
- * @author Julien Bernhart, 2018-11-26
- * @author Maximilian Loose
- *  Modifications:
- *  - response body is sent with createMessageOfJavaObject method
+ * @author Julien Bernhart, 2019-01-07
  */
-public class Nodelist extends AbstractRestCommand {
-
-    public Nodelist() {
-        setInfo("nodelist", "", "List all nodes");
+public class AppStats extends AbstractRestCommand {
+    public AppStats() {
+        setInfo("appstats", "", "Shows information about all running applications");
     }
-
     @Override
     public void register(Service server, ServiceHelper services) {
-        server.get("/nodelist", (request, response) -> {
-            List<Short> nodes = services.getService(BootService.class).getOnlineNodeIDs();
-            List<String> stringNodes = new ArrayList();
+        server.get("/appstats", (request, response) -> {
+            ApplicationService appService = services.getService(ApplicationService.class);
 
-            for (Short node : nodes) {
-                stringNodes.add(Integer.toHexString(node & 0xffff));
+            Iterator<ApplicationProcess> iterator = appService.getRunningProcesses().iterator();
+            List<ApplicationProcessResponse> list = new ArrayList<>();
+
+            while(iterator.hasNext()){
+                ApplicationProcess item = iterator.next();
+                list.add(new ApplicationProcessResponse(item.getName(), item.getId(), item.getElapsedTime(), item.getArguments()));
             }
 
-            return createMessageOfJavaObject(new NodeListResponse(stringNodes));
+            return createMessageOfJavaObject(list);
         });
     }
 }

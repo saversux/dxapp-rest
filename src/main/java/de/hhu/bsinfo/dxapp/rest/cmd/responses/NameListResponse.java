@@ -1,11 +1,11 @@
 package de.hhu.bsinfo.dxapp.rest.cmd.responses;
 
-import com.google.gson.annotations.SerializedName;
-import de.hhu.bsinfo.dxmem.data.ChunkID;
-import de.hhu.bsinfo.dxram.nameservice.NameserviceEntryStr;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.google.gson.annotations.SerializedName;
+
+import de.hhu.bsinfo.dxram.nameservice.NameserviceEntryStr;
 
 /**
  * @author Maximilian Loose

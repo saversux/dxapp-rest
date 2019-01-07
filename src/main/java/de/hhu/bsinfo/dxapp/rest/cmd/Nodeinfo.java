@@ -16,7 +16,6 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
-import de.hhu.bsinfo.dxapp.rest.cmd.responses.NodeInfoResponse;
 import spark.Service;
 
 import com.google.gson.JsonSyntaxException;
@@ -24,6 +23,7 @@ import com.google.gson.JsonSyntaxException;
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxapp.rest.cmd.requests.NodeinfoRequest;
+import de.hhu.bsinfo.dxapp.rest.cmd.responses.NodeInfoResponse;
 import de.hhu.bsinfo.dxram.boot.BootService;
 import de.hhu.bsinfo.dxram.util.NodeCapabilities;
 import de.hhu.bsinfo.dxutils.NodeID;

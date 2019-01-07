@@ -16,11 +16,11 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
-import de.hhu.bsinfo.dxapp.rest.cmd.responses.AppListResponse;
 import spark.Service;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
+import de.hhu.bsinfo.dxapp.rest.cmd.responses.AppListResponse;
 import de.hhu.bsinfo.dxram.app.ApplicationService;
 
 /**
@@ -33,7 +33,7 @@ import de.hhu.bsinfo.dxram.app.ApplicationService;
  */
 public class AppList extends AbstractRestCommand {
     public AppList() {
-        setInfo("applist", "nid", "Lists available applications to run on a remote peer");
+        setInfo("applist", "", "Lists available applications to run on a remote peer");
     }
 
     @Override

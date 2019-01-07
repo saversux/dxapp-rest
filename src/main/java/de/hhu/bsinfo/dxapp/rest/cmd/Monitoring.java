@@ -22,7 +22,6 @@ import com.google.gson.JsonSyntaxException;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
-import de.hhu.bsinfo.dxapp.rest.cmd.requests.MetadataRequest;
 import de.hhu.bsinfo.dxapp.rest.cmd.requests.MonitoringRequest;
 import de.hhu.bsinfo.dxram.monitoring.MonitoringDataStructure;
 import de.hhu.bsinfo.dxram.monitoring.MonitoringService;

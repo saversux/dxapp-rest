@@ -22,12 +22,10 @@ import com.google.gson.JsonSyntaxException;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
-import de.hhu.bsinfo.dxapp.rest.cmd.requests.AppRunRequest;
 import de.hhu.bsinfo.dxapp.rest.cmd.requests.ChunkcreateRequest;
-import de.hhu.bsinfo.dxmem.data.ChunkID;
+import de.hhu.bsinfo.dxapp.rest.cmd.responses.ChunkCreateResponse;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
 import de.hhu.bsinfo.dxutils.NodeID;
-import de.hhu.bsinfo.dxapp.rest.cmd.responses.*;
 
 /**
  * Create a chunk on specified node with specified size

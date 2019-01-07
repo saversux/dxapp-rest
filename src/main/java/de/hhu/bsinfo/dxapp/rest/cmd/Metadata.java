@@ -16,8 +16,6 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
-import de.hhu.bsinfo.dxapp.rest.cmd.responses.MetadataResponseAllPeers;
-import de.hhu.bsinfo.dxapp.rest.cmd.responses.MetadataResponseOnePeer;
 import spark.Service;
 
 import java.util.ArrayList;
@@ -27,8 +25,9 @@ import com.google.gson.JsonSyntaxException;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
-import de.hhu.bsinfo.dxapp.rest.cmd.requests.LogInfoRequest;
 import de.hhu.bsinfo.dxapp.rest.cmd.requests.MetadataRequest;
+import de.hhu.bsinfo.dxapp.rest.cmd.responses.MetadataResponseAllPeers;
+import de.hhu.bsinfo.dxapp.rest.cmd.responses.MetadataResponseOnePeer;
 import de.hhu.bsinfo.dxram.boot.BootService;
 import de.hhu.bsinfo.dxram.lookup.LookupService;
 import de.hhu.bsinfo.dxram.util.NodeRole;

@@ -16,17 +16,11 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
-import de.hhu.bsinfo.dxapp.rest.cmd.responses.NameListResponse;
-import org.w3c.dom.NameList;
 import spark.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
-import de.hhu.bsinfo.dxmem.data.ChunkID;
-import de.hhu.bsinfo.dxram.nameservice.NameserviceEntryStr;
+import de.hhu.bsinfo.dxapp.rest.cmd.responses.NameListResponse;
 import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
 
 /**

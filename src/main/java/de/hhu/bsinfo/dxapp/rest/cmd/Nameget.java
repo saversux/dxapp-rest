@@ -16,15 +16,14 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
-import de.hhu.bsinfo.dxapp.rest.cmd.responses.NameGetResponse;
 import spark.Service;
 
 import com.google.gson.JsonSyntaxException;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
-import de.hhu.bsinfo.dxapp.rest.cmd.requests.MonitoringRequest;
 import de.hhu.bsinfo.dxapp.rest.cmd.requests.NamegetRequest;
+import de.hhu.bsinfo.dxapp.rest.cmd.responses.NameGetResponse;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
 import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
 
