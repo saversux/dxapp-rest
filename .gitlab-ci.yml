@@ -25,4 +25,4 @@ deploy:
     stage: deploy
     script:
       - docker cp build/libs/dxrest-1.0.jar dxrest:/home/root/dxram/dxapp
-      - docker run -p 8009:8009 -it --entrypoint /bin/bash dxrest -p 'run.sh'
+      - docker run -p 8009:8009 --entrypoint /bin/bash dxrest -p 'run.sh'
