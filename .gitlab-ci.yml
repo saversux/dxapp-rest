@@ -23,18 +23,6 @@ build:
     expire_in: 1 week
   only:
     - master
-    
-pages:
-  stage: deploy
-  script:
-  - mkdir .public
-  - cp -r swagger/* .public
-  - mv .public public
-  artifacts:
-    paths:
-    - public
-  only:
-  - master
 
 test:
   stage: test
