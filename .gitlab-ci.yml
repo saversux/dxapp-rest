@@ -12,7 +12,6 @@ cache:
 
 build:
   stage: build
-  tags: dxrest
   script:
     - ./gradlew jar
   artifacts:
