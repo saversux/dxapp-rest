@@ -41,6 +41,7 @@ import de.hhu.bsinfo.dxapp.rest.cmd.Chunklist;
 import de.hhu.bsinfo.dxapp.rest.cmd.Chunkput;
 import de.hhu.bsinfo.dxapp.rest.cmd.Chunkremove;
 import de.hhu.bsinfo.dxapp.rest.cmd.Compgrpls;
+import de.hhu.bsinfo.dxapp.rest.cmd.Compgrpstatus;
 import de.hhu.bsinfo.dxapp.rest.cmd.LogInfo;
 import de.hhu.bsinfo.dxapp.rest.cmd.Loggerlevel;
 import de.hhu.bsinfo.dxapp.rest.cmd.Lookuptree;

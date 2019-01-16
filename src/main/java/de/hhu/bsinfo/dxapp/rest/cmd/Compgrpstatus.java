@@ -14,12 +14,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package de.hhu.bsinfo.dxapp.rest;
+package de.hhu.bsinfo.dxapp.rest.cmd;
 
 import spark.Service;
 
 import com.google.gson.JsonSyntaxException;
 
+import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxapp.rest.cmd.requests.CompgrpstatusRequest;
 import de.hhu.bsinfo.dxram.ms.MasterSlaveComputeService;
 
@@ -28,7 +30,7 @@ import de.hhu.bsinfo.dxram.ms.MasterSlaveComputeService;
  *
  * @author Julien Bernhart, 2019-01-07
  */
-public class Compgrpstatus extends AbstractRestCommand{
+public class Compgrpstatus extends AbstractRestCommand {
     public Compgrpstatus() {
         setInfo("compgrpstatus", "cgid", "get status of specific compute group");
     }
