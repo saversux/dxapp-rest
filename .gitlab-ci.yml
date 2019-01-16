@@ -24,4 +24,4 @@ build:
 deploy:
     stage: deploy
     script:
-      - docker cp build/libs/dxrest-1.0.jar dxrest:/home/root/dxram/dxapp
+      - cp build/libs/dxrest-1.0.jar /Users/julien/dxram/dxapp
