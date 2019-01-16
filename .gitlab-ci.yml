@@ -4,9 +4,6 @@ stages:
   - build
   - test
   - deploy
-  
-before_script:
-  - export GRADLE_USER_HOME=/Users/julien/.gradle
 
 cache:
   paths:
