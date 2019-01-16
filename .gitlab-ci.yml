@@ -20,8 +20,3 @@ build:
     expire_in: 1 week
   only:
     - master
-    
-deploy:
-    stage: deploy
-    script:
-      - cp build/libs/dxrest-1.0.jar /Users/julien/dxram/dxapp
