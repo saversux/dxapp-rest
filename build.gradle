@@ -31,6 +31,17 @@ repositories {
     }
 }
 
+task copy(type: Copy) {
+        from "$buildDir/libs/"
+        include "*jar"
+        into "/Users/julien/dxram/dxapp/"
+}
+
+task buildAndCopy {
+    dependsOn 'jar'
+    dependsOn 'copy'
+}
+
 /**
 jar {
     archiveName 'dxa-rest.jar'
