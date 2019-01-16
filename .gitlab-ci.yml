@@ -1,2 +1,7 @@
-job:
-  script: "uname -a"
+stages:
+  - build
+  - deploy
+  
+job 1:
+  stage: build
+  script: bash build.sh
