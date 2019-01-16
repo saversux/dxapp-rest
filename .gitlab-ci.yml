@@ -20,3 +20,9 @@ build:
     expire_in: 1 week
   only:
     - master
+    
+deploy:
+    stage: deploy
+    script:
+      - docker cp build/lib/dxrest-1.0.jar dxrest:/home/root/dxram/dxapp
+      - docker run -p 8009:8009 -it --entrypoint /bin/bash dxrest -p 'run.sh'
