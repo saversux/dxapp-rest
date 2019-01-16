@@ -52,7 +52,6 @@ public class AppList extends AbstractRestCommand {
             if (nid == NodeID.INVALID_ID) {
                 return createError("NodeID invalid", response);
             }*/
-
             return createMessageOfJavaObject(new AppListResponse(services.getService(ApplicationService.class).
                     getLoadedApplicationClasses()));
         });
