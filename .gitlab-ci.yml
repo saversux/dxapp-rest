@@ -2,6 +2,13 @@ stages:
   - build
   - deploy
   
-job 1:
+build:
   stage: build
-  script: bash build.sh
+  script:
+    - ./gradlew jar
+  artifacts:
+    paths:
+      - build/libs/*.jar
+    expire_in: 1 week
+  only:
+    - master
