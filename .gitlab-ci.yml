@@ -26,9 +26,13 @@ build:
     
 pages:
   stage: deploy
+  script:
+  - mkdir .public
+  - cp -r swagger/* .public
+  - mv .public public
   artifacts:
     paths:
-    - swagger
+    - public
   only:
   - master
 
