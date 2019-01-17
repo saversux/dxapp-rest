@@ -3,7 +3,6 @@ info:
   description: "DXRAM REST API to access DXRAM services with different REST Clients"
   version: "1.0.0"
   title: "DXRAM REST API"
-  termsOfService: "http://swagger.io/terms/"
   contact:
     email: "julien.bernhart@hhu.de"
 host: "localhost:8009"
