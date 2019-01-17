@@ -21,6 +21,7 @@ import spark.Service;
 import com.google.gson.JsonSyntaxException;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import de.hhu.bsinfo.dxapp.rest.CommandInfo;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxapp.rest.cmd.requests.ChunkremoveRequest;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
@@ -35,8 +36,9 @@ import de.hhu.bsinfo.dxram.chunk.ChunkService;
  * - parsing of the the String cid is not necessary anymmore because cids are sent as longs
  */
 public class Chunkremove extends AbstractRestCommand {
-    public Chunkremove() {
-        setInfo("chunkremove", "cid", "Remove chunk with CID");
+    @Override
+    public CommandInfo setInfo() {
+        return new CommandInfo("chunkremove", "cid", "Remove chunk with CID");
     }
 
     @Override

@@ -21,6 +21,7 @@ import spark.Service;
 import com.google.gson.JsonSyntaxException;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import de.hhu.bsinfo.dxapp.rest.CommandInfo;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxapp.rest.cmd.requests.LogInfoRequest;
 import de.hhu.bsinfo.dxram.lookup.LookupService;
@@ -33,8 +34,9 @@ import de.hhu.bsinfo.dxutils.NodeID;
  * @author Julien Bernhart, 2018-11-26
  */
 public class Lookuptree extends AbstractRestCommand {
-    public Lookuptree() {
-        setInfo("lookuptree", "nid", "Get the look up tree of a specified node");
+    @Override
+    public CommandInfo setInfo() {
+        return new CommandInfo("lookuptree", "nid", "Get the look up tree of a specified node");
     }
 
     @Override

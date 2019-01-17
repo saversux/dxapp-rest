@@ -21,6 +21,7 @@ import spark.Service;
 import com.google.gson.JsonSyntaxException;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import de.hhu.bsinfo.dxapp.rest.CommandInfo;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxapp.rest.cmd.requests.NodeshutdownRequest;
 import de.hhu.bsinfo.dxram.boot.BootService;
@@ -32,8 +33,9 @@ import de.hhu.bsinfo.dxutils.NodeID;
  * @author Julien Bernhart, 2018-11-26
  */
 public class Nodeshutdown extends AbstractRestCommand {
-    public Nodeshutdown() {
-        setInfo("nodeshutdown", "nid, kill", "Shutdown DXRAM nodes, if kill is true, the node is killed, if kill is false the default shutdown is triggered");
+    @Override
+    public CommandInfo setInfo() {
+        return new CommandInfo("nodeshutdown", "nid, kill", "Shutdown DXRAM nodes, if kill is true, the node is killed, if kill is false the default shutdown is triggered");
     }
 
     @Override

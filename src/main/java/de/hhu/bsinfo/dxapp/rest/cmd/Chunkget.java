@@ -24,6 +24,7 @@ import java.nio.ByteBuffer;
 import com.google.gson.JsonSyntaxException;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import de.hhu.bsinfo.dxapp.rest.CommandInfo;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxapp.rest.cmd.requests.ChunkgetRequest;
 import de.hhu.bsinfo.dxapp.rest.cmd.responses.ChunkGetResponse;
@@ -39,9 +40,9 @@ import de.hhu.bsinfo.dxram.chunk.data.ChunkAnon;
  * - parsing of the the String cid is not necessary anymmore because cids are sent as longs
  */
 public class Chunkget extends AbstractRestCommand {
-
-    public Chunkget() {
-        setInfo("chunkget", "cid, type", "Get Chunk <cid> of Type <type>");
+    @Override
+    public CommandInfo setInfo() {
+        return new CommandInfo("chunkget", "cid, type", "Get Chunk <cid> of Type <type>");
     }
 
     @Override

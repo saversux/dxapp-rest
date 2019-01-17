@@ -24,6 +24,7 @@ import java.util.List;
 import com.google.gson.JsonSyntaxException;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import de.hhu.bsinfo.dxapp.rest.CommandInfo;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxapp.rest.cmd.requests.MetadataRequest;
 import de.hhu.bsinfo.dxapp.rest.cmd.responses.MetadataResponseAllPeers;
@@ -42,8 +43,9 @@ import de.hhu.bsinfo.dxutils.NodeID;
  *  - response body is sent with createMessageOfJavaObject method
  */
 public class Metadata extends AbstractRestCommand {
-    public Metadata() {
-        setInfo("metadata", "nid (optional)", "Get summary of all or one superpeer's metadata");
+    @Override
+    public CommandInfo setInfo() {
+        return new CommandInfo("metadata", "nid (optional)", "Get summary of all or one superpeer's metadata");
     }
 
     @Override

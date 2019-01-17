@@ -24,6 +24,7 @@ import java.util.List;
 import com.google.gson.JsonSyntaxException;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import de.hhu.bsinfo.dxapp.rest.CommandInfo;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxapp.rest.cmd.requests.LoggerlevelRequest;
 import de.hhu.bsinfo.dxram.logger.LoggerService;
@@ -35,8 +36,9 @@ import de.hhu.bsinfo.dxutils.NodeID;
  * @author Julien Bernhart, 2018-12-03
  */
 public class Loggerlevel extends AbstractRestCommand {
-    public Loggerlevel() {
-        setInfo("loggerlevel", "level, nid", "Change the output level of the logger");
+    @Override
+    public CommandInfo setInfo() {
+        return new CommandInfo("loggerlevel", "level, nid", "Change the output level of the logger");
     }
 
     @Override

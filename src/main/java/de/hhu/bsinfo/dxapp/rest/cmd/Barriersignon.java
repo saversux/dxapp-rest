@@ -21,6 +21,7 @@ import spark.Service;
 import com.google.gson.JsonSyntaxException;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import de.hhu.bsinfo.dxapp.rest.CommandInfo;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxapp.rest.cmd.requests.BarriersignonRequest;
 import de.hhu.bsinfo.dxram.lookup.overlay.storage.BarrierID;
@@ -33,8 +34,9 @@ import de.hhu.bsinfo.dxram.sync.SynchronizationService;
  * @author Julien Bernhart, 2018-11-28
  */
 public class Barriersignon extends AbstractRestCommand {
-    public Barriersignon() {
-        setInfo("barriersignon", "bid, data", "Sign on to an allocated barrier for synchronization");
+    @Override
+    public CommandInfo setInfo() {
+        return new CommandInfo("barriersignon", "bid, data", "Sign on to an allocated barrier for synchronization");
     }
 
     @Override

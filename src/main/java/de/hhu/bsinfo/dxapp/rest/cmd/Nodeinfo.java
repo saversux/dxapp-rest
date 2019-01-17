@@ -21,6 +21,7 @@ import spark.Service;
 import com.google.gson.JsonSyntaxException;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import de.hhu.bsinfo.dxapp.rest.CommandInfo;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxapp.rest.cmd.requests.NodeinfoRequest;
 import de.hhu.bsinfo.dxapp.rest.cmd.responses.NodeInfoResponse;
@@ -37,8 +38,9 @@ import de.hhu.bsinfo.dxutils.NodeID;
  *  - response body is sent with createMessageOfJavaObject method
  */
 public class Nodeinfo extends AbstractRestCommand {
-    public Nodeinfo() {
-        setInfo("nodeinfo", "nid", "Get information about a node in the network");
+    @Override
+    public CommandInfo setInfo() {
+        return new CommandInfo("nodeinfo", "nid", "Get information about a node in the network");
     }
 
     @Override

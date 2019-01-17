@@ -21,6 +21,7 @@ import spark.Service;
 import com.google.gson.JsonSyntaxException;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import de.hhu.bsinfo.dxapp.rest.CommandInfo;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxapp.rest.cmd.requests.CompgrpstatusRequest;
 import de.hhu.bsinfo.dxram.ms.MasterSlaveComputeService;
@@ -31,9 +32,11 @@ import de.hhu.bsinfo.dxram.ms.MasterSlaveComputeService;
  * @author Julien Bernhart, 2019-01-07
  */
 public class Compgrpstatus extends AbstractRestCommand {
-    public Compgrpstatus() {
-        setInfo("compgrpstatus", "cgid", "get status of specific compute group");
+    @Override
+    public CommandInfo setInfo() {
+        return new CommandInfo("compgrpstatus", "cgid", "get status of specific compute group");
     }
+
     @Override
     public void register(Service server, ServiceHelper services) {
         server.get("/compgrpstatus", (request, response) -> {

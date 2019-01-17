@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import de.hhu.bsinfo.dxapp.rest.CommandInfo;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxapp.rest.cmd.responses.NodeListResponse;
 import de.hhu.bsinfo.dxram.boot.BootService;
@@ -35,9 +36,9 @@ import de.hhu.bsinfo.dxram.boot.BootService;
  *  - response body is sent with createMessageOfJavaObject method
  */
 public class Nodelist extends AbstractRestCommand {
-
-    public Nodelist() {
-        setInfo("nodelist", "", "List all nodes");
+    @Override
+    public CommandInfo setInfo() {
+        return new CommandInfo("nodelist", "", "List all nodes");
     }
 
     @Override

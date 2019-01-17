@@ -26,6 +26,7 @@ import java.io.RandomAccessFile;
 import com.google.gson.JsonSyntaxException;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import de.hhu.bsinfo.dxapp.rest.CommandInfo;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxapp.rest.cmd.requests.ChunkdumpRequest;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
@@ -42,9 +43,9 @@ import de.hhu.bsinfo.dxram.chunk.data.ChunkAnon;
  *  - parsing of the the String cid is not necessary anymmore because cids are sent as longs
  */
 public class Chunkdump extends AbstractRestCommand {
-
-    public Chunkdump() {
-        setInfo("chunkdump", "name, cid", "Creates a Filedump of Chunk <cid> with <name>.");
+    @Override
+    public CommandInfo setInfo() {
+        return new CommandInfo("chunkdump", "name, cid", "Creates a Filedump of Chunk <cid> with <name>.");
     }
 
     @Override

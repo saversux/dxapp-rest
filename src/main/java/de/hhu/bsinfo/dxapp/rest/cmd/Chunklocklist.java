@@ -19,6 +19,7 @@ package de.hhu.bsinfo.dxapp.rest.cmd;
 import spark.Service;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import de.hhu.bsinfo.dxapp.rest.CommandInfo;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxutils.NodeID;
 
@@ -28,8 +29,9 @@ import de.hhu.bsinfo.dxutils.NodeID;
  * @author Julien Bernhart, 2018-11-26
  */
 public class Chunklocklist extends AbstractRestCommand {
-    public Chunklocklist() {
-        setInfo("chunklocklist", "nid", "Get the list of all locked chunks of a node");
+    @Override
+    public CommandInfo setInfo() {
+        return new CommandInfo("chunklocklist", "nid", "Get the list of all locked chunks of a node");
     }
 
     @Override

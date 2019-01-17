@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import de.hhu.bsinfo.dxapp.rest.CommandInfo;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxapp.rest.cmd.responses.ApplicationProcessResponse;
 import de.hhu.bsinfo.dxram.app.ApplicationProcess;
@@ -32,9 +33,11 @@ import de.hhu.bsinfo.dxram.app.ApplicationService;
  * @author Julien Bernhart, 2019-01-07
  */
 public class AppStats extends AbstractRestCommand {
-    public AppStats() {
-        setInfo("appstats", "", "Shows information about all running applications");
+    @Override
+    public CommandInfo setInfo() {
+        return new CommandInfo("appstats", "", "Shows information about all running applications");
     }
+
     @Override
     public void register(Service server, ServiceHelper services) {
         server.get("/appstats", (request, response) -> {

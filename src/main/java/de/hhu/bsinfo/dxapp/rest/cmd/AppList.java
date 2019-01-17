@@ -19,6 +19,7 @@ package de.hhu.bsinfo.dxapp.rest.cmd;
 import spark.Service;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import de.hhu.bsinfo.dxapp.rest.CommandInfo;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxapp.rest.cmd.responses.AppListResponse;
 import de.hhu.bsinfo.dxram.app.ApplicationService;
@@ -32,8 +33,9 @@ import de.hhu.bsinfo.dxram.app.ApplicationService;
  * - response body is sent with createMessageOfJavaObject method
  */
 public class AppList extends AbstractRestCommand {
-    public AppList() {
-        setInfo("applist", "", "Lists available applications to run on a remote peer");
+    @Override
+    public CommandInfo setInfo() {
+        return new CommandInfo("applist", "", "Lists available applications to run on a remote peer");
     }
 
     @Override

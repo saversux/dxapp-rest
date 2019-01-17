@@ -21,6 +21,7 @@ import spark.Service;
 import com.google.gson.JsonSyntaxException;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import de.hhu.bsinfo.dxapp.rest.CommandInfo;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxapp.rest.cmd.requests.MonitoringRequest;
 import de.hhu.bsinfo.dxram.monitoring.MonitoringDataStructure;
@@ -33,8 +34,9 @@ import de.hhu.bsinfo.dxutils.NodeID;
  * @author Julien Bernhart, 2018-11-26
  */
 public class Monitoring extends AbstractRestCommand {
-    public Monitoring() {
-        setInfo("monitoring", "nid", "Get monitoring data of given peer");
+    @Override
+    public CommandInfo setInfo() {
+        return new CommandInfo("monitoring", "nid", "Get monitoring data of given peer");
     }
 
     @Override

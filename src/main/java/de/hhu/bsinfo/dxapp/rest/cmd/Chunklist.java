@@ -21,6 +21,7 @@ import spark.Service;
 import com.google.gson.JsonSyntaxException;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import de.hhu.bsinfo.dxapp.rest.CommandInfo;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxapp.rest.cmd.requests.ChunklistRequest;
 import de.hhu.bsinfo.dxapp.rest.cmd.responses.ChunkListResponse;
@@ -36,9 +37,9 @@ import de.hhu.bsinfo.dxutils.NodeID;
  * - response body is sent with createMessageOfJavaObject method
  */
 public class Chunklist extends AbstractRestCommand {
-
-    public Chunklist() {
-        setInfo("chunklist", "nid", "List all Chunks on Node with <nid>");
+    @Override
+    public CommandInfo setInfo() {
+        return new CommandInfo("chunklist", "nid", "List all Chunks on Node with <nid>");
     }
 
     @Override

@@ -21,6 +21,7 @@ import spark.Service;
 import com.google.gson.JsonSyntaxException;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import de.hhu.bsinfo.dxapp.rest.CommandInfo;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxapp.rest.cmd.requests.BarrierfreeRequest;
 import de.hhu.bsinfo.dxram.lookup.overlay.storage.BarrierID;
@@ -32,8 +33,9 @@ import de.hhu.bsinfo.dxram.sync.SynchronizationService;
  * @author Julien Bernhart, 2018-12-02
  */
 public class Barrierfree extends AbstractRestCommand {
-    public Barrierfree() {
-        setInfo("barrierfree", "bid", "Free an allocated barrier");
+    @Override
+    public CommandInfo setInfo() {
+        return new CommandInfo("barrierfree", "bid", "Free an allocated barrier");
     }
 
     @Override

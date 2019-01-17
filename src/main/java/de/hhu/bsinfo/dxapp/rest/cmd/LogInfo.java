@@ -21,6 +21,7 @@ import spark.Service;
 import com.google.gson.JsonSyntaxException;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import de.hhu.bsinfo.dxapp.rest.CommandInfo;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxapp.rest.cmd.requests.LogInfoRequest;
 import de.hhu.bsinfo.dxram.log.LogService;
@@ -32,8 +33,9 @@ import de.hhu.bsinfo.dxutils.NodeID;
  * @author Julien Bernhart, 2018-11-26
  */
 public class LogInfo extends AbstractRestCommand {
-    public LogInfo() {
-        setInfo("loginfo", "nid", "Prints the log utilization of given peer");
+    @Override
+    public CommandInfo setInfo() {
+        return new CommandInfo("loginfo", "nid", "Prints the log utilization of given peer");
     }
 
     @Override

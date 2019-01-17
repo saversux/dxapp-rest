@@ -24,6 +24,7 @@ import java.util.List;
 import com.google.gson.JsonSyntaxException;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import de.hhu.bsinfo.dxapp.rest.CommandInfo;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxapp.rest.cmd.requests.BarrierstatusRequest;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
@@ -38,8 +39,9 @@ import de.hhu.bsinfo.dxutils.NodeID;
  * @author Julien Bernhart, 2018-11-26
  */
 public class Barrierstatus extends AbstractRestCommand {
-    public Barrierstatus() {
-        setInfo("barrierstatus", "bid", "Get status of a barrier");
+    @Override
+    public CommandInfo setInfo() {
+        return new CommandInfo("barrierstatus", "bid", "Get status of a barrier");
     }
 
     @Override

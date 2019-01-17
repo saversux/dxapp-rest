@@ -21,6 +21,7 @@ import spark.Service;
 import com.google.gson.JsonSyntaxException;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import de.hhu.bsinfo.dxapp.rest.CommandInfo;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxapp.rest.cmd.requests.BarriersizeRequest;
 import de.hhu.bsinfo.dxram.lookup.overlay.storage.BarrierID;
@@ -32,8 +33,9 @@ import de.hhu.bsinfo.dxram.sync.SynchronizationService;
  * @author Julien Bernhart, 2018-12-03
  */
 public class Barriersize extends AbstractRestCommand {
-    public Barriersize() {
-        setInfo("barriersize", "bid, size", "Change the size of an existing barrier");
+    @Override
+    public CommandInfo setInfo() {
+        return new CommandInfo("barriersize", "bid, size", "Change the size of an existing barrier");
     }
 
     @Override

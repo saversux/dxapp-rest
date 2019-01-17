@@ -36,9 +36,13 @@ public abstract class AbstractRestCommand {
 
     public AbstractRestCommand() {
         gson = new GsonBuilder().setPrettyPrinting().create();
+        info = setInfo();
+
     }
 
     public abstract void register(Service server, ServiceHelper services);
+
+    public abstract CommandInfo setInfo();
 
     /**
      * Wrap json objects in a html page
@@ -119,36 +123,11 @@ public abstract class AbstractRestCommand {
     }
 
     /**
-     * Set information about the command
-     * @param name
-     * @param param
-     * @param info
-     */
-    public void setInfo(String name, String param, String info) {
-        this.info = new CommandInfo(name, param, info);
-    }
-
-    /**
      * Get information about the command
      * @return
      */
     public CommandInfo getInfo() {
         return info;
-    }
-
-    /**
-     * CommandInfo object (for gson serialization)
-     */
-    private class CommandInfo {
-        String name;
-        String param;
-        String info;
-
-        public CommandInfo(String name, String param, String info) {
-            this.name = name;
-            this.param = param;
-            this.info = info;
-        }
     }
 
 }

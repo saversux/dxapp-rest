@@ -21,6 +21,7 @@ import spark.Service;
 import com.google.gson.JsonSyntaxException;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import de.hhu.bsinfo.dxapp.rest.CommandInfo;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxapp.rest.cmd.requests.BarrierallocRequest;
 import de.hhu.bsinfo.dxram.lookup.overlay.storage.BarrierID;
@@ -32,8 +33,9 @@ import de.hhu.bsinfo.dxram.sync.SynchronizationService;
  * @author Julien Bernhart, 2018-11-28
  */
 public class Barrieralloc extends AbstractRestCommand {
-    public Barrieralloc() {
-        setInfo("barrieralloc", "size", "Create a new barrier for synchronization of multiple peers");
+    @Override
+    public CommandInfo setInfo() {
+        return new CommandInfo("barrieralloc", "size", "Create a new barrier for synchronization of multiple peers");
     }
 
     @Override

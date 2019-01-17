@@ -19,6 +19,7 @@ package de.hhu.bsinfo.dxapp.rest.cmd;
 import spark.Service;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import de.hhu.bsinfo.dxapp.rest.CommandInfo;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxapp.rest.cmd.responses.NameListResponse;
 import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
@@ -32,9 +33,9 @@ import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
  *  * - response body is sent with createMessageOfJavaObject method
  */
 public class Namelist extends AbstractRestCommand {
-
-    public Namelist() {
-        setInfo("namelist", "", "Get Namelist");
+    @Override
+    public CommandInfo setInfo() {
+        return new CommandInfo("namelist", "", "Get Namelist");
     }
 
     @Override

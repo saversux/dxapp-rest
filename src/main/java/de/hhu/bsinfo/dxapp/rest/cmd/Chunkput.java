@@ -23,6 +23,7 @@ import java.nio.ByteBuffer;
 import com.google.gson.JsonSyntaxException;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import de.hhu.bsinfo.dxapp.rest.CommandInfo;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxapp.rest.cmd.requests.ChunkputRequest;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
@@ -41,9 +42,9 @@ import de.hhu.bsinfo.dxram.chunk.data.ChunkAnon;
  *
  */
 public class Chunkput extends AbstractRestCommand {
-
-    public Chunkput() {
-        setInfo("chunkput", "cid, data, type", "Put <data> with <type> on Chunk with <cid>");
+    @Override
+    public CommandInfo setInfo() {
+        return new CommandInfo("chunkput", "cid, data, type", "Put <data> with <type> on Chunk with <cid>");
     }
 
     @Override

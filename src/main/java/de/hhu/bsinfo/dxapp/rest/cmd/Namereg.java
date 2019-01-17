@@ -21,6 +21,7 @@ import spark.Service;
 import com.google.gson.JsonSyntaxException;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import de.hhu.bsinfo.dxapp.rest.CommandInfo;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxapp.rest.cmd.requests.NameregRequest;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
@@ -34,9 +35,9 @@ import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
  * - parsing of the the String cid is not necessary anymmore because cids are sent as longs
  */
 public class Namereg extends AbstractRestCommand {
-
-    public Namereg() {
-        setInfo("namereg", "cid, name", "Register Chunk <cid> with <name>");
+    @Override
+    public CommandInfo setInfo() {
+        return new CommandInfo("namereg", "cid, name", "Register Chunk <cid> with <name>");
     }
 
     @Override

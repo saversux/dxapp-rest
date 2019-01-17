@@ -21,6 +21,7 @@ import spark.Service;
 import java.util.ArrayList;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import de.hhu.bsinfo.dxapp.rest.CommandInfo;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxram.ms.MasterNodeEntry;
 import de.hhu.bsinfo.dxram.ms.MasterSlaveComputeService;
@@ -31,9 +32,11 @@ import de.hhu.bsinfo.dxram.ms.MasterSlaveComputeService;
  * @author Julien Bernhart, 2019-01-07
  */
 public class Compgrpls extends AbstractRestCommand {
-    public Compgrpls() {
-        setInfo("compgrpls", "", "list all compute groups");
+    @Override
+    public CommandInfo setInfo() {
+        return new CommandInfo("compgrpls", "", "list all compute groups");
     }
+
     @Override
     public void register(Service server, ServiceHelper services) {
         server.get("/compgrpls", (request, response) -> {

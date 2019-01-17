@@ -21,6 +21,7 @@ import spark.Service;
 import com.google.gson.JsonSyntaxException;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import de.hhu.bsinfo.dxapp.rest.CommandInfo;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxapp.rest.cmd.requests.ChunkcreateRequest;
 import de.hhu.bsinfo.dxapp.rest.cmd.responses.ChunkCreateResponse;
@@ -38,9 +39,9 @@ import de.hhu.bsinfo.dxutils.NodeID;
  *
  */
 public class Chunkcreate extends AbstractRestCommand {
-
-    public Chunkcreate() {
-        setInfo("chunkcreate", "nid, size", "Creates a Chunk on Node <nid> with Size <size>");
+    @Override
+    public CommandInfo setInfo() {
+        return new CommandInfo("chunkcreate", "nid, size", "Creates a Chunk on Node <nid> with Size <size>");
     }
 
     @Override

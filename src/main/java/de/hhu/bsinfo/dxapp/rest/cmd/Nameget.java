@@ -21,6 +21,7 @@ import spark.Service;
 import com.google.gson.JsonSyntaxException;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import de.hhu.bsinfo.dxapp.rest.CommandInfo;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxapp.rest.cmd.requests.NamegetRequest;
 import de.hhu.bsinfo.dxapp.rest.cmd.responses.NameGetResponse;
@@ -36,8 +37,9 @@ import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
  * - response body is sent with createMessageOfJavaObject method
  */
 public class Nameget extends AbstractRestCommand {
-    public Nameget() {
-        setInfo("nameget", "name", "Get chunk by name from nameservice.");
+    @Override
+    public CommandInfo setInfo() {
+        return new CommandInfo("nameget", "name", "Get chunk by name from nameservice.");
     }
 
     @Override

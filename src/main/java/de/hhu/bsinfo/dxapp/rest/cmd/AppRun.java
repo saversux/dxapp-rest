@@ -21,6 +21,7 @@ import spark.Service;
 import com.google.gson.JsonSyntaxException;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
+import de.hhu.bsinfo.dxapp.rest.CommandInfo;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
 import de.hhu.bsinfo.dxapp.rest.cmd.requests.AppRunRequest;
 import de.hhu.bsinfo.dxram.app.ApplicationService;
@@ -35,8 +36,9 @@ import de.hhu.bsinfo.dxutils.NodeID;
  * - in the case of a successful response, no response body is sent
  */
 public class AppRun extends AbstractRestCommand {
-    public AppRun() {
-        setInfo("apprun", "nid, app", "Start app on remote node");
+    @Override
+    public CommandInfo setInfo() {
+        return new CommandInfo("apprun", "nid, app", "Start app on remote node");
     }
 
     @Override
