@@ -1,0 +1,493 @@
+openapi: 3.0.0
+info:
+  description: DXRAM REST API to access DXRAM services with different REST Clients
+  version: 1.0.0
+  title: DXRAM REST API
+  contact:
+    email: julien.bernhart@hhu.de
+paths:
+  /chunkget:
+    get:
+      tags:
+        - chunk
+      summary: get a chunk
+      description: ''
+      responses:
+        '404':
+          description: Invalid input
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - cid
+                - type
+              properties:
+                cid:
+                  type: integer
+                type:
+                  type: string
+        required: true
+  /applist:
+    get:
+      tags:
+        - app
+      summary: list running applications
+      description: ''
+      responses:
+        '404':
+          description: Invalid input
+  /appstats:
+    get:
+      tags:
+        - app
+      summary: shows information about all running applications
+      description: ''
+      responses:
+        '404':
+          description: Invalid input
+  /apprun:
+    get:
+      tags:
+        - app
+      summary: starts a dxapp on a remote peer
+      description: ''
+      responses:
+        '404':
+          description: Invalid input
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - nid
+                - appname
+              properties:
+                nid:
+                  type: integer
+                appname:
+                  type: string
+        required: true
+  /chunkcreate:
+    put:
+      tags:
+        - chunk
+      summary: creates a new chunk on remote peer
+      description: ''
+      responses:
+        '404':
+          description: Invalid input
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - nid
+                - size
+              properties:
+                nid:
+                  type: integer
+                size:
+                  type: integer
+        required: true
+  /chunkdump:
+    put:
+      tags:
+        - chunk
+      summary: create chunkdump with specified filename
+      description: ''
+      responses:
+        '404':
+          description: Invalid input
+      requestBody:
+        $ref: '#/components/requestBodies/Body'
+  /chunklist:
+    get:
+      tags:
+        - chunk
+      summary: get chunklist for a specific remote node
+      description: ''
+      responses:
+        '404':
+          description: Invalid input
+      requestBody:
+        $ref: '#/components/requestBodies/Body2'
+  /chunkput:
+    put:
+      tags:
+        - chunk
+      summary: put data to chunk
+      description: ''
+      responses:
+        '404':
+          description: Invalid input
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - cid
+                - type
+                - data
+              properties:
+                name:
+                  type: string
+                cid:
+                  type: integer
+                data:
+                  type: string
+        required: true
+  /chunkremove:
+    put:
+      tags:
+        - chunk
+      summary: remove specific chunk
+      description: ''
+      responses:
+        '404':
+          description: Invalid input
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - cid
+              properties:
+                cid:
+                  type: integer
+        required: true
+  /loginfo:
+    get:
+      tags:
+        - dev
+      summary: prints the log utilization of given peer
+      description: ''
+      responses:
+        '404':
+          description: Invalid input
+      requestBody:
+        $ref: '#/components/requestBodies/Body2'
+  /lookuptree:
+    get:
+      tags:
+        - dev
+      summary: get the lookuptree of a specified node
+      description: ''
+      responses:
+        '404':
+          description: Invalid input
+      requestBody:
+        $ref: '#/components/requestBodies/Body2'
+  /metadata:
+    get:
+      tags:
+        - dev
+      summary: get summary of all or one superper's metadata
+      description: ''
+      responses:
+        '404':
+          description: Invalid input
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nid:
+                  type: integer
+  /monitoring:
+    get:
+      tags:
+        - dev
+      summary: get monitoring data of given peer
+      description: ''
+      responses:
+        '404':
+          description: Invalid input
+      requestBody:
+        $ref: '#/components/requestBodies/Body2'
+  /nameget:
+    get:
+      tags:
+        - name
+      summary: get chunk by name
+      description: ''
+      responses:
+        '404':
+          description: Invalid input
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+        required: true
+  /namelist:
+    get:
+      tags:
+        - name
+      summary: get namelist
+      description: ''
+      responses:
+        '404':
+          description: Invalid input
+  /namereg:
+    put:
+      tags:
+        - name
+      summary: register chunk with name
+      description: ''
+      responses:
+        '404':
+          description: Invalid input
+      requestBody:
+        $ref: '#/components/requestBodies/Body'
+  /nodeinfo:
+    get:
+      tags:
+        - dev
+      summary: get monitoring data of given peer
+      description: ''
+      responses:
+        '404':
+          description: Invalid input
+      requestBody:
+        $ref: '#/components/requestBodies/Body2'
+  /nodelist:
+    get:
+      tags:
+        - dev
+      summary: lists all nodes
+      description: ''
+      responses:
+        '404':
+          description: Invalid input
+  /statsprint:
+    get:
+      tags:
+        - dev
+      summary: debug information
+      description: ''
+      responses:
+        '404':
+          description: Invalid input
+  /barrierstatus:
+    get:
+      tags:
+        - barrier
+      summary: get status of a barrier
+      description: ''
+      responses:
+        '404':
+          description: Invalid input
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - bid
+              properties:
+                bid:
+                  type: integer
+        required: true
+  /barrieralloc:
+    put:
+      tags:
+        - barrier
+      summary: alloc barrier with given size
+      description: ''
+      responses:
+        '404':
+          description: Invalid input
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - size
+              properties:
+                size:
+                  type: integer
+        required: true
+  /barriersignon:
+    put:
+      tags:
+        - barrier
+      summary: sign into an existing barrier for synchronization
+      description: ''
+      responses:
+        '404':
+          description: Invalid input
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - bid
+                - data
+              properties:
+                bid:
+                  type: string
+                data:
+                  type: string
+        required: true
+  /barrierfree:
+    put:
+      tags:
+        - barrier
+      summary: free an allocated barrier
+      description: ''
+      responses:
+        '404':
+          description: Invalid input
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - bid
+              properties:
+                bid:
+                  type: string
+        required: true
+  /barriersize:
+    put:
+      tags:
+        - barrier
+      summary: change the size of an existing barrier
+      description: ''
+      responses:
+        '404':
+          description: Invalid input
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - bid
+                - size
+              properties:
+                bid:
+                  type: string
+                size:
+                  type: integer
+        required: true
+  /loggerlevel:
+    put:
+      tags:
+        - dev
+      summary: change the output level of the logger
+      description: ''
+      responses:
+        '404':
+          description: Invalid input
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - level
+              properties:
+                level:
+                  type: string
+                nid:
+                  type: integer
+        required: true
+  /nodeshutdown:
+    put:
+      tags:
+        - dev
+      summary: shutdown dxram node
+      description: ''
+      responses:
+        '404':
+          description: Invalid input
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - nid
+              properties:
+                nid:
+                  type: string
+                kill:
+                  type: string
+        required: true
+  /compgrpls:
+    get:
+      tags:
+        - compute
+      summary: list all compute groups
+      description: ''
+      responses:
+        '404':
+          description: Invalid input
+  /compgrpstatus:
+    get:
+      tags:
+        - compute
+      summary: get status of specific compute group
+      description: ''
+      responses:
+        '404':
+          description: Invalid input
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - cgid
+              properties:
+                cgid:
+                  type: string
+        required: true
+externalDocs:
+  description: Find out more about DXRAM
+  url: 'http://dxram.io'
+servers:
+  - url: 'http://localhost:8009/'
+components:
+  requestBodies:
+    Body:
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - name
+              - cid
+            properties:
+              name:
+                type: string
+              cid:
+                type: integer
+      required: true
+    Body2:
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - nid
+            properties:
+              nid:
+                type: integer
+      required: true

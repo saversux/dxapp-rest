@@ -37,9 +37,19 @@ task copy(type: Copy) {
         into "/Users/julien/dxram/dxapp/"
 }
 
+task startDocker(type: Exec) {
+    commandLine 'bash','docker.sh'
+}
+
 task buildAndCopy {
     dependsOn 'jar'
     dependsOn 'copy'
+}
+
+task runOnDocker{
+    dependsOn 'jar'
+    dependsOn 'copy'
+    dependsOn 'startDocker'
 }
 
 /**

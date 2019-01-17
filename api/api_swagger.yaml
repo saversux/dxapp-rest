@@ -6,9 +6,6 @@ info:
   termsOfService: "http://swagger.io/terms/"
   contact:
     email: "julien.bernhart@hhu.de"
-  license:
-    name: "Apache 2.0"
-    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 host: "localhost:8009"
 basePath: "/"
 schemes:
