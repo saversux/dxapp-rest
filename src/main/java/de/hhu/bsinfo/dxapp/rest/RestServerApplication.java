@@ -143,7 +143,7 @@ public class RestServerApplication extends AbstractApplication {
         }
 
         server.get("/", (req, res) -> gson.toJson(commandInfo));
-        LOGGER.debug("REST SERVER started");
+        LOGGER.info("REST SERVER started");
 
         while (run) {
             try {

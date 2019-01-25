@@ -22,6 +22,9 @@ import spark.Service;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Command Class, this is used to create new DXRAM Rest commands
  *
@@ -33,6 +36,7 @@ import com.google.gson.GsonBuilder;
 public abstract class AbstractRestCommand {
     protected Gson gson;
     private CommandInfo info;
+    private static final Logger LOGGER = LogManager.getFormatterLogger(RestServerApplication.class.getSimpleName());
 
     public AbstractRestCommand() {
         gson = new GsonBuilder().setPrettyPrinting().create();
@@ -64,6 +68,7 @@ public abstract class AbstractRestCommand {
      */
     public String createError(String error, Response response) {
         response.status(400);
+        LOGGER.info("REST error: "+error);
         return gson.toJson(new ResponseError(error));
     }
 
@@ -73,10 +78,12 @@ public abstract class AbstractRestCommand {
      * @return response message
      */
     public String createMessage(String message) {
+        LOGGER.info("REST message: "+message);
         return gson.toJson(new ResponseMessage(message));
     }
 
     public String createMessageOfJavaObject(Object javaObject) {
+        LOGGER.info("Creating REST Response of Class: "+javaObject.getClass());
         return gson.toJson(javaObject);
     }
 
