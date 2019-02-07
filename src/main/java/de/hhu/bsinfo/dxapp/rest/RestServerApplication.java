@@ -92,19 +92,23 @@ public class RestServerApplication extends AbstractApplication {
         run = true;
 
         int port;
+        int maxThreads;
         if (args.length > 0) {
             try {
                 port = Integer.parseInt(args[0]);
+                maxThreads = args.length > 1 ? Integer.parseInt(args[1]) : -1;
             } catch (NumberFormatException e) {
                 LOGGER.error("Invalid port argument. Running with standard port 8009.");
                 port = 8009;
+                maxThreads = -1;
             }
         } else {
             LOGGER.error("Invalid port argument. Running with standard port 8009.");
             port = 8009;
+            maxThreads = -1;
         }
 
-        startServer(2, port);
+        startServer(maxThreads, port);
 
         List<Object> commandInfo = new ArrayList<>();
         List<AbstractRestCommand> restCommands = new ArrayList<>();
@@ -143,7 +147,7 @@ public class RestServerApplication extends AbstractApplication {
         }
 
         server.get("/", (req, res) -> gson.toJson(commandInfo));
-        LOGGER.info("REST SERVER started");
+        LOGGER.info("DXRest server started on port %d", port);
 
         while (run) {
             try {
@@ -164,7 +168,8 @@ public class RestServerApplication extends AbstractApplication {
      * @param port
      */
     private static void startServer(int maxThreads, int port) {
-        server = Service.ignite().port(port);
+
+        server = maxThreads != -1 ? Service.ignite().port(port).threadPool(maxThreads) : Service.ignite().port(port);
     }
 
     /**
