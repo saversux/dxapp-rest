@@ -147,6 +147,7 @@ public class RestServerApplication extends AbstractApplication {
         }
 
         server.get("/", (req, res) -> gson.toJson(commandInfo));
+        server.get("/api", (req, rest) -> new Specification().getSpec());
         LOGGER.info("DXRest server started on port %d", port);
 
         while (run) {
