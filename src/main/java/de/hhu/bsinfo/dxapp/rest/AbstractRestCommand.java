@@ -39,7 +39,7 @@ public abstract class AbstractRestCommand {
     private static final Logger LOGGER = LogManager.getFormatterLogger(RestServerApplication.class.getSimpleName());
 
     public AbstractRestCommand() {
-        gson = new GsonBuilder().setPrettyPrinting().create();
+        gson = new GsonBuilder().create();
         info = setInfo();
 
     }

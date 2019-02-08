@@ -146,15 +146,15 @@ public class RestServerApplication extends AbstractApplication {
             commandInfo.add(c.getInfo());
         }
 
-        server.get("/", (req, res) -> gson.toJson(commandInfo));
-        server.get("/api", (req, rest) -> new Specification().getSpec());
+        server.get("/","application/json", (req, res) -> gson.toJson(commandInfo));
+        server.get("/api", "text/yaml", (req, rest) -> new Specification().getSpec());
         LOGGER.info("DXRest server started on port %d", port);
 
         while (run) {
             try {
                 sleep(10000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                LOGGER.error(e);
             }
         }
     }
