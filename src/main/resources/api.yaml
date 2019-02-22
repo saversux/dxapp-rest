@@ -1,0 +1,644 @@
+swagger: "2.0"
+info:
+  description: "DXRAM REST API to access DXRAM services with different REST Clients"
+  version: "1.0.0"
+  title: "DXRAM REST API"
+  contact:
+    email: "julien.bernhart@hhu.de"
+host: "localhost:8009"
+basePath: "/"
+schemes:
+- "http"
+paths:
+  /chunkget:
+    get:
+      tags:
+      - "chunk"
+      summary: "get a chunk"
+      description: ""
+      produces:
+      - "application/json"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: object
+          required:
+            - cid
+            - type
+          properties:
+            cid: 
+              type: integer
+            type:
+              type: string
+      responses:
+        404:
+          description: "Invalid input"
+  /applist:
+    get:
+      tags:
+      - "app"
+      summary: "list running applications"
+      description: ""
+      produces:
+      - "application/json"
+      responses:
+        404:
+          description: "Invalid input"
+  /appstats:
+    get:
+      tags:
+      - "app"
+      summary: "shows information about all running applications"
+      description: ""
+      produces:
+      - "application/json"
+      responses:
+        404:
+          description: "Invalid input"
+  /apprun:
+    get:
+      tags:
+      - "app"
+      summary: "starts a dxapp on a remote peer"
+      description: ""
+      produces:
+      - "application/json"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: object
+          required:
+            - nid
+            - appname
+          properties:
+            nid: 
+              type: integer
+            appname:
+              type: string
+      responses:
+        404:
+          description: "Invalid input"
+  /chunkcreate:
+    put:
+      tags:
+      - "chunk"
+      summary: "creates a new chunk on remote peer"
+      description: ""
+      produces:
+      - "application/json"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: object
+          required:
+            - nid
+            - size
+          properties:
+            nid: 
+              type: integer
+            size:
+              type: integer
+      responses:
+        404:
+          description: "Invalid input"
+  /chunkdump:
+    put:
+      tags:
+      - "chunk"
+      summary: "create chunkdump with specified filename"
+      description: ""
+      produces:
+      - "application/json"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: object
+          required:
+            - name
+            - cid
+          properties:
+            name: 
+              type: string
+            cid:
+              type: integer
+      responses:
+        404:
+          description: "Invalid input"
+  /chunklist:
+    get:
+      tags:
+      - "chunk"
+      summary: "get chunklist for a specific remote node"
+      description: ""
+      produces:
+      - "application/json"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: object
+          required:
+            - nid
+          properties:
+            nid: 
+              type: integer
+      responses:
+        404:
+          description: "Invalid input"
+  /chunkput:
+    put:
+      tags:
+      - "chunk"
+      summary: "put data to chunk"
+      description: ""
+      produces:
+      - "application/json"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: object
+          required:
+            - cid
+            - type
+            - data
+          properties:
+            name: 
+              type: string
+            cid:
+              type: integer
+            data:
+              type: string
+      responses:
+        404:
+          description: "Invalid input"
+  /chunkremove:
+    put:
+      tags:
+      - "chunk"
+      summary: "remove specific chunk"
+      description: ""
+      produces:
+      - "application/json"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: object
+          required:
+            - cid
+          properties:
+            cid:
+              type: integer
+      responses:
+        404:
+          description: "Invalid input"
+  /loginfo:
+    get:
+      tags:
+      - "dev"
+      summary: "prints the log utilization of given peer"
+      description: ""
+      produces:
+      - "application/json"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: object
+          required:
+            - nid
+          properties:
+            nid:
+              type: integer
+      responses:
+        404:
+          description: "Invalid input"
+  /lookuptree:
+    get:
+      tags:
+      - "dev"
+      summary: "get the lookuptree of a specified node"
+      description: ""
+      produces:
+      - "application/json"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: object
+          required:
+            - nid
+          properties:
+            nid:
+              type: integer
+      responses:
+        404:
+          description: "Invalid input"
+  /metadata:
+    get:
+      tags:
+      - "dev"
+      summary: "get summary of all or one superper's metadata"
+      description: ""
+      produces:
+      - "application/json"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: false
+        schema:
+          type: object
+          properties:
+            nid:
+              type: integer
+      responses:
+        404:
+          description: "Invalid input"
+  /monitoring:
+    get:
+      tags:
+      - "dev"
+      summary: "get monitoring data of given peer"
+      description: ""
+      produces:
+      - "application/json"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: object
+          required:
+            - nid
+          properties:
+            nid:
+              type: integer
+      responses:
+        404:
+          description: "Invalid input"
+  /nameget:
+    get:
+      tags:
+      - "name"
+      summary: "get chunk by name"
+      description: ""
+      produces:
+      - "application/json"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: object
+          required:
+            - name
+          properties:
+            name:
+              type: string
+      responses:
+        404:
+          description: "Invalid input"
+  /namelist:
+    get:
+      tags:
+      - "name"
+      summary: "get namelist"
+      description: ""
+      produces:
+      - "application/json"
+      responses:
+        404:
+          description: "Invalid input"
+  /namereg:
+    put:
+      tags:
+      - "name"
+      summary: "register chunk with name"
+      description: ""
+      produces:
+      - "application/json"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: object
+          required:
+            - name
+            - cid
+          properties:
+            name:
+              type: string
+            cid:
+              type: integer
+      responses:
+        404:
+          description: "Invalid input"
+  /nodeinfo:
+    get:
+      tags:
+      - "dev"
+      summary: "get monitoring data of given peer"
+      description: ""
+      produces:
+      - "application/json"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: object
+          required:
+            - nid
+          properties:
+            nid:
+              type: integer
+      responses:
+        404:
+          description: "Invalid input"
+  /nodelist:
+    get:
+      tags:
+      - "dev"
+      summary: "lists all nodes"
+      description: ""
+      produces:
+      - "application/json"
+      responses:
+        404:
+          description: "Invalid input"
+  /statsprint:
+    get:
+      tags:
+      - "dev"
+      summary: "debug information"
+      description: ""
+      produces:
+      - "text/html"
+      responses:
+        404:
+          description: "Invalid input"
+  /barrierstatus:
+    get:
+      tags:
+      - "barrier"
+      summary: "get status of a barrier"
+      description: ""
+      produces:
+      - "application/json"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: object
+          required:
+            - bid
+          properties:
+            bid:
+              type: integer
+      responses:
+        404:
+          description: "Invalid input"
+  /barrieralloc:
+    put:
+      tags:
+      - "barrier"
+      summary: "alloc barrier with given size"
+      description: ""
+      produces:
+      - "application/json"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: object
+          required:
+            - size
+          properties:
+            size:
+              type: integer
+      responses:
+        404:
+          description: "Invalid input"
+  /barriersignon:
+    put:
+      tags:
+      - "barrier"
+      summary: "sign into an existing barrier for synchronization"
+      description: ""
+      produces:
+      - "application/json"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: object
+          required:
+            - bid
+            - data
+          properties:
+            bid:
+              type: string
+            data:
+              type: string
+      responses:
+        404:
+          description: "Invalid input"
+  /barrierfree:
+    put:
+      tags:
+      - "barrier"
+      summary: "free an allocated barrier"
+      description: ""
+      produces:
+      - "application/json"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: object
+          required:
+            - bid
+          properties:
+            bid:
+              type: string
+      responses:
+        404:
+          description: "Invalid input"
+  /barriersize:
+    put:
+      tags:
+      - "barrier"
+      summary: "change the size of an existing barrier"
+      description: ""
+      produces:
+      - "application/json"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: object
+          required:
+            - bid
+            - size
+          properties:
+            bid:
+              type: string
+            size:
+              type: integer
+      responses:
+        404:
+          description: "Invalid input"
+  /loggerlevel:
+    put:
+      tags:
+      - "dev"
+      summary: "change the output level of the logger"
+      description: ""
+      produces:
+      - "application/json"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: object
+          required:
+            - level
+          properties:
+            level:
+              type: string
+            nid:
+              type: integer
+      responses:
+        404:
+          description: "Invalid input"
+  /nodeshutdown:
+    put:
+      tags:
+      - "dev"
+      summary: "shutdown dxram node"
+      description: ""
+      produces:
+      - "application/json"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: object
+          required:
+            - nid
+          properties:
+            nid:
+              type: string
+            kill:
+              type: string
+      responses:
+        404:
+          description: "Invalid input"
+  /compgrpls:
+    get:
+      tags:
+      - "compute"
+      summary: "list all compute groups"
+      description: ""
+      produces:
+      - "application/json"
+      responses:
+        404:
+          description: "Invalid input"
+  /compgrpstatus:
+    get:
+      tags:
+      - "compute"
+      summary: "get status of specific compute group"
+      description: ""
+      produces:
+      - "application/json"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: object
+          required:
+            - cgid
+          properties:
+            cgid:
+              type: string
+      responses:
+        404:
+          description: "Invalid input"
+  
+  
+  
+  
+
+  
+externalDocs:
+  description: "Find out more about DXRAM"
+  url: "http://dxram.io"
