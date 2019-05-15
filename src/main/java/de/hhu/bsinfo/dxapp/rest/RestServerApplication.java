@@ -54,8 +54,7 @@ import de.hhu.bsinfo.dxapp.rest.cmd.Nodeinfo;
 import de.hhu.bsinfo.dxapp.rest.cmd.Nodelist;
 import de.hhu.bsinfo.dxapp.rest.cmd.Nodeshutdown;
 import de.hhu.bsinfo.dxapp.rest.cmd.Statsprint;
-import de.hhu.bsinfo.dxram.app.AbstractApplication;
-import de.hhu.bsinfo.dxram.engine.AbstractDXRAMService;
+import de.hhu.bsinfo.dxram.app.Application;
 import de.hhu.bsinfo.dxram.engine.DXRAMVersion;
 import de.hhu.bsinfo.dxram.generated.BuildConfig;
 
@@ -64,7 +63,7 @@ import de.hhu.bsinfo.dxram.generated.BuildConfig;
  *
  * @author Julien Bernhart, 2018-11-26
  */
-public class RestServerApplication extends AbstractApplication {
+public class RestServerApplication extends Application {
     private static Service server;
     private volatile boolean run;
     private Gson gson;
@@ -160,7 +159,7 @@ public class RestServerApplication extends AbstractApplication {
         }
     }
 
-    protected <T extends AbstractDXRAMService> T getService(final Class<T> p_class) {
+    protected <T extends de.hhu.bsinfo.dxram.engine.Service> T getService(final Class<T> p_class) {
         return super.getService(p_class);
     }
 

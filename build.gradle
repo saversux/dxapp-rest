@@ -34,7 +34,7 @@ repositories {
 task copy(type: Copy) {
         from "$buildDir/libs/"
         include "*jar"
-        into "/Users/julien/dxram/dxapp/"
+        into "/Users/julien/dockerhome/dxram/dxapp/"
 }
 
 task startDocker(type: Exec) {
@@ -52,17 +52,21 @@ task runOnDocker{
     dependsOn 'startDocker'
 }
 
-/**
 jar {
     archiveName 'dxa-rest.jar'
     from {
         configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
-**/
 
 dependencies {
-    providedImplementation 'de.hhu.bsinfo:dxram:0.6.0' + (Boolean.valueOf(System.getProperty("release")) ? "" : "-SNAPSHOT")
-    compile "com.sparkjava:spark-core:2.7.2"
+    providedImplementation 'de.hhu.bsinfo:dxram:0.8.0' + (Boolean.valueOf(System.getProperty("release")) ? "" : "-SNAPSHOT")
+    compile "com.sparkjava:spark-core:2.8.0"
+    compile group: 'org.glassfish.jersey.core', name: 'jersey-server', version: '2.28'
     testImplementation 'junit:junit:4.12'
+}
+buildscript {
+    repositories {
+        mavenCentral()
+    }
 }

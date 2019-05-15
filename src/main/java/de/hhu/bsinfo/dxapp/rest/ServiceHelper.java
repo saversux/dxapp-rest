@@ -16,7 +16,7 @@
 
 package de.hhu.bsinfo.dxapp.rest;
 
-import de.hhu.bsinfo.dxram.engine.AbstractDXRAMService;
+import de.hhu.bsinfo.dxram.engine.Service;
 
 /**
  * Service wrapper
@@ -30,7 +30,7 @@ public class ServiceHelper {
         this.app = app;
     }
 
-    public <T extends AbstractDXRAMService> T getService(final Class<T> p_class) {
+    public <T extends Service> T getService(final Class<T> p_class) {
         return app.getService(p_class);
     }
 
