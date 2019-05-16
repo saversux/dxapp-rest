@@ -16,7 +16,11 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
-import spark.Service;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import com.google.gson.JsonSyntaxException;
 
@@ -34,38 +38,36 @@ import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
  * @author Maximilian Loose
  * - parsing of the the String cid is not necessary anymmore because cids are sent as longs
  */
+@Path("namereg")
 public class Namereg extends AbstractRestCommand {
     @Override
     public CommandInfo setInfo() {
         return new CommandInfo("namereg", "cid, name", "Register Chunk <cid> with <name>");
     }
 
-    @Override
-    public void register(Service server, ServiceHelper services) {
-        server.put("/namereg", (request, response) -> {
-            if (request.body().equals("")) {
-                return createError("No body in request.", response);
-            }
-            NameregRequest nameregRequest;
-            try {
-                nameregRequest = gson.fromJson(request.body(), NameregRequest.class);
-            } catch (JsonSyntaxException e) {
-                return createError("Please put name and cid into body as json.", response);
-            }
-            Long cid  = nameregRequest.getCid();
-            String name = nameregRequest.getName();
+    @PUT
+    @Produces(MediaType.TEXT_PLAIN)
+    public String nameReg(String body) {
+        if (body.equals("")) {
+            throw new BadRequestException("No body in request.");
+        }
+        NameregRequest nameregRequest;
+        try {
+            nameregRequest = gson.fromJson(body, NameregRequest.class);
+        } catch (JsonSyntaxException e) {
+            throw new BadRequestException("Please put name and cid into body as json.");
+        }
+        Long cid  = nameregRequest.getCid();
+        String name = nameregRequest.getName();
 
-            if (cid == 0L || name == null) {
-                return createError("Please put name and cid into body as json.",
-                        response);
-            }
-            if (cid != ChunkID.INVALID_ID) {
-                services.getService(NameserviceService.class).register(cid, name);
-                response.status(200);
-                return "";
-            } else {
-                return createError("CID invalid", response);
-            }
-        });
+        if (cid == 0L || name == null) {
+            throw new BadRequestException("Please put name and cid into body as json.");
+        }
+        if (cid != ChunkID.INVALID_ID) {
+            ServiceHelper.getService(NameserviceService.class).register(cid, name);
+            return "";
+        } else {
+            throw new BadRequestException("CID invalid");
+        }
     }
 }

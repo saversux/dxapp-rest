@@ -16,7 +16,11 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
-import spark.Service;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.xml.ws.Service;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.CommandInfo;
@@ -32,30 +36,30 @@ import de.hhu.bsinfo.dxram.app.ApplicationService;
  * Modifications:
  * - response body is sent with createMessageOfJavaObject method
  */
+@Path("applist")
 public class AppList extends AbstractRestCommand {
     @Override
     public CommandInfo setInfo() {
         return new CommandInfo("applist", "", "Lists available applications to run on a remote peer");
     }
 
-    @Override
-    public void register(Service server, ServiceHelper services) {
-        server.get("/applist", (request, response) -> {
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String listApps() {
             //remote lookup not implemented
             /*
             String stringNid = request.queryParams("nid");
 
             if (stringNid == null){
-               return createError("Invalid Parameter, please use: /applist?nid=[NID]", response);
+               throw new BadRequestException("Invalid Parameter, please use: /applist?nid=[NID]");
             }
 
             short nid = NodeID.parse(stringNid);
 
             if (nid == NodeID.INVALID_ID) {
-                return createError("NodeID invalid", response);
+                throw new BadRequestException("NodeID invalid");
             }*/
-            return createMessageOfJavaObject(new AppListResponse(services.getService(ApplicationService.class).
+            return createMessageOfJavaObject(new AppListResponse(ServiceHelper.getService(ApplicationService.class).
                     getLoadedApplicationClasses()));
-        });
     }
 }

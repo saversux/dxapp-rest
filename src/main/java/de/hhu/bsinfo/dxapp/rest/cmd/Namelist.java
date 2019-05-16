@@ -16,7 +16,10 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
-import spark.Service;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.CommandInfo;
@@ -32,18 +35,18 @@ import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
  *  * Modifications:
  *  * - response body is sent with createMessageOfJavaObject method
  */
+@Path("namelist")
 public class Namelist extends AbstractRestCommand {
     @Override
     public CommandInfo setInfo() {
         return new CommandInfo("namelist", "", "Get Namelist");
     }
 
-    @Override
-    public void register(Service server, ServiceHelper services) {
-        server.get("/namelist", (request, response) -> {
-            NameListResponse entries = new NameListResponse(services.getService(NameserviceService.class).getAllEntries());
-            return createMessageOfJavaObject(entries);
-        });
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String nameList(String body) {
+        NameListResponse entries = new NameListResponse(ServiceHelper.getService(NameserviceService.class).getAllEntries());
+        return createMessageOfJavaObject(entries);
     }
 
 }

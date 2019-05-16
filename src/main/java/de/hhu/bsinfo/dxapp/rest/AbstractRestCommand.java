@@ -16,8 +16,8 @@
 
 package de.hhu.bsinfo.dxapp.rest;
 
-import spark.Response;
-import spark.Service;
+import javax.ws.rs.BadRequestException;
+import javax.xml.ws.Service;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -41,10 +41,7 @@ public abstract class AbstractRestCommand {
     public AbstractRestCommand() {
         gson = new GsonBuilder().create();
         info = setInfo();
-
     }
-
-    public abstract void register(Service server, ServiceHelper services);
 
     public abstract CommandInfo setInfo();
 
@@ -58,18 +55,6 @@ public abstract class AbstractRestCommand {
         json = "<html> <body> <pre> <code>" + json + "</code> </pre> </body> </html>";
 
         return json;
-    }
-
-    /**
-     * This is used to create error message with html status 400 (wrong input)
-     * @param error
-     * @param response
-     * @return response with html error code and specified error message
-     */
-    public String createError(String error, Response response) {
-        response.status(400);
-        LOGGER.info("REST error: "+error);
-        return gson.toJson(new ResponseError(error));
     }
 
     /**

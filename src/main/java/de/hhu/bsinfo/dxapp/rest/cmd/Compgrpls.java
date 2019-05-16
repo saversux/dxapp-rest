@@ -16,9 +16,12 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
-import spark.Service;
-
 import java.util.ArrayList;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.CommandInfo;
@@ -31,20 +34,19 @@ import de.hhu.bsinfo.dxram.ms.MasterSlaveComputeService;
  *
  * @author Julien Bernhart, 2019-01-07
  */
+@Path("compgrpls")
 public class Compgrpls extends AbstractRestCommand {
     @Override
     public CommandInfo setInfo() {
         return new CommandInfo("compgrpls", "", "list all compute groups");
     }
 
-    @Override
-    public void register(Service server, ServiceHelper services) {
-        server.get("/compgrpls", (request, response) -> {
-            MasterSlaveComputeService mscomp = services.getService(MasterSlaveComputeService.class);
-            ArrayList<MasterNodeEntry> masters = mscomp.getMasters();
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getCompGrps(String body) {
+        MasterSlaveComputeService mscomp = ServiceHelper.getService(MasterSlaveComputeService.class);
+        ArrayList<MasterNodeEntry> masters = mscomp.getMasters();
 
-            return createMessageOfJavaObject(masters);
-        });
-
+        return createMessageOfJavaObject(masters);
     }
 }

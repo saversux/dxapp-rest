@@ -16,7 +16,11 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
-import spark.Service;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import com.google.gson.JsonSyntaxException;
 
@@ -35,40 +39,39 @@ import de.hhu.bsinfo.dxram.chunk.ChunkService;
  * Modifications:
  * - parsing of the the String cid is not necessary anymmore because cids are sent as longs
  */
+@Path("chunkremove")
 public class Chunkremove extends AbstractRestCommand {
     @Override
     public CommandInfo setInfo() {
         return new CommandInfo("chunkremove", "cid", "Remove chunk with CID");
     }
 
-    @Override
-    public void register(Service server, ServiceHelper services) {
-        server.put("/chunkremove", (request, response) -> {
-            if (request.body().equals("")) {
-                return createError("No body in request.", response);
-            }
-            ChunkremoveRequest chunkremoveRequest;
-            try {
-                chunkremoveRequest = gson.fromJson(request.body(), ChunkremoveRequest.class);
-            } catch (JsonSyntaxException e) {
-                return createError("Please put cid into body as json.", response);
-            }
-            Long cid = chunkremoveRequest.getCid();
+    @PUT
+    @Produces(MediaType.TEXT_PLAIN)
+    public String removeChunk(String body) {
+        if (body.equals("")) {
+            throw new BadRequestException("No body in request.");
+        }
+        ChunkremoveRequest chunkremoveRequest;
+        try {
+            chunkremoveRequest = gson.fromJson(body, ChunkremoveRequest.class);
+        } catch (JsonSyntaxException e) {
+            throw new BadRequestException("Please put cid into body as json.");
+        }
+        Long cid = chunkremoveRequest.getCid();
 
-            if (cid == 0L) {
-                return createError("Please put cid into body as json.", response);
-            }
+        if (cid == 0L) {
+            throw new BadRequestException("Please put cid into body as json.");
+        }
 
 
-            if (ChunkID.getLocalID(cid) == 0) {
-                return createError("Removal of index chunk is not allowed", response);
-            }
-            if (services.getService(ChunkService.class).remove().remove(cid) != 1) {
-                return createError("Removing chunk with ID " + ChunkID.toHexString(cid) + " failed", response);
-            } else {
-                response.status(200);
-                return "";
-            }
-        });
+        if (ChunkID.getLocalID(cid) == 0) {
+            throw new BadRequestException("Removal of index chunk is not allowed");
+        }
+        if (ServiceHelper.getService(ChunkService.class).remove().remove(cid) != 1) {
+            throw new BadRequestException("Removing chunk with ID " + ChunkID.toHexString(cid) + " failed");
+        } else {
+            return "";
+        }
     }
 }

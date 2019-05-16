@@ -16,7 +16,11 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
-import spark.Service;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import com.google.gson.JsonSyntaxException;
 
@@ -32,43 +36,42 @@ import de.hhu.bsinfo.dxutils.NodeID;
  *
  * @author Julien Bernhart, 2018-11-26
  */
+@Path("nodeshutdown")
 public class Nodeshutdown extends AbstractRestCommand {
     @Override
     public CommandInfo setInfo() {
         return new CommandInfo("nodeshutdown", "nid, kill", "Shutdown DXRAM nodes, if kill is true, the node is killed, if kill is false the default shutdown is triggered");
     }
 
-    @Override
-    public void register(Service server, ServiceHelper services) {
-        server.put("/nodeshutdown", (request, response) -> {
-            if (request.body().equals("")) {
-                return createError("No body in request.", response);
-            }
-            NodeshutdownRequest nodeshutdownRequest;
-            try {
-                nodeshutdownRequest = gson.fromJson(request.body(), NodeshutdownRequest.class);
-            } catch (JsonSyntaxException e) {
-                return createError("Please put nid and kill into body as json.", response);
-            }
-            String stringNid = nodeshutdownRequest.getNid();
-            Boolean kill = Boolean.getBoolean(nodeshutdownRequest.getKill());
+    @PUT
+    @Produces(MediaType.TEXT_PLAIN)
+    public String shutdownNode(String body) {
+        if (body.equals("")) {
+            throw new BadRequestException("No body in request.");
+        }
+        NodeshutdownRequest nodeshutdownRequest;
+        try {
+            nodeshutdownRequest = gson.fromJson(body, NodeshutdownRequest.class);
+        } catch (JsonSyntaxException e) {
+            throw new BadRequestException("Please put nid and kill into body as json.");
+        }
+        String stringNid = nodeshutdownRequest.getNid();
+        Boolean kill = Boolean.getBoolean(nodeshutdownRequest.getKill());
 
-            if (stringNid == null || kill == null) {
-                return createError("Please put nid and kill into body as json.", response);
-            }
+        if (stringNid == null || kill == null) {
+            throw new BadRequestException("Please put nid and kill into body as json.");
+        }
 
-            if (!isNodeID(stringNid)) {
-                return createError("Invalid NodeID", response);
-            }
+        if (!isNodeID(stringNid)) {
+            throw new BadRequestException("Invalid NodeID");
+        }
 
-            short nid = NodeID.parse(stringNid);
+        short nid = NodeID.parse(stringNid);
 
-            if (!services.getService(BootService.class).shutdownNode(nid, kill)) {
-                return createMessage("Shutting down node "+NodeID.toHexString(nid)+" failed");
-            } else {
-                return createMessage("Shutting down node "+NodeID.toHexString(nid)+"...");
-            }
-
-        });
+        if (!ServiceHelper.getService(BootService.class).shutdownNode(nid, kill)) {
+            return createMessage("Shutting down node "+NodeID.toHexString(nid)+" failed");
+        } else {
+            return createMessage("Shutting down node "+NodeID.toHexString(nid)+"...");
+        }
     }
 }

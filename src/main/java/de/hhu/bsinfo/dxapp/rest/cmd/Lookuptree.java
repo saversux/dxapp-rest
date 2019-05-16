@@ -16,7 +16,11 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
-import spark.Service;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import com.google.gson.JsonSyntaxException;
 
@@ -33,50 +37,50 @@ import de.hhu.bsinfo.dxutils.NodeID;
  *
  * @author Julien Bernhart, 2018-11-26
  */
+@Path("lookuptree")
 public class Lookuptree extends AbstractRestCommand {
     @Override
     public CommandInfo setInfo() {
         return new CommandInfo("lookuptree", "nid", "Get the look up tree of a specified node");
     }
 
-    @Override
-    public void register(Service server, ServiceHelper services) {
-        server.get("/lookuptree", (request, response) -> {
-            if (request.body().equals("")) {
-                return createError("No body in request.", response);
-            }
-            LogInfoRequest logInfoRequest;
-            try {
-                logInfoRequest = gson.fromJson(request.body(), LogInfoRequest.class);
-            } catch (JsonSyntaxException e) {
-                return createError("Please put nid into body as json.", response);
-            }
-            String stringNid = logInfoRequest.getNid();
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String lookUpTree(String body) {
+        if (body.equals("")) {
+            throw new BadRequestException("No body in request.");
+        }
+        LogInfoRequest logInfoRequest;
+        try {
+            logInfoRequest = gson.fromJson(body, LogInfoRequest.class);
+        } catch (JsonSyntaxException e) {
+            throw new BadRequestException("Please put nid into body as json.");
+        }
+        String stringNid = logInfoRequest.getNid();
 
-            if (stringNid == null) {
-                return createError("Please put nid into body as json.", response);
-            }
+        if (stringNid == null) {
+            throw new BadRequestException("Please put nid into body as json.");
+        }
 
-            if (!isNodeID(stringNid)) {
-                return createError("Invalid NodeID", response);
-            }
+        if (!isNodeID(stringNid)) {
+            throw new BadRequestException("Invalid NodeID");
+        }
 
-            short nid = NodeID.parse(stringNid);
+        short nid = NodeID.parse(stringNid);
 
-            if (nid == NodeID.INVALID_ID) {
-                return createError("NID invalid", response);
-            }
+        if (nid == NodeID.INVALID_ID) {
+            throw new BadRequestException("NID invalid");
+        }
 
-            LookupService lookup = services.getService(LookupService.class);
+        LookupService lookup = ServiceHelper.getService(LookupService.class);
 
-            short respSuperpeer = lookup.getResponsibleSuperpeer(nid);
+        short respSuperpeer = lookup.getResponsibleSuperpeer(nid);
 
-            if (respSuperpeer == NodeID.INVALID_ID) {
-                return createError("No responsible superpeer for " + NodeID.toHexString(nid) + " found", response);
-            }
+        if (respSuperpeer == NodeID.INVALID_ID) {
+            throw new BadRequestException("No responsible superpeer for " + NodeID.toHexString(nid) + " found");
+        }
 
-            LookupTree tree = lookup.getLookupTreeFromSuperpeer(respSuperpeer, nid);
-            return gson.toJson(tree);
-        });
+        LookupTree tree = lookup.getLookupTreeFromSuperpeer(respSuperpeer, nid);
+        return gson.toJson(tree);
     }
 }

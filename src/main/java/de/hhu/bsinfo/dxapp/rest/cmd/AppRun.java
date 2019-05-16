@@ -16,7 +16,10 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
-import spark.Service;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.GET;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import com.google.gson.JsonSyntaxException;
 
@@ -41,42 +44,42 @@ public class AppRun extends AbstractRestCommand {
         return new CommandInfo("apprun", "nid, app", "Start app on remote node");
     }
 
-    @Override
-    public void register(Service server, ServiceHelper services) {
-        server.put("/apprun", (request, response) -> {
-            if (request.body().equals("")) {
-                return createError("No body in request.", response);
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String runApp(String body) {
+            if (body.equals("")) {
+                throw new BadRequestException("No body in request.");
             }
             AppRunRequest apprunRequest;
             try {
-                apprunRequest = gson.fromJson(request.body(), AppRunRequest.class);
+                apprunRequest = gson.fromJson(body, AppRunRequest.class);
             } catch (JsonSyntaxException e) {
-                return createError("Please put nid and name into body as json.", response);
+                throw new BadRequestException("Please put nid and name into body as json.");
             }
             String stringNid = apprunRequest.getNid();
             String appname = apprunRequest.getName();
 
-            ApplicationService appService = services.getService(ApplicationService.class);
+            ApplicationService appService = ServiceHelper.getService(ApplicationService.class);
 
             if (stringNid == null || appname == null) {
-                return createError("Please put nid and name into body as json.", response);
+                throw new BadRequestException("Please put nid and name into body as json.");
+
             }
 
             if (!isNodeID(stringNid)) {
-                return createError("Invalid NodeID", response);
+                throw new BadRequestException("Invalid NodeID");
             }
 
             short nid = NodeID.parse(stringNid);
 
             if (nid == NodeID.INVALID_ID) {
-                return createError("NodeID invalid", response);
+                throw new BadRequestException("Invalid NodeID");
             }
 
             if (!appService.startApplication(nid, appname, null)) {
-                return createError("Starting " + appname + " failed...", response);
+                throw new BadRequestException("Starting " + appname + " failed...");
             }
-            response.status(200);
+
             return "";
-        });
     }
 }

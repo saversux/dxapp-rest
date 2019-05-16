@@ -16,7 +16,11 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
-import spark.Service;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import com.google.gson.JsonSyntaxException;
 
@@ -37,55 +41,54 @@ import de.hhu.bsinfo.dxutils.NodeID;
  *  Modifications:
  *  - response body is sent with createMessageOfJavaObject method
  */
+@Path("nodeinfo")
 public class Nodeinfo extends AbstractRestCommand {
     @Override
     public CommandInfo setInfo() {
         return new CommandInfo("nodeinfo", "nid", "Get information about a node in the network");
     }
 
-    @Override
-    public void register(Service server, ServiceHelper services) {
-        server.get("/nodeinfo", (request, response) -> {
-            if (request.body().equals("")) {
-                return createError("No body in request.", response);
-            }
-            NodeinfoRequest nodeinfoRequest;
-            try {
-                nodeinfoRequest = gson.fromJson(request.body(), NodeinfoRequest.class);
-            } catch (JsonSyntaxException e) {
-                return createError("Please put nid into body as json.", response);
-            }
-            String stringNid = nodeinfoRequest.getNid();
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String nodeInfo(String body) {
+        if (body.equals("")) {
+            throw new BadRequestException("No body in request.");
+        }
+        NodeinfoRequest nodeinfoRequest;
+        try {
+            nodeinfoRequest = gson.fromJson(body, NodeinfoRequest.class);
+        } catch (JsonSyntaxException e) {
+            throw new BadRequestException("Please put nid into body as json.");
+        }
+        String stringNid = nodeinfoRequest.getNid();
 
-            BootService bootService = services.getService(BootService.class);
+        BootService bootService = ServiceHelper.getService(BootService.class);
 
-            if (stringNid == null) {
-                return createError("Please put nid into body as json.", response);
-            }
+        if (stringNid == null) {
+            throw new BadRequestException("Please put nid into body as json.");
+        }
 
-            if (!isNodeID(stringNid)) {
-                return createError("Invalid NodeID", response);
-            }
+        if (!isNodeID(stringNid)) {
+            throw new BadRequestException("Invalid NodeID");
+        }
 
-            short nid = NodeID.parse(stringNid);
+        short nid = NodeID.parse(stringNid);
 
-            if (nid != NodeID.INVALID_ID) {
-                if (!bootService.isNodeOnline(nid)) {
-                    return createError("Node not available.", response);
-                } else {
-                    NodeInfoResponse nodeInfoResponse = new NodeInfoResponse(
-                            NodeID.toHexString(nid),
-                            bootService.getNodeRole(nid).toString(),
-                            bootService.getNodeAddress(nid).toString(),
-                            NodeCapabilities.toString(bootService.getNodeCapabilities(nid))
-                    );
-                    return createMessageOfJavaObject(nodeInfoResponse);
-                }
+        if (nid != NodeID.INVALID_ID) {
+            if (!bootService.isNodeOnline(nid)) {
+                throw new BadRequestException("Node not available.");
             } else {
-                return createError("NID invalid", response);
+                NodeInfoResponse nodeInfoResponse = new NodeInfoResponse(
+                        NodeID.toHexString(nid),
+                        bootService.getNodeRole(nid).toString(),
+                        bootService.getNodeAddress(nid).toString(),
+                        NodeCapabilities.toString(bootService.getNodeCapabilities(nid))
+                );
+                return createMessageOfJavaObject(nodeInfoResponse);
             }
-
-        });
+        } else {
+            throw new BadRequestException("NID invalid");
+        }
     }
 
 

@@ -16,7 +16,11 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
-import spark.Service;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import com.google.gson.JsonSyntaxException;
 
@@ -33,45 +37,45 @@ import de.hhu.bsinfo.dxram.sync.SynchronizationService;
  *
  * @author Julien Bernhart, 2018-11-28
  */
+@Path("barriersignon")
 public class Barriersignon extends AbstractRestCommand {
     @Override
     public CommandInfo setInfo() {
         return new CommandInfo("barriersignon", "bid, data", "Sign on to an allocated barrier for synchronization");
     }
 
-    @Override
-    public void register(Service server, ServiceHelper services) {
-        server.put("/barriersignon", (request, response) -> {
-            if (request.body().equals("")) {
-                return createError("No body in request.", response);
-            }
-            BarriersignonRequest barriersignonRequest;
-            try {
-                barriersignonRequest = gson.fromJson(request.body(), BarriersignonRequest.class);
-            } catch (JsonSyntaxException e) {
-                return createError("Please put bid into body as json.", response);
-            }
-            String stringBid = barriersignonRequest.getBid();
-            long data = barriersignonRequest.getData();
+    @PUT
+    @Produces(MediaType.TEXT_PLAIN)
+    public String barrierSignon(String body) {
+        if (body.equals("")) {
+            throw new BadRequestException("No body in request.");
+        }
+        BarriersignonRequest barriersignonRequest;
+        try {
+            barriersignonRequest = gson.fromJson(body, BarriersignonRequest.class);
+        } catch (JsonSyntaxException e) {
+            throw new BadRequestException("Please put bid into body as json.");
+        }
+        String stringBid = barriersignonRequest.getBid();
+        long data = barriersignonRequest.getData();
 
-            if (stringBid == null) {
-                return createError("Please put bid into body as json.", response);
-            }
+        if (stringBid == null) {
+            throw new BadRequestException("Please put bid into body as json.");
+        }
 
-            if (!isBarrierID(stringBid)) {
-                return createError("Invalid BarrierID", response);
-            }
+        if (!isBarrierID(stringBid)) {
+            throw new BadRequestException("Invalid BarrierID");
+        }
 
-            int bid = BarrierID.parse(stringBid);
+        int bid = BarrierID.parse(stringBid);
 
-            SynchronizationService sync = services.getService(SynchronizationService.class);
-            BarrierStatus result = sync.barrierSignOn(bid, data, false);
+        SynchronizationService sync = ServiceHelper.getService(SynchronizationService.class);
+        BarrierStatus result = sync.barrierSignOn(bid, data, false);
 
-            if (result == null) {
-                return createError("Signing on to barrier "+ BarrierID.toHexString(bid)+" failed",response);
-            }
+        if (result == null) {
+            throw new BadRequestException("Signing on to barrier "+ BarrierID.toHexString(bid)+" failed");
+        }
 
-            return createMessage("Synchronized to barrier "+ BarrierID.toHexString(bid)+" with custom data: "+data);
-        });
+        return createMessage("Synchronized to barrier "+ BarrierID.toHexString(bid)+" with custom data: "+data);
     }
 }

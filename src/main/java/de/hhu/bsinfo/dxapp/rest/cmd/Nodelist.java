@@ -16,10 +16,13 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
-import spark.Service;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.CommandInfo;
@@ -35,23 +38,23 @@ import de.hhu.bsinfo.dxram.boot.BootService;
  *  Modifications:
  *  - response body is sent with createMessageOfJavaObject method
  */
+@Path("nodelist")
 public class Nodelist extends AbstractRestCommand {
     @Override
     public CommandInfo setInfo() {
         return new CommandInfo("nodelist", "", "List all nodes");
     }
 
-    @Override
-    public void register(Service server, ServiceHelper services) {
-        server.get("/nodelist", (request, response) -> {
-            List<Short> nodes = services.getService(BootService.class).getOnlineNodeIDs();
-            List<String> stringNodes = new ArrayList();
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String listNodes(String body) {
+        List<Short> nodes = ServiceHelper.getService(BootService.class).getOnlineNodeIDs();
+        List<String> stringNodes = new ArrayList();
 
-            for (Short node : nodes) {
-                stringNodes.add(Integer.toHexString(node & 0xffff));
-            }
+        for (Short node : nodes) {
+            stringNodes.add(Integer.toHexString(node & 0xffff));
+        }
 
-            return createMessageOfJavaObject(new NodeListResponse(stringNodes));
-        });
+        return createMessageOfJavaObject(new NodeListResponse(stringNodes));
     }
 }

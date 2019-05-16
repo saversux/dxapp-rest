@@ -16,7 +16,11 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
-import spark.Service;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import com.google.gson.JsonSyntaxException;
 
@@ -32,41 +36,40 @@ import de.hhu.bsinfo.dxram.sync.SynchronizationService;
  *
  * @author Julien Bernhart, 2018-11-28
  */
+@Path("barrieraloc")
 public class Barrieralloc extends AbstractRestCommand {
     @Override
     public CommandInfo setInfo() {
         return new CommandInfo("barrieralloc", "size", "Create a new barrier for synchronization of multiple peers");
     }
 
-    @Override
-    public void register(Service server, ServiceHelper services) {
-        server.put("/barrieralloc", (request, response) -> {
-            if (request.body().equals("")) {
-                return createError("No body in request.", response);
-            }
-            BarrierallocRequest barrierallocRequest;
-            try {
-                barrierallocRequest = gson.fromJson(request.body(), BarrierallocRequest.class);
-            } catch (JsonSyntaxException e) {
-                return createError("Please put bid into body as json.", response);
-            }
-            int size = barrierallocRequest.getSize();
+    @PUT
+    @Produces(MediaType.TEXT_PLAIN)
+    public String barrierAloc(String body) {
+        if (body.equals("")) {
+            throw new BadRequestException("No body in request.");
+        }
+        BarrierallocRequest barrierallocRequest;
+        try {
+            barrierallocRequest = gson.fromJson(body, BarrierallocRequest.class);
+        } catch (JsonSyntaxException e) {
+            throw new BadRequestException("Please put bid into body as json.");
+        }
+        int size = barrierallocRequest.getSize();
 
-            if (size <= 0){
-                return createError("Please put a valid size in body", response);
-            }
+        if (size <= 0){
+            throw new BadRequestException("Please put bid into body as json.");
+        }
 
-            SynchronizationService sync = services.getService(SynchronizationService.class);
+        SynchronizationService sync = ServiceHelper.getService(SynchronizationService.class);
 
-            int barrierId = sync.barrierAllocate(size);
-            if (barrierId == BarrierID.INVALID_ID) {
-                return createError("Allocating barrier failed", response);
-            } else {
-                BarrierallocRest barrierallocRest = new BarrierallocRest(BarrierID.toHexString(barrierId));
-                return gson.toJson(barrierallocRest);
-            }
-
-        });
+        int barrierId = sync.barrierAllocate(size);
+        if (barrierId == BarrierID.INVALID_ID) {
+            throw new BadRequestException("Allocating barrier failed");
+        } else {
+            BarrierallocRest barrierallocRest = new BarrierallocRest(BarrierID.toHexString(barrierId));
+            return gson.toJson(barrierallocRest);
+        }
     }
 
     private class BarrierallocRest{

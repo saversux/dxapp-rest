@@ -23,14 +23,14 @@ import de.hhu.bsinfo.dxram.engine.Service;
  *
  * @author Julien Bernhart, 2018-11-26
  */
-public class ServiceHelper {
-    private RestServerApplication app;
+public final class ServiceHelper {
+    private static RestServerApplication app;
 
     public ServiceHelper(RestServerApplication app) {
         this.app = app;
     }
 
-    public <T extends Service> T getService(final Class<T> p_class) {
+    public static <T extends Service> T getService(final Class<T> p_class) {
         return app.getService(p_class);
     }
 

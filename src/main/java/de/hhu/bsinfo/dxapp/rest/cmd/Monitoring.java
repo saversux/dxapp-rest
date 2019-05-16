@@ -16,7 +16,11 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
-import spark.Service;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import com.google.gson.JsonSyntaxException;
 
@@ -33,45 +37,44 @@ import de.hhu.bsinfo.dxutils.NodeID;
  *
  * @author Julien Bernhart, 2018-11-26
  */
+@Path("monitor")
 public class Monitoring extends AbstractRestCommand {
     @Override
     public CommandInfo setInfo() {
         return new CommandInfo("monitoring", "nid", "Get monitoring data of given peer");
     }
 
-    @Override
-    public void register(Service server, ServiceHelper services) {
-        server.get("/monitor", (request, response) -> {
-            if (request.body().equals("")) {
-                return createError("No body in request.", response);
-            }
-            MonitoringRequest monitoringRequest;
-            try {
-                monitoringRequest = gson.fromJson(request.body(), MonitoringRequest.class);
-            } catch (JsonSyntaxException e) {
-                return createError("Please put nid into body as json.", response);
-            }
-            String stringNid = monitoringRequest.getNid();
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String monitor(String body) {
+        if (body.equals("")) {
+            throw new BadRequestException("No body in request.");
+        }
+        MonitoringRequest monitoringRequest;
+        try {
+            monitoringRequest = gson.fromJson(body, MonitoringRequest.class);
+        } catch (JsonSyntaxException e) {
+            throw new BadRequestException("Please put nid into body as json.");
+        }
+        String stringNid = monitoringRequest.getNid();
 
-            if (stringNid == null) {
-                return createError("Please put nid into body as json.", response);
-            }
+        if (stringNid == null) {
+            throw new BadRequestException("Please put nid into body as json.");
+        }
 
-            if (!isNodeID(stringNid)) {
-                return createError("Invalid NodeID", response);
-            }
+        if (!isNodeID(stringNid)) {
+            throw new BadRequestException("Invalid NodeID");
+        }
 
-            short nid = NodeID.parse(stringNid);
-            MonitoringService monitoring = services.getService(MonitoringService.class);
+        short nid = NodeID.parse(stringNid);
+        MonitoringService monitoring = ServiceHelper.getService(MonitoringService.class);
 
-            if (nid != NodeID.INVALID_ID) {
-                MonitoringDataStructure data = monitoring.getMonitoringDataFromPeer(nid);
-                return gson.toJson(data);
+        if (nid != NodeID.INVALID_ID) {
+            MonitoringDataStructure data = monitoring.getMonitoringDataFromPeer(nid);
+            return gson.toJson(data);
 
-            } else {
-                return createError("NID invalid", response);
-            }
-
-        });
+        } else {
+            throw new BadRequestException("NID invalid");
+        }
     }
 }

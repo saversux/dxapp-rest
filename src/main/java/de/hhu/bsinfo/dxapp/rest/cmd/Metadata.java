@@ -16,10 +16,14 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
-import spark.Service;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import com.google.gson.JsonSyntaxException;
 
@@ -42,57 +46,57 @@ import de.hhu.bsinfo.dxutils.NodeID;
  *  Modifications:
  *  - response body is sent with createMessageOfJavaObject method
  */
+@Path("metadata")
 public class Metadata extends AbstractRestCommand {
     @Override
     public CommandInfo setInfo() {
         return new CommandInfo("metadata", "nid (optional)", "Get summary of all or one superpeer's metadata");
     }
 
-    @Override
-    public void register(Service server, ServiceHelper services) {
-        server.get("metadata", (request, response) -> {
-            MetadataRequest metadataRequest;
-            try {
-                metadataRequest = gson.fromJson(request.body(), MetadataRequest.class);
-            } catch (JsonSyntaxException e) {
-                return createError("Please put nid into body as json.", response);
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String metadata(String body) {
+        MetadataRequest metadataRequest;
+        try {
+            metadataRequest = gson.fromJson(body, MetadataRequest.class);
+        } catch (JsonSyntaxException e) {
+            throw new BadRequestException("Please put nid into body as json.");
+        }
+
+        String stringNid;
+        if (body.equals("")) {
+            stringNid = null;
+        }else{
+            stringNid = metadataRequest.getNid();
+        }
+
+        LookupService lookup = ServiceHelper.getService(LookupService.class);
+        BootService boot = ServiceHelper.getService(BootService.class);
+
+        if (stringNid == null) {
+            List<Short> nodeIds = boot.getOnlineNodeIDs();
+            List<MetadataResponseOnePeer> metadataEntries = new ArrayList<>();
+            for (Short nodeId : nodeIds) {
+                NodeRole curRole = boot.getNodeRole(nodeId);
+                if (curRole == NodeRole.SUPERPEER) {
+                    String summary = lookup.getMetadataSummary(nodeId);
+                    metadataEntries.add(new MetadataResponseOnePeer(NodeID.toHexString(nodeId), summary));
+                }
+            }
+            return createMessageOfJavaObject(new MetadataResponseAllPeers(metadataEntries));
+        } else {
+            if (!isNodeID(stringNid)) {
+                throw new BadRequestException("Invalid NodeID");
             }
 
-            String stringNid;
-            if (request.body().equals("")) {
-                stringNid = null;
-            }else{
-                stringNid = metadataRequest.getNid();
+            short nid = NodeID.parse(stringNid);
+            if (nid == NodeID.INVALID_ID) {
+                throw new BadRequestException("NID invalid");
             }
 
-            LookupService lookup = services.getService(LookupService.class);
-            BootService boot = services.getService(BootService.class);
-
-            if (stringNid == null) {
-                List<Short> nodeIds = boot.getOnlineNodeIDs();
-                List<MetadataResponseOnePeer> metadataEntries = new ArrayList<>();
-                for (Short nodeId : nodeIds) {
-                    NodeRole curRole = boot.getNodeRole(nodeId);
-                    if (curRole == NodeRole.SUPERPEER) {
-                        String summary = lookup.getMetadataSummary(nodeId);
-                        metadataEntries.add(new MetadataResponseOnePeer(NodeID.toHexString(nodeId), summary));
-                    }
-                }
-                return createMessageOfJavaObject(new MetadataResponseAllPeers(metadataEntries));
-            } else {
-                if (!isNodeID(stringNid)) {
-                    return createError("Invalid NodeID", response);
-                }
-
-                short nid = NodeID.parse(stringNid);
-                if (nid == NodeID.INVALID_ID) {
-                    return createError("NID invalid", response);
-                }
-
-                String summary = lookup.getMetadataSummary(nid);
-                return createMessageOfJavaObject(new MetadataResponseOnePeer(NodeID.toHexString(nid), summary));
-            }
-        });
+            String summary = lookup.getMetadataSummary(nid);
+            return createMessageOfJavaObject(new MetadataResponseOnePeer(NodeID.toHexString(nid), summary));
+        }
     }
 
 

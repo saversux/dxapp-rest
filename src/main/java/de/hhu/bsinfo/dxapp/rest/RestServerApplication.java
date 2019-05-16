@@ -16,15 +16,23 @@
 
 package de.hhu.bsinfo.dxapp.rest;
 
-import spark.Service;
-
+import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ws.rs.core.UriBuilder;
+
 import com.google.gson.Gson;
+import com.sun.net.httpserver.HttpServer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
+import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
+import org.glassfish.jersey.server.ResourceConfig;
 
 import de.hhu.bsinfo.dxapp.rest.cmd.AppList;
 import de.hhu.bsinfo.dxapp.rest.cmd.AppRun;
@@ -64,9 +72,9 @@ import de.hhu.bsinfo.dxram.generated.BuildConfig;
  * @author Julien Bernhart, 2018-11-26
  */
 public class RestServerApplication extends Application {
-    private static Service server;
     private volatile boolean run;
     private Gson gson;
+    private Server server;
     private static final Logger LOGGER = LogManager.getFormatterLogger(RestServerApplication.class.getSimpleName());
 
     @Override
@@ -109,7 +117,7 @@ public class RestServerApplication extends Application {
 
         startServer(maxThreads, port);
 
-        List<Object> commandInfo = new ArrayList<>();
+        /*List<Object> commandInfo = new ArrayList<>();
         List<AbstractRestCommand> restCommands = new ArrayList<>();
         restCommands.add(new Chunkget());
         restCommands.add(new Chunklist());
@@ -141,13 +149,11 @@ public class RestServerApplication extends Application {
         restCommands.add(new Compgrpstatus());
 
         for (AbstractRestCommand c : restCommands) {
-            c.register(server, services);
             commandInfo.add(c.getInfo());
         }
 
         server.get("/","application/json", (req, res) -> gson.toJson(commandInfo));
-        server.get("/api", (request, response) -> getClass().getClassLoader()
-                .getResourceAsStream("api.json"));
+        server.get("/api", (request, response) -> getClass().getClassLoader().getResourceAsStream("api.json"));*/
         LOGGER.info("DXRest server started on port %d", port);
 
         while (run) {
@@ -168,9 +174,19 @@ public class RestServerApplication extends Application {
      * @param maxThreads
      * @param port
      */
-    private static void startServer(int maxThreads, int port) {
+    private void startServer(int maxThreads, int port) {
+        URI baseUri = UriBuilder.fromUri("http://localhost/").port(port).build();
 
-        server = maxThreads != -1 ? Service.ignite().port(port).threadPool(maxThreads) : Service.ignite().port(port);
+        ResourceConfig config = new ResourceConfig();
+        config.packages("de.hhu.bsinfo.dxapp.rest");
+
+        server = JettyHttpContainerFactory.createServer(baseUri, config);
+
+        try {
+            server.start();
+        } catch (Exception e) {
+            LOGGER.error(e);
+        }
     }
 
     /**
@@ -178,7 +194,13 @@ public class RestServerApplication extends Application {
      */
     @Override
     public void signalShutdown() {
-        server.stop();
+        if (server != null) {
+            try {
+                server.stop();
+            } catch (Exception e) {
+                LOGGER.error(e);
+            }
+        }
         run = false;
     }
 

@@ -16,7 +16,11 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
-import spark.Service;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import com.google.gson.JsonSyntaxException;
 
@@ -32,48 +36,48 @@ import de.hhu.bsinfo.dxram.sync.SynchronizationService;
  *
  * @author Julien Bernhart, 2018-12-03
  */
+@Path("barriersize")
 public class Barriersize extends AbstractRestCommand {
     @Override
     public CommandInfo setInfo() {
         return new CommandInfo("barriersize", "bid, size", "Change the size of an existing barrier");
     }
 
-    @Override
-    public void register(Service server, ServiceHelper services) {
-        server.put("/barriersize", (request, response) -> {
-            if (request.body().equals("")) {
-                return createError("No body in request.", response);
-            }
-            BarriersizeRequest barriersizeRequest;
-            try {
-                barriersizeRequest = gson.fromJson(request.body(), BarriersizeRequest.class);
-            } catch (JsonSyntaxException e) {
-                return createError("Please put bid and size into body as json.", response);
-            }
-            String stringBid = barriersizeRequest.getBid();
-            int size = barriersizeRequest.getSize();
+    @PUT
+    @Produces(MediaType.TEXT_PLAIN)
+    public String barrierSize(String body) {
+        if (body.equals("")) {
+            throw new BadRequestException("No body in request.");
+        }
+        BarriersizeRequest barriersizeRequest;
+        try {
+            barriersizeRequest = gson.fromJson(body, BarriersizeRequest.class);
+        } catch (JsonSyntaxException e) {
+            throw new BadRequestException("Please put bid and size into body as json.");
+        }
+        String stringBid = barriersizeRequest.getBid();
+        int size = barriersizeRequest.getSize();
 
-            if (stringBid == null) {
-                return createError("Please put bid and size into body as json.", response);
-            }
+        if (stringBid == null) {
+            throw new BadRequestException("Please put bid and size into body as json.");
+        }
 
-            if (!isBarrierID(stringBid)) {
-                return createError("Invalid BarrierID", response);
-            }
+        if (!isBarrierID(stringBid)) {
+            throw new BadRequestException("Invalid BarrierID");
+        }
 
-            if (size < 1){
-                return createError("Enter a valid size", response);
-            }
+        if (size < 1){
+            throw new BadRequestException("Enter a valid size");
+        }
 
-            int bid = BarrierID.parse(stringBid);
+        int bid = BarrierID.parse(stringBid);
 
-            SynchronizationService sync = services.getService(SynchronizationService.class);
+        SynchronizationService sync = ServiceHelper.getService(SynchronizationService.class);
 
-            if (!sync.barrierChangeSize(bid, size)) {
-                return createError("Changing barrier "+BarrierID.toHexString(bid)+" size to "+size+" failed", response);
-            } else {
-                return createMessage("Barrier "+BarrierID.toHexString(bid)+" size changed to "+size);
-            }
-        });
+        if (!sync.barrierChangeSize(bid, size)) {
+            throw new BadRequestException("Changing barrier "+BarrierID.toHexString(bid)+" size to "+size+" failed");
+        } else {
+            return createMessage("Barrier "+BarrierID.toHexString(bid)+" size changed to "+size);
+        }
     }
 }

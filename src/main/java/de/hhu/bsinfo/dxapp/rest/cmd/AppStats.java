@@ -16,11 +16,14 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
-import spark.Service;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.CommandInfo;
@@ -32,26 +35,26 @@ import de.hhu.bsinfo.dxram.app.ApplicationService;
 /**
  * @author Julien Bernhart, 2019-01-07
  */
+@Path("appstats")
 public class AppStats extends AbstractRestCommand {
     @Override
     public CommandInfo setInfo() {
         return new CommandInfo("appstats", "", "Shows information about all running applications");
     }
 
-    @Override
-    public void register(Service server, ServiceHelper services) {
-        server.get("/appstats", (request, response) -> {
-            ApplicationService appService = services.getService(ApplicationService.class);
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String appStats() {
+        ApplicationService appService = ServiceHelper.getService(ApplicationService.class);
 
-            Iterator<ApplicationProcess> iterator = appService.getRunningProcesses().iterator();
-            List<ApplicationProcessResponse> list = new ArrayList<>();
+        Iterator<ApplicationProcess> iterator = appService.getRunningProcesses().iterator();
+        List<ApplicationProcessResponse> list = new ArrayList<>();
 
-            while(iterator.hasNext()){
-                ApplicationProcess item = iterator.next();
-                list.add(new ApplicationProcessResponse(item.getName(), item.getId(), item.getElapsedTime(), item.getArguments()));
-            }
+        while(iterator.hasNext()){
+            ApplicationProcess item = iterator.next();
+            list.add(new ApplicationProcessResponse(item.getName(), item.getId(), item.getElapsedTime(), item.getArguments()));
+        }
 
-            return createMessageOfJavaObject(list);
-        });
+        return createMessageOfJavaObject(list);
     }
 }

@@ -16,10 +16,15 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
-import spark.Service;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.CommandInfo;
@@ -31,28 +36,24 @@ import de.hhu.bsinfo.dxram.stats.StatisticsService;
  *
  * @author Julien Bernhart, 2018-11-26
  */
+@Path("statsprint")
 public class Statsprint extends AbstractRestCommand {
     @Override
     public CommandInfo setInfo() {
         return new CommandInfo("statsprint", "interval", "Get debug information all <interval> seconds");
     }
 
-    @Override
-    public void register(Service server, ServiceHelper services) {
-        server.get("/statsprint", (request, response) -> {
-            String interval = request.queryParams("interval");
+    @GET
+    @Produces(MediaType.TEXT_HTML)
+    public String register(@QueryParam("interval") String interval, String body) {
+        if (interval == null) {
+            throw new BadRequestException("Please enter the refresh interval parameter: /statsprint?interval=[SECONDS]");
+        }
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(os);
 
-            if (interval == null) {
-                response.status(400);
-                return createError("Please enter the refresh interval parameter: /statsprint?interval=[SECONDS]",
-                        response);
-            }
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
-            PrintStream ps = new PrintStream(os);
+        ServiceHelper.getService(StatisticsService.class).getManager().printStatistics(ps);
 
-            services.getService(StatisticsService.class).getManager().printStatistics(ps);
-
-            return htmlRefresh(os.toString(), interval);
-        });
+        return htmlRefresh(os.toString(), interval);
     }
 }

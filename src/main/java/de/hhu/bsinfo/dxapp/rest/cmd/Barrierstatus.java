@@ -16,10 +16,14 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
-import spark.Service;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import com.google.gson.JsonSyntaxException;
 
@@ -38,52 +42,51 @@ import de.hhu.bsinfo.dxutils.NodeID;
  *
  * @author Julien Bernhart, 2018-11-26
  */
+@Path("barrierstatus")
 public class Barrierstatus extends AbstractRestCommand {
     @Override
     public CommandInfo setInfo() {
         return new CommandInfo("barrierstatus", "bid", "Get status of a barrier");
     }
 
-    @Override
-    public void register(Service server, ServiceHelper services) {
-        server.get("/barrierstatus", (request, response) -> {
-            if (request.body().equals("")) {
-                return createError("No body in request.", response);
-            }
-            BarrierstatusRequest barrierstatusRequest;
-            try {
-                barrierstatusRequest = gson.fromJson(request.body(), BarrierstatusRequest.class);
-            } catch (JsonSyntaxException e) {
-                return createError("Please put bid into body as json.", response);
-            }
-            String stringBid = barrierstatusRequest.getBid();
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String barrierStatus(String body) {
+        if (body.equals("")) {
+            throw new BadRequestException("No body in request.");
+        }
+        BarrierstatusRequest barrierstatusRequest;
+        try {
+            barrierstatusRequest = gson.fromJson(body, BarrierstatusRequest.class);
+        } catch (JsonSyntaxException e) {
+            throw new BadRequestException("Please put bid into body as json.");
+        }
+        String stringBid = barrierstatusRequest.getBid();
 
-            if (stringBid == null) {
-                return createError("Please put bid into body as json.", response);
-            }
+        if (stringBid == null) {
+            throw new BadRequestException("Please put bid into body as json.");
+        }
 
-            if (!isBarrierID(stringBid)) {
-                return createError("Invalid BarrierID", response);
-            }
+        if (!isBarrierID(stringBid)) {
+            throw new BadRequestException("Invalid BarrierID");
+        }
 
-            int bid = BarrierID.parse(stringBid);
+        int bid = BarrierID.parse(stringBid);
 
-            SynchronizationService sync = services.getService(SynchronizationService.class);
-            BarrierStatus status = sync.barrierGetStatus(bid);
+        SynchronizationService sync = ServiceHelper.getService(SynchronizationService.class);
+        BarrierStatus status = sync.barrierGetStatus(bid);
 
-            if (status == null) {
-                return createError("Getting status of barrier "+BarrierID.toHexString(bid)+" failed", response);
-            }
+        if (status == null) {
+            throw new BadRequestException("Getting status of barrier "+BarrierID.toHexString(bid)+" failed");
+        }
 
-            List<BarrierstatusEntryRest> peers = new ArrayList<>();
-            for (int i = 1; i < status.getSignedOnNodeIDs().length; i++) {
-                peers.add(new BarrierstatusEntryRest(NodeID.toHexString(status.getSignedOnNodeIDs()[i]), ChunkID.toHexString(status.getCustomData()[i])));
-            }
+        List<BarrierstatusEntryRest> peers = new ArrayList<>();
+        for (int i = 1; i < status.getSignedOnNodeIDs().length; i++) {
+            peers.add(new BarrierstatusEntryRest(NodeID.toHexString(status.getSignedOnNodeIDs()[i]), ChunkID.toHexString(status.getCustomData()[i])));
+        }
 
-            BarrierstatusRest barrierstatusRest = new BarrierstatusRest(peers, BarrierID.toHexString(bid), status.getNumberOfSignedOnPeers(), status.getSignedOnNodeIDs().length);
-            return gson.toJson(barrierstatusRest);
-
-        });
+        BarrierstatusRest barrierstatusRest = new BarrierstatusRest(peers, BarrierID.toHexString(bid), status.getNumberOfSignedOnPeers(), status.getSignedOnNodeIDs().length);
+        return gson.toJson(barrierstatusRest);
     }
 
     private class BarrierstatusRest {

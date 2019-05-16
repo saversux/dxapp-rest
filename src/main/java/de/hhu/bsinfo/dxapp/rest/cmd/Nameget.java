@@ -16,7 +16,11 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
-import spark.Service;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import com.google.gson.JsonSyntaxException;
 
@@ -36,40 +40,39 @@ import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
  * Modifications:
  * - response body is sent with createMessageOfJavaObject method
  */
+@Path("nameget")
 public class Nameget extends AbstractRestCommand {
     @Override
     public CommandInfo setInfo() {
         return new CommandInfo("nameget", "name", "Get chunk by name from nameservice.");
     }
 
-    @Override
-    public void register(Service server, ServiceHelper services) {
-        server.get("/nameget", (request, response) -> {
-            if (request.body().equals("")) {
-                return createError("No body in request.", response);
-            }
-            NamegetRequest namegetRequest;
-            try {
-                namegetRequest = gson.fromJson(request.body(), NamegetRequest.class);
-            } catch (JsonSyntaxException e) {
-                return createError("Please put name into body as json.", response);
-            }
-            String name = namegetRequest.getName();
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String nameGet(String body) {
+        if (body.equals("")) {
+            throw new BadRequestException("No body in request.");
+        }
+        NamegetRequest namegetRequest;
+        try {
+            namegetRequest = gson.fromJson(body, NamegetRequest.class);
+        } catch (JsonSyntaxException e) {
+            throw new BadRequestException("Please put name into body as json.");
+        }
+        String name = namegetRequest.getName();
 
-            if (name == null) {
-                createError("Please put name into body as json.", response);
-            }
+        if (name == null) {
+            throw new BadRequestException("Please put name into body as json.");
+        }
 
-            NameserviceService nameservice = services.getService(NameserviceService.class);
+        NameserviceService nameservice = ServiceHelper.getService(NameserviceService.class);
 
-            long cid = nameservice.getChunkID(name, 2000);
+        long cid = nameservice.getChunkID(name, 2000);
 
-            if (cid == ChunkID.INVALID_ID) {
-                return createError("Could not get name entry for " + name + ", does not exist", response);
-            } else {
-                return createMessageOfJavaObject(new NameGetResponse(cid));
-            }
-
-        });
+        if (cid == ChunkID.INVALID_ID) {
+            throw new BadRequestException("Could not get name entry for " + name + ", does not exist");
+        } else {
+            return createMessageOfJavaObject(new NameGetResponse(cid));
+        }
     }
 }

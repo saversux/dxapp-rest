@@ -16,12 +16,15 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
-import spark.Service;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import de.hhu.bsinfo.dxapp.rest.AbstractRestCommand;
 import de.hhu.bsinfo.dxapp.rest.CommandInfo;
 import de.hhu.bsinfo.dxapp.rest.ServiceHelper;
-import de.hhu.bsinfo.dxram.chunk.ChunkService;
 import de.hhu.bsinfo.dxutils.NodeID;
 
 /**
@@ -29,33 +32,32 @@ import de.hhu.bsinfo.dxutils.NodeID;
  *
  * @author Julien Bernhart, 2018-11-26
  */
+@Path("chunklocklist")
 public class Chunklocklist extends AbstractRestCommand {
     @Override
     public CommandInfo setInfo() {
         return new CommandInfo("chunklocklist", "nid", "Get the list of all locked chunks of a node");
     }
 
-    @Override
-    public void register(Service server, ServiceHelper services) {
-        server.get("/chunklocklist", (request, response) -> {
-            String stringNid = request.queryParams("nid");
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String register(String body) {
+            String stringNid = "";
 
             if (stringNid == null) {
-                return createError("Invalid Parameter, please use: /chunklocklist?nid=[NID]", response);
+                throw new BadRequestException("Invalid Parameter, please use: /chunklocklist?nid=[NID]");
             }
 
             if (!isNodeID(stringNid)) {
-                return createError("Invalid NodeID", response);
+                throw new BadRequestException("Invalid NodeID");
             }
 
             short nid = NodeID.parse(stringNid);
             if (nid == NodeID.INVALID_ID) {
-                return createError("NID invalid", response);
+                throw new BadRequestException("NID invalid");
             }
 
             //TODO
             return null;
-
-        });
     }
 }

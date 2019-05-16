@@ -16,7 +16,11 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
-import spark.Service;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import com.google.gson.JsonSyntaxException;
 
@@ -38,50 +42,49 @@ import de.hhu.bsinfo.dxutils.NodeID;
  * - response body is sent with createMessageOfJavaObject method
  *
  */
+@Path("chunkcreate")
 public class Chunkcreate extends AbstractRestCommand {
     @Override
     public CommandInfo setInfo() {
         return new CommandInfo("chunkcreate", "nid, size", "Creates a Chunk on Node <nid> with Size <size>");
     }
 
-    @Override
-    public void register(Service server, ServiceHelper services) {
-        server.put("/chunkcreate", (request, response) -> {
-            if (request.body().equals("")) {
-                return createError("No body in request.", response);
-            }
-            ChunkcreateRequest chunkcreateRequest;
-            try {
-                chunkcreateRequest = gson.fromJson(request.body(), ChunkcreateRequest.class);
-            } catch (JsonSyntaxException e) {
-                return createError("Please put nid and size into body as json.", response);
-            }
-            String stringNid = chunkcreateRequest.getNid();
-            String stringSize = chunkcreateRequest.getSize();
+    @PUT
+    @Produces(MediaType.TEXT_PLAIN)
+    public String register(String body) {
+        if (body.equals("")) {
+            throw new BadRequestException("No body in request.");
+        }
+        ChunkcreateRequest chunkcreateRequest;
+        try {
+            chunkcreateRequest = gson.fromJson(body, ChunkcreateRequest.class);
+        } catch (JsonSyntaxException e) {
+            throw new BadRequestException("Please put nid and size into body as json.");
+        }
+        String stringNid = chunkcreateRequest.getNid();
+        String stringSize = chunkcreateRequest.getSize();
 
-            if (stringNid == null || stringSize == null) {
-                return createError("Please put nid and size into body as json.",
-                        response);
-            }
+        if (stringNid == null || stringSize == null) {
+            throw new BadRequestException("Please put nid and size into body as json.");
+        }
 
-            if (!isNodeID(stringNid)) {
-                return createError("Invalid NodeID", response);
-            }
+        if (!isNodeID(stringNid)) {
+            throw new BadRequestException("Invalid NodeID");
+        }
 
-            short nid = NodeID.parse(stringNid);
+        short nid = NodeID.parse(stringNid);
 
-            //todo check if strinSize is a number
-            int size = Integer.parseInt(stringSize);
+        //todo check if strinSize is a number
+        int size = Integer.parseInt(stringSize);
 
-            if (nid == NodeID.INVALID_ID) {
-                return createError("NodeID invalid", response);
-            }
+        if (nid == NodeID.INVALID_ID) {
+            throw new BadRequestException("NodeID invalid");
+        }
 
-            long[] chunkIDs = new long[1];
+        long[] chunkIDs = new long[1];
 
-            services.getService(ChunkService.class).create().create(nid, chunkIDs, 1, size);
+        ServiceHelper.getService(ChunkService.class).create().create(nid, chunkIDs, 1, size);
 
-            return createMessageOfJavaObject(new ChunkCreateResponse(chunkIDs[0]));
-        });
+        return createMessageOfJavaObject(new ChunkCreateResponse(chunkIDs[0]));
     }
 }

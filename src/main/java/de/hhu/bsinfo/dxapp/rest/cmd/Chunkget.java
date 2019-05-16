@@ -16,10 +16,14 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
-import spark.Service;
-
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import com.google.gson.JsonSyntaxException;
 
@@ -39,103 +43,102 @@ import de.hhu.bsinfo.dxram.chunk.data.ChunkAnon;
  * Modifications:
  * - parsing of the the String cid is not necessary anymmore because cids are sent as longs
  */
+@Path("chunkget")
 public class Chunkget extends AbstractRestCommand {
     @Override
     public CommandInfo setInfo() {
         return new CommandInfo("chunkget", "cid, type", "Get Chunk <cid> of Type <type>");
     }
 
-    @Override
-    public void register(Service server, ServiceHelper services) {
-        server.get("/chunkget", (request, response) -> {
-            long DEFAULT_VALUE_LONG = 0L;
-            if (request.body().equals("")) {
-                return createError("No body in request.", response);
-            }
-            ChunkgetRequest chunkgetRequest;
-            try {
-                chunkgetRequest = gson.fromJson(request.body(), ChunkgetRequest.class);
-            } catch (JsonSyntaxException e) {
-                return createError("Please put cid and type into body as json.", response);
-            }
-            long cid = chunkgetRequest.getCid();
-            String type = chunkgetRequest.getType();
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String register(String body) {
+        long DEFAULT_VALUE_LONG = 0L;
+        if (body.equals("")) {
+            throw new BadRequestException("No body in request.");
+        }
+        ChunkgetRequest chunkgetRequest;
+        try {
+            chunkgetRequest = gson.fromJson(body, ChunkgetRequest.class);
+        } catch (JsonSyntaxException e) {
+            throw new BadRequestException("Please put cid and type into body as json.");
+        }
+        long cid = chunkgetRequest.getCid();
+        String type = chunkgetRequest.getType();
 
-            if (cid == DEFAULT_VALUE_LONG || type == null) {
-                return createError("Please put cid and type into body as json.",
-                        response);
-            }
+        if (cid == DEFAULT_VALUE_LONG || type == null) {
+            throw new BadRequestException("Please put cid and type into body as json.");
+        }
 
-            ChunkAnon[] chunks = new ChunkAnon[1];
-            if (services.getService(ChunkAnonService.class).getAnon().get(chunks, cid) != 1) {
-                return createError("Could not get Chunk", response);
-            }
+        ChunkAnon[] chunks = new ChunkAnon[1];
+        if (ServiceHelper.getService(ChunkAnonService.class).getAnon().get(chunks, cid) != 1) {
+            throw new BadRequestException("Could not get Chunk");
+        }
 
-            ChunkAnon chunk = chunks[0];
+        ChunkAnon chunk = chunks[0];
 
-            int offset = 0;
+        int offset = 0;
 
-            boolean hex = true;
+        boolean hex = true;
 
-            String str = "";
-            ByteBuffer byteBuffer = ByteBuffer.wrap(chunk.getData());
-            byteBuffer.position(offset);
-            int length = chunk.getDataSize();
+        String str = "";
+        ByteBuffer byteBuffer = ByteBuffer.wrap(chunk.getData());
+        byteBuffer.position(offset);
+        int length = chunk.getDataSize();
 
-            switch (type) {
-                case "str":
-                    try {
-                        str = new String(chunk.getData(), offset, length, "US-ASCII");
-                    } catch (final UnsupportedEncodingException e) {
-                        return createError("Error encoding String", response);
+        switch (type) {
+            case "str":
+                try {
+                    str = new String(chunk.getData(), offset, length, "US-ASCII");
+                } catch (final UnsupportedEncodingException e) {
+                    throw new BadRequestException("Error encoding String");
+                }
+
+                break;
+
+            case "byte":
+                for (int i = 0; i < length; i += Byte.BYTES) {
+                    if (hex) {
+                        str += Integer.toHexString(byteBuffer.get() & 0xFF) + ' ';
+                    } else {
+                        str += byteBuffer.get() + " ";
                     }
+                }
+                break;
 
-                    break;
-
-                case "byte":
-                    for (int i = 0; i < length; i += Byte.BYTES) {
-                        if (hex) {
-                            str += Integer.toHexString(byteBuffer.get() & 0xFF) + ' ';
-                        } else {
-                            str += byteBuffer.get() + " ";
-                        }
+            case "short":
+                for (int i = 0; i < length; i += java.lang.Short.BYTES) {
+                    if (hex) {
+                        str += Integer.toHexString(byteBuffer.getShort() & 0xFFFF) + ' ';
+                    } else {
+                        str += byteBuffer.getShort() + " ";
                     }
-                    break;
+                }
+                break;
 
-                case "short":
-                    for (int i = 0; i < length; i += java.lang.Short.BYTES) {
-                        if (hex) {
-                            str += Integer.toHexString(byteBuffer.getShort() & 0xFFFF) + ' ';
-                        } else {
-                            str += byteBuffer.getShort() + " ";
-                        }
+            case "int":
+                for (int i = 0; i < length; i += java.lang.Integer.BYTES) {
+                    if (hex) {
+                        str += Integer.toHexString(byteBuffer.getInt()) + ' ';
+                    } else {
+                        str += byteBuffer.getInt() + " ";
                     }
-                    break;
+                }
+                break;
 
-                case "int":
-                    for (int i = 0; i < length; i += java.lang.Integer.BYTES) {
-                        if (hex) {
-                            str += Integer.toHexString(byteBuffer.getInt()) + ' ';
-                        } else {
-                            str += byteBuffer.getInt() + " ";
-                        }
+            case "long":
+                for (int i = 0; i < length; i += java.lang.Long.BYTES) {
+                    if (hex) {
+                        str += Long.toHexString(byteBuffer.getLong()) + ' ';
+                    } else {
+                        str += byteBuffer.getLong() + " ";
                     }
-                    break;
+                }
+                break;
 
-                case "long":
-                    for (int i = 0; i < length; i += java.lang.Long.BYTES) {
-                        if (hex) {
-                            str += Long.toHexString(byteBuffer.getLong()) + ' ';
-                        } else {
-                            str += byteBuffer.getLong() + " ";
-                        }
-                    }
-                    break;
-
-                default:
-                    return createError("Unsuported data type", response);
-            }
-            return createMessageOfJavaObject(new ChunkGetResponse(str));
-        });
+            default:
+                throw new BadRequestException("Unsuported data type");
+        }
+        return createMessageOfJavaObject(new ChunkGetResponse(str));
     }
 }

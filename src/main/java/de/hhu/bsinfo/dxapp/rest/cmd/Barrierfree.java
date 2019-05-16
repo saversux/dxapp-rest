@@ -16,7 +16,11 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
-import spark.Service;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import com.google.gson.JsonSyntaxException;
 
@@ -32,43 +36,43 @@ import de.hhu.bsinfo.dxram.sync.SynchronizationService;
  *
  * @author Julien Bernhart, 2018-12-02
  */
+@Path("barrierfree")
 public class Barrierfree extends AbstractRestCommand {
     @Override
     public CommandInfo setInfo() {
         return new CommandInfo("barrierfree", "bid", "Free an allocated barrier");
     }
 
-    @Override
-    public void register(Service server, ServiceHelper services) {
-        server.put("/barrierfree", (request, response) -> {
-            if (request.body().equals("")) {
-                return createError("No body in request.", response);
-            }
-            BarrierfreeRequest barrierfreeRequest;
-            try {
-                barrierfreeRequest = gson.fromJson(request.body(), BarrierfreeRequest.class);
-            } catch (JsonSyntaxException e) {
-                return createError("Please put bid into body as json.", response);
-            }
-            String stringBid = barrierfreeRequest.getBid();
+    @PUT
+    @Produces(MediaType.TEXT_PLAIN)
+    public String barrierFree(String body) {
+        if (body.equals("")) {
+            throw new BadRequestException("No body in request.");
+        }
+        BarrierfreeRequest barrierfreeRequest;
+        try {
+            barrierfreeRequest = gson.fromJson(body, BarrierfreeRequest.class);
+        } catch (JsonSyntaxException e) {
+            throw new BadRequestException("Please put bid into body as json.");
+        }
+        String stringBid = barrierfreeRequest.getBid();
 
-            if (stringBid == null) {
-                return createError("Please put bid into body as json.", response);
-            }
+        if (stringBid == null) {
+            throw new BadRequestException("Please put bid into body as json.");
+        }
 
-            if (!isBarrierID(stringBid)) {
-                return createError("Invalid BarrierID", response);
-            }
+        if (!isBarrierID(stringBid)) {
+            throw new BadRequestException("Invalid BarrierID");
+        }
 
-            int bid = BarrierID.parse(stringBid);
+        int bid = BarrierID.parse(stringBid);
 
-            SynchronizationService sync = services.getService(SynchronizationService.class);
+        SynchronizationService sync = ServiceHelper.getService(SynchronizationService.class);
 
-            if (!sync.barrierFree(bid)) {
-                return createError("Freeing barrier failed", response);
-            } else {
-                return createMessage("Barrier "+BarrierID.toHexString(bid)+" free'd");
-            }
-        });
+        if (!sync.barrierFree(bid)) {
+            throw new BadRequestException("Freeing barrier failed");
+        } else {
+            return createMessage("Barrier "+BarrierID.toHexString(bid)+" free'd");
+        }
     }
 }

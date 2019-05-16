@@ -16,7 +16,11 @@
 
 package de.hhu.bsinfo.dxapp.rest.cmd;
 
-import spark.Service;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import com.google.gson.JsonSyntaxException;
 
@@ -31,38 +35,38 @@ import de.hhu.bsinfo.dxram.ms.MasterSlaveComputeService;
  *
  * @author Julien Bernhart, 2019-01-07
  */
+@Path("compgrpstatus")
 public class Compgrpstatus extends AbstractRestCommand {
     @Override
     public CommandInfo setInfo() {
         return new CommandInfo("compgrpstatus", "cgid", "get status of specific compute group");
     }
 
-    @Override
-    public void register(Service server, ServiceHelper services) {
-        server.get("/compgrpstatus", (request, response) -> {
-            if (request.body().equals("")) {
-                return createError("No body in request.", response);
-            }
-            CompgrpstatusRequest compgrpstatusRequest;
-            try {
-                compgrpstatusRequest = gson.fromJson(request.body(), CompgrpstatusRequest.class);
-            } catch (JsonSyntaxException e) {
-                return createError("Please put cgid into body as json.", response);
-            }
-            String stringCgid = compgrpstatusRequest.getCgid();
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getCompGrpStatus(String body) {
+        if (body.equals("")) {
+            throw new BadRequestException("No body in request.");
+        }
+        CompgrpstatusRequest compgrpstatusRequest;
+        try {
+            compgrpstatusRequest = gson.fromJson(body, CompgrpstatusRequest.class);
+        } catch (JsonSyntaxException e) {
+            throw new BadRequestException("Please put cgid into body as json.");
+        }
+        String stringCgid = compgrpstatusRequest.getCgid();
 
-            if (stringCgid == null) {
-                return createError("Please put cgid into body as json.", response);
-            }
+        if (stringCgid == null) {
+            throw new BadRequestException("Please put cgid into body as json.");
+        }
 
-            MasterSlaveComputeService mscomp = services.getService(MasterSlaveComputeService.class);
-            MasterSlaveComputeService.StatusMaster status = mscomp.getStatusMaster(Short.valueOf(stringCgid));
+        MasterSlaveComputeService mscomp = ServiceHelper.getService(MasterSlaveComputeService.class);
+        MasterSlaveComputeService.StatusMaster status = mscomp.getStatusMaster(Short.valueOf(stringCgid));
 
-            if (status == null) {
-                return createError("Getting compute group status of group "+stringCgid+" failed", response);
-            }
+        if (status == null) {
+            throw new BadRequestException("Getting compute group status of group "+stringCgid+" failed");
+        }
 
-            return createMessageOfJavaObject(status);
-        });
+        return createMessageOfJavaObject(status);
     }
 }
